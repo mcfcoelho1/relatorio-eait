@@ -1,5 +1,5 @@
 ---
-title: "Nome_Aluno(a)"
+title: "Maria Clara FIgueiredo Coelho"
 image: "logo.png"
 links:
   - label: GitHub
