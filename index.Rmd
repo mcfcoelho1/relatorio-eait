@@ -1,5 +1,5 @@
 ---
-title: "Maria Clara FIgueiredo Coelho"
+title: "Maria Clara Figueiredo Coelho"
 image: "logo.png"
 links:
   - label: GitHub
