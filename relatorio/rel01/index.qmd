@@ -1,6 +1,6 @@
 ---
 # Só mude aqui!!!!
-author: "Nome do Aluno"
+author: "Maria Clara Figueiredo Coelho"
 title: "Relatório de Aula Prática 01"
 bibliography: referencias.bib
 # A partir daqui nao faca alteracoes!!!!!
@@ -28,28 +28,233 @@ execute:
 
 ## 📌 Introdução
 
-Descreva o contexto da prática e sua importância.
+A linguagem R é uma ferramenta voltada à programação, manipulação e análise de dados, que oferece uma ampla gama de recursos para organizar e analisar informações através de métodos estatísticos. 
 
-> Exemplo: análise da variabilidade em experimentos físicos utilizando uma catapulta.
+Este relatório apresenta uma sequência de atividades que parte dos fundamentos da linguagem R e avança até sua aplicação na análise estatística de dados relacionados à geotecnia. O trabalho está organizado em três etapas principais, buscando estabelecer uma relação entre os conhecimentos de programação, os conceitos de estatística descritiva e sua aplicação prática.
 
+Na primeira etapa, será realizada uma introdução à linguagem R, fundamentada no curso R Básico 2024 – Sintaxe e Semântica, ministrado pelo professor Ben Dêivide. Serão apresentados os principais conceitos abordados no curso, incluindo o funcionamento da linguagem e do ambiente RStudio, objetos, estruturas de dados, funções, estruturas de controle, pacotes, ambientes e interfaces.
 
+A segunda etapa contemplará a revisão dos fundamentos da estatística descritiva, com base no livro Estatística para Análise Exploratória de Dados e Experimentos Computacionais (EPAEC). Além dos conteúdos apresentados nesse material, serão incluídos os conceitos de assimetria e curtose, complementando as medidas utilizadas para descrever o comportamento de uma distribuição de dados.
+
+Por fim, a terceira etapa terá caráter prático e abordará a aplicação dos conhecimentos estudados a um banco de dados relacionado à geotecnia. Com o auxílio do pacote leem, os dados serão organizados, tabulados e representados graficamente, além do cálculo de medidas de posição, dispersão, assimetria e curtose. Os resultados obtidos serão analisados e discutidos, buscando compreender os valores fornecidos pelas ferramentas computacionais e os procedimentos estatísticos envolvidos em sua obtenção.
 
 ## 🎯 Objetivos
 
 ### Objetivo geral
 
-Descrever o objetivo principal da prática.
+Compreender os fundamentos da linguagem R e da Estatística Descritiva e aplicá-los na análise de um banco de dados, utilizando o pacote leem como ferramenta computacional para organização, representação, descrição e interpretação dos dados.
 
 ### Objetivos específicos
 
-- Coletar dados experimentais  
-- Aplicar estatística descritiva  
-- Construir gráficos  
-- Interpretar resultados  
+- Apresentar os principais fundamentos da linguagem R abordados no curso R Básico 2024 – Sintaxe e Semântica;
+- Compreender conceitos relacionados a objetos, estruturas de dados, funções, estruturas de controle, pacotes, ambientes e interfaces no R;
+- Revisar os principais conceitos de Estatística Descritiva apresentados no livro EPAEC;
+- Estudar os conceitos de assimetria e curtose como complemento à descrição de distribuições de dados;
+- Organizar um banco de dados e utilizar o pacote leem para realizar a tabulação e representação gráfica dos dados;
+- Calcular e interpretar medidas de posição, dispersão, assimetria e curtose;
+- Discutir os resultados encontrados, relacionando as medidas e representações obtidas às características observadas no conjunto de dados.  
 
 ---
 
 ## 📚  Fundamentação Teórica
+
+### Fundamentos da Linguagem R
+
+O R é uma linguagem e um ambiente de software livre e de código aberto, que se aplica de forma satisfatória à estatística e à análise de dados. A compreensão de seu funcionamento envolve dois conceitos importantes: sintaxe e semântica. A sintaxe está relacionada à forma como os comandos são escritos, enquanto a semântica corresponde ao comportamento produzido a partir da execução desses comandos.
+
+O funcionamento da linguagem pode ser descrito a partir da conexão de diferentes elementos, como objetos, funções, estruturas de dados, estruturas de controle, ambientes, pacotes e interfaces. Esses recursos permitem armazenar informações, realizar operações, controlar a execução de procedimentos e ampliar as funcionalidades disponíveis no ambiente de programação.
+
+#### R e RStudio
+
+O R e o RStudio possuem funções distintas. O R corresponde à linguagem responsável pela interpretação e execução dos comandos, enquanto o RStudio é um Ambiente Integrado de Desenvolvimento (IDE) que fornece uma interface para facilitar a utilização da linguagem.
+
+O RStudio reúne ferramentas como o console, o editor de scripts, o ambiente de objetos (`Environment`), o histórico de comandos (`History`) e áreas destinadas a arquivos, gráficos, pacotes e documentação. Essa organização permite escrever códigos, executá-los e acompanhar os objetos produzidos durante uma sessão de trabalho.
+
+O console é o espaço no qual os comandos são enviados para execução. A partir do símbolo >, identifica-se que o R está disponível para receber uma nova instrução.
+
+Além da execução direta no console, os comandos podem ser armazenados em scripts, normalmente identificados pela extensão `.R`. Os scripts permitem organizar e preservar o código utilizado, facilitando sua consulta e execução posterior. Comentários podem ser inseridos com o símbolo `#`, que permitem incluir informações sem que elas sejam interpretadas como comandos.
+
+O R também utiliza um diretório de trabalho como referência para determinadas operações de leitura e gravação de arquivos. A função `getwd()` permite identificar o diretório atual, enquanto `setwd()` possibilita defini-lo. Já `source()` permite executar comandos armazenados em outro arquivo de script.
+
+#### Princípios Fundamentais da Linguagem R
+
+A estrutura da linguagem R pode ser compreendida a partir de três princípios fundamentais: objeto, função e interface.
+
+O **princípio do objeto** está relacionado ao fato de que os elementos existentes no R podem ser tratados como objetos. Valores, vetores, matrizes, listas, funções e ambientes são exemplos de objetos que podem possuir diferentes características e estruturas.
+
+O **princípio da função** estabelece que as operações realizadas no R estão relacionadas a chamadas de funções. As funções recebem informações por meio de seus argumentos, executam determinadas operações e podem produzir resultados. Dessa maneira, são um elemento central na manipulação dos objetos.
+
+O **princípio da interface** corresponde à capacidade do R de se comunicar com outros programas, linguagens e tecnologias. Essa característica permite ampliar as possibilidades da linguagem e utilizar recursos desenvolvidos em outros ambientes.
+
+#### Objetos, Atribuição e Estruturas de Dados
+
+A atribuição permite estabelecer uma associação entre um nome e um objeto. Uma das formas utilizadas para realizar essa operação é o operador `<-`:
+
+```r
+> x <- 5
+```
+
+Nesse caso, o valor 5 é atribuído ao nome `x`. Para isso, o R utiliza nomes sintáticos, que podem ser formados por letras, números, pontos (`.`) e underline (`_`). Esses nomes devem começar por uma letra ou por um ponto que não seja seguido de número, não podendo ser iniciados por número ou underline. Também não podem ser utilizadas palavras reservadas da linguagem, como if, else, for e while. Além disso, o R diferencia letras maiúsculas de minúsculas, de forma que, por exemplo, `x` e `X` correspondem a nomes diferentes.
+
+Os objetos podem possuir diferentes características, que podem ser obtidas por funções como `length()`, `mode()`, `typeof()`, `attributes()`, `attr()` e `class()`. Essas funções permitem verificar propriedades relacionadas ao comprimento, aos atributos e às classes dos objetos.
+
+As informações podem ser organizadas no R por meio de diferentes estruturas de dados, entre as quais estão vetores, matrizes, arrays, listas e data frames.
+
+Os **vetores** são estruturas unidimensionais utilizadas para armazenar uma sequência de elementos. Nos vetores atômicos, esses elementos possuem a mesma natureza, como valores numéricos, lógicos ou caracteres. Eles podem ser construídos utilizando recursos como `c()`, `:`, `seq()` e `rep()`, e cada elemento pode ser acessado por sua posição no vetor por meio de colchetes. Por exemplo, em um vetor x, a expressão x[2] permite acessar o elemento localizado na segunda posição.
+
+As **matrizes** são estruturas organizadas em duas dimensões, ou seja, em linhas e colunas. Assim como os vetores, seus elementos possuem a mesma natureza, mas sua disposição é modificada pela presença do atributo `dim`, que define suas dimensões. Para acessar um elemento específico, são informadas sua linha e sua coluna. Por exemplo, `x[2, 3]` representa o elemento localizado na segunda linha e na terceira coluna da matriz.
+
+Os **arrays** permitem organizar os dados em mais dimensões do que uma matriz. Um array pode, por exemplo, reunir várias matrizes dentro de um mesmo objeto, fazendo com que seus elementos sejam identificados pela linha, coluna e matriz em que estão localizados. Nesse caso, uma expressão como `x[1, 2, 3]` permite acessar o elemento localizado na primeira linha, segunda coluna e terceira matriz. Essa estrutura é tratada como um vetor multidimensional.
+
+As **listas** permitem armazenar diferentes tipos de objetos em uma mesma estrutura, como valores numéricos, textos, vetores e até outras listas. Cada objeto corresponde a um elemento da lista e pode ser acessado por sua posição. Quando os elementos recebem nomes, também podem ser acessados diretamente pelo operador $, utilizando o nome associado a cada elemento.
+
+Os **data frames** são estruturas utilizadas para organizar dados em formato de tabela, formada por linhas e colunas. As linhas representam as observações, enquanto as colunas representam as variáveis. Diferentemente de uma matriz, as colunas de um data frame podem armazenar dados de diferentes naturezas, como valores numéricos, lógicos ou caracteres. Seus dados podem ser acessados indicando a posição da linha e da coluna, como em `x[2, 3]`, ou pelo nome de uma variável utilizando o operador `$`, como em `x$idade`.
+
+#### Funções
+
+As funções permitem reunir operações que podem ser executadas a partir de uma chamada. Além das funções já disponíveis no R e em seus pacotes, novas funções podem ser criadas com `function()`.
+
+Uma função pode ser compreendida a partir de seus argumentos, corpo e ambiente. Por exemplo:
+
+```r
+> f <- function(x) {
+x + 1
+}
+```
+
+Nesse caso, x representa o argumento recebido pela função, enquanto a expressão entre as chaves corresponde ao seu corpo. Ao final da execução de uma função, o R fornece como resultado o valor produzido pela função, que também pode ser exibido a partir do comando `return()`.
+
+Já as estruturas de controle permitem determinar o fluxo de execução dos comandos. `if` e `else` permitem estabelecer caminhos diferentes conforme uma condição lógica, enquanto `ifelse()` possibilita realizar determinadas operações de forma vetorizada. `switch()` também pode ser utilizado para selecionar alternativas.
+
+As estruturas `repeat`, `while` e `for` permitem executar operações repetidamente. Dentro dessas estruturas, `break` pode interromper a repetição e ´next´ permite avançar para a próxima iteração.
+
+#### Importação, Exportação e Organização dos Dados
+
+A utilização de informações vindas de fontes externas exige que os dados sejam disponibilizados em uma estrutura que possa ser interpretada pelo R. Uma forma de organização considera as variáveis dispostas nas colunas, as observações nas linhas e os nomes das variáveis no cabeçalho.
+
+Os dados podem estar armazenados em diferentes formatos de arquivos, como TXT, CSV, XLS e XLSX. Para realizar a importação, são apresentados recursos como `scan()` e `read.table()`. O RStudio também disponibiliza opções em sua própria interface para auxiliar nesse processo.
+
+Durante a importação, algumas informações podem ser fornecidas para que o R reconheça corretamente a organização do arquivo. É possível indicar, por exemplo, se a primeira linha contém os nomes das variáveis, qual caractere é utilizado para separar os dados e qual símbolo representa as casas decimais. Essas características podem variar de acordo com a extensão do arquivo e suas informações.
+
+Além de importar informações, o R também permite exportar os dados, ou seja, gravar em um arquivo externo os dados disponíveis no ambiente através de funções como `write.table()` e `write_xlsx()`.
+
+#### Pacotes e Ampliação das Funcionalidades do R
+
+Os pacotes são estruturas organizadas que podem reunir funções, objetos, códigos, documentação e outros recursos. Eles permitem acrescentar ao R funcionalidades que podem ser utilizadas para diferentes finalidades.
+
+A instalação desses pacotes pode ser realizada através da aba *Packages*, em *Install*, ou através da função:
+
+```r
+install.packages("nome_do_pacote")
+```
+
+Depois de instalado, o pacote pode ser carregado durante uma sessão por meio de funções como library() e require(). É importante diferenciar essas duas etapas: instalar significa disponibilizar o pacote no computador, enquanto carregá-lo permite utilizar seus recursos durante a sessão de trabalho.
+
+Os pacotes podem ser obtidos a partir de diferentes locais. O CRAN é um dos principais repositórios utilizados para sua disponibilização, e também é possível encontrar projetos e pacotes no GitHub.
+
+Quando um pacote é anexado, seus objetos passam a fazer parte do caminho de busca do R. Esse caminho corresponde à ordem utilizada pelo programa para procurar um objeto a partir de seu nome e pode ser visualizado pela função search(). Quando existem objetos com o mesmo nome em diferentes pacotes, essa ordem pode determinar qual deles será utilizado.
+
+Também é possível indicar diretamente de qual pacote se deseja utilizar uma função por meio do operador `::`, como no exemplo:
+
+```r
+pacote::funcao()
+```
+
+Nesse caso, a função é acessada diretamente do pacote indicado, sem a necessidade de anexá-lo ao caminho de busca.
+
+#### Ambientes e Interfaces 
+
+Os ambientes são estruturas utilizadas pelo R para armazenar associações entre nomes e objetos. Quando um objeto é criado durante uma sessão, por exemplo, ele pode ficar associado a um nome dentro de determinado ambiente. Um dos principais é o ambiente global (`.GlobalEnv`), relacionado aos objetos criados pelo usuário durante a sessão.
+
+Os ambientes também podem estar relacionados entre si de forma hierárquica. Um novo ambiente pode ser criado com a função `new.env()`, enquanto `parent.env()` permite identificar o ambiente que está acima dele nessa organização.
+
+Esse funcionamento também está relacionado às funções. Quando uma função é executada, ela possui seu próprio ambiente, no qual ficam os nomes e objetos utilizados durante aquela execução. Se a função precisar de um objeto que não esteja disponível nesse ambiente, o R pode procurá-lo nos ambientes relacionados. Esse mecanismo faz parte do chamado escopo léxico.
+
+Nesse contexto, também existe uma diferença entre os operadores `<-` e `<<-`. O operador `<-` é utilizado para realizar uma atribuição no ambiente em que o código está sendo executado. Já o operador `<<-`, chamado de superatribuição, permite procurar e modificar uma associação existente em um ambiente superior.
+
+Além da organização interna dos objetos, o R também possui recursos para se comunicar com outras linguagens e tecnologias. Essa capacidade está relacionada ao princípio da interface. Por exemplo, o pacote reticulate permite a integração com Python, enquanto o Rcpp permite trabalhar com recursos desenvolvidos em C++. O pacote tcltk também possibilita utilizar recursos da linguagem Tcl/Tk, incluindo a criação de elementos de interface gráfica.
+
+O R também pode ser utilizado em conjunto com outras tecnologias, como Markdown, Quarto, HTML, JavaScript e Shiny, permitindo diferentes formas de apresentação dos conteúdos produzidos.
+
+#### Síntese dos Fundamentos da Linguagem R
+
+A linguagem R permite reunir diferentes recursos para armazenar dados, realizar operações e organizar a execução dos códigos. Seu funcionamento pode ser compreendido a partir dos princípios de objeto, função e interface.
+
+Os dados podem ser armazenados em estruturas como vetores, matrizes, arrays, listas e data frames, cada uma com uma forma própria de organização. As funções permitem realizar operações sobre esses objetos, enquanto as estruturas de controle possibilitam estabelecer condições e repetições durante a execução de um código.
+
+Os ambientes participam da organização das associações entre nomes e objetos, enquanto os pacotes permitem acrescentar funções e outros recursos ao R. Além disso, por meio das interfaces, o R pode se comunicar com outras linguagens e tecnologias.
+
+Em conjunto, esses conceitos fornecem uma visão dos principais elementos envolvidos na sintaxe e na semântica do R, desde a criação e organização dos dados até sua manipulação por meio de funções e outros recursos da linguagem.
+
+---
+
+### Estatística Descritiva
+
+A Estatística compreende um conjunto de métodos voltados à coleta, organização, descrição, análise e interpretação de dados. Seu estudo pode ser dividido em três áreas principais:
+
+- Estatística Descritiva; 
+- Estatística Inferencial; e 
+- Probabilidade. 
+
+Em síntese, a **Estatística Descritiva** está relacionada à coleta, organização e resumo dos dados, enquanto a **Estatística Inferencial** utiliza informações obtidas em uma amostra para estudar características de uma população, através da extrapolação dos dados. A **Probabilidade**, por sua vez, está relacionada ao estudo de fenômenos aleatórios e das incertezas associadas aos seus resultados.
+
+A seguir, serão abordados os principais conceitos da Estatística Descritiva, considerando as metodologias para organização, apresentação e descrição de um conjunto de dados. Serão apresentadas as definições de população, amostra e variáveis, seguidas pelas formas de organização e representação dos dados e pelas principais medidas de posição e dispersão.
+
+#### População, Amostra e Variável
+
+A população corresponde ao conjunto de todos os elementos que possuem pelo menos uma característica de interesse para determinado estudo. O número de elementos da população é chamado de tamanho da população e é representado por $N$. Quando apenas uma parte dessa população é analisada, tem-se uma amostra, formada por um subconjunto de seus elementos, em que seu tamanho é representado por $n$.
+
+As características observadas nos elementos da população ou da amostra são chamadas de variáveis, e os resultados obtidos a partir dessas observações correspondem aos dados ou valores observados. As variáveis podem ser classificadas em qualitativas ou quantitativas.
+
+As variáveis qualitativas representam atributos ou categorias. Elas são classificadas como nominais, quando não existe uma ordem entre as categorias, ou ordinais, quando é possível definir uma ordem entre os valores.
+
+As variáveis quantitativas assumem valores numéricos e podem ser classificadas como discretas ou contínuas. As discretas estão associadas a processos de contagem, em que os potenciais valores pertencem a um conjunto enumerável. Já as contínuas estão associadas a processos de medidas e podem assumir valores dentro de determinado intervalo.
+
+#### Técnicas de Somatório
+
+A notação de somatório é utilizada para representar de forma simplificada a soma de uma sequência de valores e aparece com frequência nas expressões utilizadas em Estatística. O símbolo $\sum$ indica que os termos definidos pela expressão devem ser somados, considerando os limites indicados.
+
+De forma geral, um somatório pode ser representado por:
+
+$$
+\sum_{i=1}^{n} X_i = X_1 + X_2 + ... + X_n
+$$
+Em que $i$ funciona como índice e $n$ indica o limite superior da soma. Dessa forma, a expressão representa a soma dos valores de $X_i$, desde $i = 1$ até $i = n$.
+
+Também podem ser realizadas operações envolvendo constantes, produtos, potências e diferentes variáveis. É importante observar que expressões semelhantes podem representar operações distintas. Por exemplo:
+
+$$
+\sum_{i=1}^{n} X_i^2
+$$
+
+Representa a soma dos quadrados dos valores, enquanto:
+
+$$
+\left(\sum_{i=1}^{n} X_i\right)^2
+$$
+representa o quadrado da soma dos valores.
+
+#### Coleta e Organização dos Dados
+
+Após a coleta, os valores obtidos podem ser apresentados inicialmente sem qualquer ordenação. Nesse caso, são chamados de dados brutos. Quando esses mesmos valores são colocados em ordem crescente ou decrescente, obtém-se o rol, também chamado de conjunto de dados elaborados.
+
+A organização dos dados em rol facilita a observação das informações contidas no conjunto. Outra forma de organizar e resumir os dados é por meio de uma distribuição de frequências, na qual são apresentadas as frequências associadas aos valores ou grupos de valores observados.
+
+#### Representação Tabular dos Dados
+
+A representação tabular é uma forma de organizar e resumir os dados por meio de tabelas. Uma das formas apresentadas é a distribuição de frequências, na qual os dados são organizados de acordo com o número de ocorrências de cada valor, categoria ou intervalo.
+
+A frequência simples ou absoluta, representada por $F_i$, indica quantas vezes determinado valor ou grupo aparece no conjunto de dados. A soma de todas as frequências absolutas corresponde ao número total de observações.
+
+
+
+
+
+
+
+
+
+
 
 Apresente os conceitos principais:
 
