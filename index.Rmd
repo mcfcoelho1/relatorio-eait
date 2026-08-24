@@ -12,4 +12,4 @@ output:
   postcards::jolla
 ---
 
-Descrição ...
+Página dedicada à apresentação dos relatório desenvolvidos na disciplina de Estatística Aplicada à Inovação Tecnológica ministrada no Mestrado Profissional - PPGTIC/UFSJ
