@@ -663,4 +663,7 @@ Na aplicação aos resultados de grau de compactação do aterro do canal CP-01,
 Esse resultado mostra a importância de analisar os dados como um conjunto, utilizando-se da combinação de diversos conceitos. Os resultados também mostraram que a média, de forma isolada, não é suficiente para descrever todo o conjunto de dados, uma vez que foram identificados ensaios abaixo do GC mínimo especificado. A análise das demais medidas estatísticas, junto às tabelas e gráficos, permitiu avaliar de forma mais completa a distribuição e a variabilidade dos resultados.
 
 ## 📖 Referências
+
+BATISTA, B. D. O.; OLIVEIRA, D. A. B. J. R básico. 1. ed. Ouro Branco, MG: [s.n.], 2024.
+
 BATISTA, B. D. O.. Estatística Básica aplicada às Engenharias e Ciências. Ouro Branco, MG: [s.n.]. 2024. XXX p. ISBN 978-65-00-66079-1. Disponível em: https://bendeivide. github.io/book-epaec/. Acesso em: 22:00, sábado, 22 de agosto de 2026.
