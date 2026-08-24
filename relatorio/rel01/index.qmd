@@ -519,55 +519,148 @@ knitr::kable(
 
 ## 🔍 Resultados e Discussão
 
-```{r}
+### Resultados
 
+```{r, echo=FALSE}
+library(leem)
+
+dados <- read.csv2("ensaiohilf.csv")
+
+dadogc <- dados$GC
+
+valor <- new_leem(dadogc, variable = "continuous")
+ 
+media <- mean(valor, rounding = 2)
+  
+mediana <- median(valor, rounding = 2)
+
+amplitude <- amplitude(valor, rounding = 2)
+
+desvio <- sdev(valor, rounding = 2)
+
+variancia <- variance(valor, rounding = 2)
+
+variancia1 <- round(variancia, 2)
+
+cv <- cv(valor,rounding = 2)
+
+assimetria <- skewness(valor, rounding = 2)
+
+curtose <- e1071::kurtosis(valor, na.rm = FALSE, type = 1)
+
+curtose1 <- round(curtose, 2)
+
+tabela <- data.frame(
+  Dados = "GC",
+  Media = media,
+  Mediana = mediana,
+  Amplitude = amplitude,
+  Desvio = desvio,
+  Variancia = variancia1,
+  CV = cv,
+  Assimetria = assimetria,
+  Curtose = curtose1
+)
+
+knitr::kable(
+  tabela,
+  align = "c",
+  col.names = c(
+    "Dados",
+    "Média",
+    "Mediana",
+    "Amplitude",
+    "Desvio-padrão",
+    "Variância",
+    "CV (%)",
+    "Assimetria",
+    "Curtose"
+),
+ caption = "Estatísticas descritivas"
+) |>
+  kableExtra::kable_styling(
+    full_width = FALSE,
+    bootstrap_options = c("striped", "hover", "condensed")
+  )
+  
 ```
 
+```{r, echo=FALSE}
+library(leem)
 
+dadogc |>
+  new_leem(variable = "continuous") |>
+  tabfreq() |>
+  hist(
+    freq = "p",
+    main = "Distribuição do Grau de Compactação",
+    xlab = "Grau de Compactação (%)",
+    ylab = "Frequência (%)",
+    bg = FALSE,
+    barcol = "gray80",
+    barborder = "gray30"
+  )
 
-Apresente e interprete os resultados obtidos a partir dos dados coletados.
+abline(
+  v = 98,
+  col = "red",
+  lwd = 2,
+  lty = 2
+)
 
-- Descreva os principais resultados numéricos (média, variabilidade, etc.).
-- Comente o comportamento dos dados observados nos gráficos.
-- Indique se há presença de valores discrepantes (outliers).
-- Avalie se os dados apresentam simetria ou tendência.
-
-Em seguida, discuta os resultados à luz dos conceitos teóricos:
-
-- Os resultados estão de acordo com o esperado?
-- Há grande variabilidade? O que isso significa no contexto do experimento?
-- Quais fatores podem ter influenciado os resultados?
-- Existem possíveis fontes de erro experimental?
-
-Procure não apenas descrever, mas **interpretar os dados**.
-
-### 💬 Exemplo de como citar uma referência bibliográfica
-
-Depois de inserido as informaçõe no arquivo **referencias.bib**, use:
-
-- Segundo @Rbasico2022
-- Tudo é um objeto em R [@Rbasico2022]
-
-### 📊 Análise de Dados
-
-```{r}
-distancia <- c(10.2, 9.8, 10.5, 10.1, 9.9, 10.3)
-distancia
+legend(
+  "topright",
+  legend = "GC mínimo = 98%",
+  col = "red",
+  lwd = 2,
+  lty = 2,
+  bty = "n"
+)
 ```
+
+```{r, echo=FALSE}
+# Classificação dos resultados
+situacao <- ifelse(dados$GC >= 98, "GC >= 98%", "GC < 98%")
+
+# Tabela resumo
+tabela_gc <- data.frame(
+  Situação = c("GC >= 98%", "GC < 98%"),
+  Quantidade = c(
+    sum(dados$GC >= 98),
+    sum(dados$GC < 98)
+  ),
+  Percentual = c(
+    mean(dados$GC >= 98) * 100,
+    mean(dados$GC < 98) * 100
+  )
+)
+
+knitr::kable(
+  tabela_gc,
+  col.names = c("Situação", "Nº de ensaios", "Percentual (%)"),
+  digits = c(0, 0, 1),
+  align = "c",
+  caption = "Atendimento ao critério mínimo de grau de compactação"
+)
+```
+
+### Discussões
+
+Os resultados obtidos através do Ensaio Hilf apresentaram grau de compactação médio de 99,64% e mediana de 99,73%, superiores ao valor mínimo de 98% estabelecido como premissa de projeto. A proximidade entre média e mediana indica que os valores estão concentrados em torno de uma região central, próxima a 100%, comportamento que também pode ser observado no histograma.
+
+Quanto à dispersão, o conjunto apresentou desvio padrão de 2,73 pontos percentuais e coeficiente de variação de 2,74%, indicando baixa variabilidade dos resultados em relação à média. A amplitude de 10,48 pontos percentuais mostra, entretanto, que existe uma diferença considerável entre os valores extremos da amostra.
+
+A distribuição apresentou leve assimetria à esquerda (-0,22), indicando uma pequena tendência de prolongamento em direção aos menores valores de GC. A curtose foi de 0,37 e, por apresentar valor próximo de zero, a distribuição pode ser considerada aproximadamente mesocúrtica, ou seja, apresenta comportamento próximo ao da distribuição normal.
+
+Foi possível observar, também, a partir da análise individual dos dados, que 80% (24 ensaios) dos resultados atenderam ao critério de compactação mínimo de projeto, enquanto 20% (6 ensaios) ficaram abaixo desse critério.
 
 ## 🧠 Considerações finais
 
-Apresente uma síntese dos principais pontos observados no experimento.
+O desenvolvimento deste relatório permitiu reunir os principais fundamentos da linguagem R e da Estatística Descritiva, para aplicá-los a uma análise com dados reais. Na fundamentação teórica, foram apresentados os conceitos de organização e representação dos dados, além da definição das medidas de posição, dispersão, assimetria e curtose, unindo a teoria à aplicação no RStudio.
 
-- Retome o objetivo da prática e indique se ele foi alcançado.
-- Destaque os principais aprendizados obtidos.
-- Comente brevemente sobre a qualidade dos dados coletados.
-- Sugira possíveis melhorias no procedimento experimental.
+Na aplicação aos resultados de grau de compactação do aterro do canal CP-01, foi possível observar que os dados apresentaram média de 99,64%, baixa variabilidade e distribuição aproximadamente mesocúrtica, com leve assimetria à esquerda. Além disso, mostrou que 80% dos ensaios atenderam ao critério mínimo de GC ≥ 98%, enquanto 20% apresentaram resultados abaixo do valor estabelecido.
 
-Evite repetir apenas os resultados; foque nas **conclusões e reflexões** sobre a prática realizada.
-
-## Aprenda Quarto
-
-Acesse [Quarto](https://quarto.org/).
+Esse resultado mostra a importância de analisar os dados como um conjunto, utilizando-se da combinação de diversos conceitos. Os resultados também mostraram que a média, de forma isolada, não é suficiente para descrever todo o conjunto de dados, uma vez que foram identificados ensaios abaixo do GC mínimo especificado. A análise das demais medidas estatísticas, junto às tabelas e gráficos, permitiu avaliar de forma mais completa a distribuição e a variabilidade dos resultados.
 
 ## 📖 Referências
+BATISTA, B. D. O.. Estatística Básica aplicada às Engenharias e Ciências. Ouro Branco, MG: [s.n.]. 2024. XXX p. ISBN 978-65-00-66079-1. Disponível em: https://bendeivide. github.io/book-epaec/. Acesso em: 22:00, sábado, 22 de agosto de 2026.
