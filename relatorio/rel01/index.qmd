@@ -45,15 +45,12 @@ Compreender os fundamentos da linguagem R e da Estatística Descritiva e aplicá
 
 ### Objetivos específicos
 
-- Apresentar os principais fundamentos da linguagem R, abordando aspectos relacionados à sua sintaxe e semântica, estruturas de dados, funções, estruturas de controle, pacotes, ambientes e interfaces;
-- Revisar os fundamentos da Estatística Descritiva, incluindo população, amostra, classificação das variáveis e técnicas de somatório;
-- Apresentar os procedimentos de organização e representação tabular dos dados, considerando distribuições de frequência e agrupamento em classes;
-- Descrever as principais formas de representação gráfica dos dados, considerando sua aplicação de acordo com a natureza das variáveis;
-- Apresentar e interpretar as principais medidas de posição e dispersão, compreendendo seus procedimentos de cálculo e as informações fornecidas por cada medida;
-- Abordar os conceitos e as medidas de assimetria e curtose, complementando a análise das características de uma distribuição;
+- Apresentar os fundamentos da linguagem R, incluindo sintaxe, estruturas de dados, funções, controles, pacotes e ambientes;
+- Revisar os principais conceitos da Estatística Descritiva e a classificação das variáveis;
+- Abordar a organização, tabulação e representação gráfica dos dados;
+- Apresentar e interpretar medidas de posição, dispersão, assimetria e curtose;
 - Utilizar o pacote leem para realizar a análise descritiva de uma base de dados;
-- Organizar, tabular e representar graficamente os dados selecionados, além de calcular suas medidas de posição, dispersão, assimetria e curtose;
-- Analisar e discutir os resultados obtidos, relacionando as medidas calculadas e as representações produzidas às características observadas no conjunto de dados.
+- Organizar e representar os dados, calcular as principais medidas estatísticas e discutir os resultados obtidos.
 
 ------------------------------------------------------------------------
 
