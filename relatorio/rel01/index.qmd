@@ -25,10 +25,9 @@ execute:
   message: false
 ---
 
-
 ## 📌 Introdução
 
-A linguagem R é uma ferramenta voltada à programação, manipulação e análise de dados, que oferece uma ampla gama de recursos para organizar e analisar informações através de métodos estatísticos. 
+A linguagem R é uma ferramenta voltada à programação, manipulação e análise de dados, que oferece uma ampla gama de recursos para organizar e analisar informações através de métodos estatísticos.
 
 Este relatório apresenta uma sequência de atividades que parte dos fundamentos da linguagem R e avança até sua aplicação na análise estatística de dados relacionados à geotecnia. O trabalho está organizado em três etapas principais, buscando estabelecer uma relação entre os conhecimentos de programação, os conceitos de estatística descritiva e sua aplicação prática.
 
@@ -46,17 +45,19 @@ Compreender os fundamentos da linguagem R e da Estatística Descritiva e aplicá
 
 ### Objetivos específicos
 
-- Apresentar os principais fundamentos da linguagem R abordados no curso R Básico 2024 – Sintaxe e Semântica;
-- Compreender conceitos relacionados a objetos, estruturas de dados, funções, estruturas de controle, pacotes, ambientes e interfaces no R;
-- Revisar os principais conceitos de Estatística Descritiva apresentados no livro EPAEC;
-- Estudar os conceitos de assimetria e curtose como complemento à descrição de distribuições de dados;
-- Organizar um banco de dados e utilizar o pacote leem para realizar a tabulação e representação gráfica dos dados;
-- Calcular e interpretar medidas de posição, dispersão, assimetria e curtose;
-- Discutir os resultados encontrados, relacionando as medidas e representações obtidas às características observadas no conjunto de dados.  
+- Apresentar os principais fundamentos da linguagem R, abordando aspectos relacionados à sua sintaxe e semântica, estruturas de dados, funções, estruturas de controle, pacotes, ambientes e interfaces;
+- Revisar os fundamentos da Estatística Descritiva, incluindo população, amostra, classificação das variáveis e técnicas de somatório;
+- Apresentar os procedimentos de organização e representação tabular dos dados, considerando distribuições de frequência e agrupamento em classes;
+- Descrever as principais formas de representação gráfica dos dados, considerando sua aplicação de acordo com a natureza das variáveis;
+- Apresentar e interpretar as principais medidas de posição e dispersão, compreendendo seus procedimentos de cálculo e as informações fornecidas por cada medida;
+- Abordar os conceitos e as medidas de assimetria e curtose, complementando a análise das características de uma distribuição;
+- Utilizar o pacote leem para realizar a análise descritiva de uma base de dados;
+- Organizar, tabular e representar graficamente os dados selecionados, além de calcular suas medidas de posição, dispersão, assimetria e curtose;
+- Analisar e discutir os resultados obtidos, relacionando as medidas calculadas e as representações produzidas às características observadas no conjunto de dados.
 
----
+------------------------------------------------------------------------
 
-## 📚  Fundamentação Teórica
+## 📚 Fundamentação Teórica
 
 ### Fundamentos da Linguagem R
 
@@ -70,7 +71,7 @@ O R e o RStudio possuem funções distintas. O R corresponde à linguagem respon
 
 O RStudio reúne ferramentas como o console, o editor de scripts, o ambiente de objetos (`Environment`), o histórico de comandos (`History`) e áreas destinadas a arquivos, gráficos, pacotes e documentação. Essa organização permite escrever códigos, executá-los e acompanhar os objetos produzidos durante uma sessão de trabalho.
 
-O console é o espaço no qual os comandos são enviados para execução. A partir do símbolo >, identifica-se que o R está disponível para receber uma nova instrução.
+O console é o espaço no qual os comandos são enviados para execução. A partir do símbolo \>, identifica-se que o R está disponível para receber uma nova instrução.
 
 Além da execução direta no console, os comandos podem ser armazenados em scripts, normalmente identificados pela extensão `.R`. Os scripts permitem organizar e preservar o código utilizado, facilitando sua consulta e execução posterior. Comentários podem ser inseridos com o símbolo `#`, que permitem incluir informações sem que elas sejam interpretadas como comandos.
 
@@ -90,7 +91,7 @@ O **princípio da interface** corresponde à capacidade do R de se comunicar com
 
 A atribuição permite estabelecer uma associação entre um nome e um objeto. Uma das formas utilizadas para realizar essa operação é o operador `<-`:
 
-```r
+``` r
 > x <- 5
 ```
 
@@ -100,13 +101,13 @@ Os objetos podem possuir diferentes características, que podem ser obtidas por 
 
 As informações podem ser organizadas no R por meio de diferentes estruturas de dados, entre as quais estão vetores, matrizes, arrays, listas e data frames.
 
-Os **vetores** são estruturas unidimensionais utilizadas para armazenar uma sequência de elementos. Nos vetores atômicos, esses elementos possuem a mesma natureza, como valores numéricos, lógicos ou caracteres. Eles podem ser construídos utilizando recursos como `c()`, `:`, `seq()` e `rep()`, e cada elemento pode ser acessado por sua posição no vetor por meio de colchetes. Por exemplo, em um vetor x, a expressão x[2] permite acessar o elemento localizado na segunda posição.
+Os **vetores** são estruturas unidimensionais utilizadas para armazenar uma sequência de elementos. Nos vetores atômicos, esses elementos possuem a mesma natureza, como valores numéricos, lógicos ou caracteres. Eles podem ser construídos utilizando recursos como `c()`, `:`, `seq()` e `rep()`, e cada elemento pode ser acessado por sua posição no vetor por meio de colchetes. Por exemplo, em um vetor x, a expressão x\[2\] permite acessar o elemento localizado na segunda posição.
 
 As **matrizes** são estruturas organizadas em duas dimensões, ou seja, em linhas e colunas. Assim como os vetores, seus elementos possuem a mesma natureza, mas sua disposição é modificada pela presença do atributo `dim`, que define suas dimensões. Para acessar um elemento específico, são informadas sua linha e sua coluna. Por exemplo, `x[2, 3]` representa o elemento localizado na segunda linha e na terceira coluna da matriz.
 
 Os **arrays** permitem organizar os dados em mais dimensões do que uma matriz. Um array pode, por exemplo, reunir várias matrizes dentro de um mesmo objeto, fazendo com que seus elementos sejam identificados pela linha, coluna e matriz em que estão localizados. Nesse caso, uma expressão como `x[1, 2, 3]` permite acessar o elemento localizado na primeira linha, segunda coluna e terceira matriz. Essa estrutura é tratada como um vetor multidimensional.
 
-As **listas** permitem armazenar diferentes tipos de objetos em uma mesma estrutura, como valores numéricos, textos, vetores e até outras listas. Cada objeto corresponde a um elemento da lista e pode ser acessado por sua posição. Quando os elementos recebem nomes, também podem ser acessados diretamente pelo operador $, utilizando o nome associado a cada elemento.
+As **listas** permitem armazenar diferentes tipos de objetos em uma mesma estrutura, como valores numéricos, textos, vetores e até outras listas. Cada objeto corresponde a um elemento da lista e pode ser acessado por sua posição. Quando os elementos recebem nomes, também podem ser acessados diretamente pelo operador \$, utilizando o nome associado a cada elemento.
 
 Os **data frames** são estruturas utilizadas para organizar dados em formato de tabela, formada por linhas e colunas. As linhas representam as observações, enquanto as colunas representam as variáveis. Diferentemente de uma matriz, as colunas de um data frame podem armazenar dados de diferentes naturezas, como valores numéricos, lógicos ou caracteres. Seus dados podem ser acessados indicando a posição da linha e da coluna, como em `x[2, 3]`, ou pelo nome de uma variável utilizando o operador `$`, como em `x$idade`.
 
@@ -116,7 +117,7 @@ As funções permitem reunir operações que podem ser executadas a partir de um
 
 Uma função pode ser compreendida a partir de seus argumentos, corpo e ambiente. Por exemplo:
 
-```r
+``` r
 > f <- function(x) {
 x + 1
 }
@@ -144,7 +145,7 @@ Os pacotes são estruturas organizadas que podem reunir funções, objetos, cód
 
 A instalação desses pacotes pode ser realizada através da aba *Packages*, em *Install*, ou através da função:
 
-```r
+``` r
 install.packages("nome_do_pacote")
 ```
 
@@ -156,13 +157,13 @@ Quando um pacote é anexado, seus objetos passam a fazer parte do caminho de bus
 
 Também é possível indicar diretamente de qual pacote se deseja utilizar uma função por meio do operador `::`, como no exemplo:
 
-```r
+``` r
 pacote::funcao()
 ```
 
 Nesse caso, a função é acessada diretamente do pacote indicado, sem a necessidade de anexá-lo ao caminho de busca.
 
-#### Ambientes e Interfaces 
+#### Ambientes e Interfaces
 
 Os ambientes são estruturas utilizadas pelo R para armazenar associações entre nomes e objetos. Quando um objeto é criado durante uma sessão, por exemplo, ele pode ficar associado a um nome dentro de determinado ambiente. Um dos principais é o ambiente global (`.GlobalEnv`), relacionado aos objetos criados pelo usuário durante a sessão.
 
@@ -186,15 +187,15 @@ Os ambientes participam da organização das associações entre nomes e objetos
 
 Em conjunto, esses conceitos fornecem uma visão dos principais elementos envolvidos na sintaxe e na semântica do R, desde a criação e organização dos dados até sua manipulação por meio de funções e outros recursos da linguagem.
 
----
+------------------------------------------------------------------------
 
 ### Estatística Descritiva
 
 A Estatística compreende um conjunto de métodos voltados à coleta, organização, descrição, análise e interpretação de dados. Seu estudo pode ser dividido em três áreas principais:
 
-- Estatística Descritiva; 
-- Estatística Inferencial; e 
-- Probabilidade. 
+- Estatística Descritiva;
+- Estatística Inferencial; e
+- Probabilidade.
 
 Em síntese, a **Estatística Descritiva** está relacionada à coleta, organização e resumo dos dados, enquanto a **Estatística Inferencial** utiliza informações obtidas em uma amostra para estudar características de uma população, através da extrapolação dos dados. A **Probabilidade**, por sua vez, está relacionada ao estudo de fenômenos aleatórios e das incertezas associadas aos seus resultados.
 
@@ -216,23 +217,15 @@ A notação de somatório é utilizada para representar de forma simplificada a 
 
 De forma geral, um somatório pode ser representado por:
 
-$$
-\sum_{i=1}^{n} X_i = X_1 + X_2 + ... + X_n
-$$
-Em que $i$ funciona como índice e $n$ indica o limite superior da soma. Dessa forma, a expressão representa a soma dos valores de $X_i$, desde $i = 1$ até $i = n$.
+$$\sum_{i=1}^{n} X_i = X_1 + X_2 + ... + X_n$$ Em que $i$ funciona como índice e $n$ indica o limite superior da soma. Dessa forma, a expressão representa a soma dos valores de $X_i$, desde $i = 1$ até $i = n$.
 
 Também podem ser realizadas operações envolvendo constantes, produtos, potências e diferentes variáveis. É importante observar que expressões semelhantes podem representar operações distintas. Por exemplo:
 
-$$
-\sum_{i=1}^{n} X_i^2
-$$
+$$\sum_{i=1}^{n} X_i^2$$
 
 Representa a soma dos quadrados dos valores, enquanto:
 
-$$
-\left(\sum_{i=1}^{n} X_i\right)^2
-$$
-representa o quadrado da soma dos valores.
+$$\left(\sum_{i=1}^{n} X_i\right)^2$$ representa o quadrado da soma dos valores.
 
 #### Coleta e Organização dos Dados
 
@@ -240,48 +233,297 @@ Após a coleta, os valores obtidos podem ser apresentados inicialmente sem qualq
 
 A organização dos dados em rol facilita a observação das informações contidas no conjunto. Outra forma de organizar e resumir os dados é por meio de uma distribuição de frequências, na qual são apresentadas as frequências associadas aos valores ou grupos de valores observados.
 
-#### Representação Tabular dos Dados
+#### Representação Tabular
 
 A representação tabular é uma forma de organizar e resumir os dados por meio de tabelas. Uma das formas apresentadas é a distribuição de frequências, na qual os dados são organizados de acordo com o número de ocorrências de cada valor, categoria ou intervalo.
 
 A frequência simples ou absoluta, representada por $F_i$, indica quantas vezes determinado valor ou grupo aparece no conjunto de dados. A soma de todas as frequências absolutas corresponde ao número total de observações.
 
+A frequência relativa representa a proporção de observações pertencentes a cada grupo em relação ao total:
 
+$$Fr_i = \frac{F_i}{\sum_{i=1}^{k} F_i}$$
 
+em que $F_i$ representa a frequência absoluta e k o número de grupos considerados.
 
+A frequência relativa também pode ser apresentada em porcentagem:
 
+$$F_{\%i} = Fr_i \times 100$$
 
+Assim, enquanto a frequência absoluta informa o número de ocorrências, a frequência relativa representa a proporção correspondente a cada grupo, e a frequência percentual apresenta essa mesma informação em porcentagem.
 
+Além dessas frequências, os dados podem ser apresentados de forma acumulada. A frequência acumulada “abaixo de” é obtida pela soma das frequências desde o primeiro grupo até o grupo considerado:
 
+$$F_{ac_i\downarrow} = \sum_{j=1}^{i} F_j$$
 
+Já a frequência acumulada “acima de” considera a soma a partir do grupo analisado até o último grupo:
 
+$$F_{ac_i\uparrow} = \sum_{j=1}^{i} F_j$$
 
-Apresente os conceitos principais:
+Essas frequências também podem ser expressas nas formas relativa e percentual, permitindo observar tanto a quantidade acumulada de observações quanto sua participação em relação ao conjunto total.
 
-- Média
-- Variância
-- Desvio padrão
-- Amostragem
+A utilização das frequências acumuladas depende da existência de uma ordem entre os valores ou categorias. Por esse motivo, elas podem ser aplicadas a variáveis quantitativas e a variáveis qualitativas ordinais, mas não possuem a mesma aplicação para variáveis qualitativas nominais, uma vez que suas categorias não apresentam uma ordenação.
+
+Para variáveis quantitativas contínuas, os dados podem ser agrupados em intervalos de classes. O número de classes é definido a partir de um critério empírico que considera o número de elementos do conjunto, $k$, obtido através da seguinte expressão:
+
+$$k \approx
+\begin{cases}
+\sqrt{m}, & m \leq 100; \\
+5\log_{10}(m), & m > 100.
+\end{cases}$$
+
+Depois de determinado esse número, calcula-se a amplitude total, dada pela diferença entre o maior e o menor valor observado:
+
+$$A_t = máx(X_i) - min(X_i)$$ E a amplitude da classe ($c$) será definida a partir da seguinte expressão:
+
+$$c =
+\begin{cases}
+\dfrac{A_t}{k-1}, & \text{Amostra}
+\dfrac{A_t}{k}, & \text{População.}
+\end{cases}$$
+
+Cada classe também pode ser representada por seu ponto médio, calculado pela média entre os limites inferior e superior:
+
+$$\bar{X}_i = \frac{LI_i + LS_i}{2}$$
+
+em que $LI_i$ e $LS_i$ correspondem, respectivamente, aos limites inferior e superior da $i$-ésima classe. O ponto médio passa a representar os valores pertencentes ao intervalo quando os dados agrupados são utilizados em cálculos posteriores.
+
+Em resumo, o agrupamento de dados contínuos pode, portanto, ser resumido nas etapas: determinar o número de classes, calcular a amplitude total, calcular a amplitude de classe, definir o limite inferior inicial, construir os intervalos, determinar os pontos médios e calcular as frequências correspondentes.
+
+Apresenta-se, a seguir, a aplicação das frequências mencionadas acima em um conjunto de dados, através do pacote *leem*.
+
+```{r, echo=FALSE}
+library(leem)
+con <- url("https://raw.githubusercontent.com/bendeivide/book-epaec/master/dados/cap02/challenger.RData")
+load(con); close(con)
+challenger |>
+new_leem(variable = 2) |>
+tabfreq()
+```
+
+#### Representação Gráfica
+
+Além da representação tabular, os dados podem ser apresentados por meio de gráficos, permitindo visualizar as informações contidas nas distribuições de frequência. Entre as representações apresentadas estão os gráficos de hastes ou bastão, barras, setores, histogramas de frequências, polígonos de frequências e ogivas.
+
+O gráfics de hastes ou bastão podem ser utilizados para variáveis discretizadas, incluindo variáveis qualitativas e quantitativas discretas. Os valores ou grupos são apresentados no eixo horizontal, enquanto suas respectivas frequências são representadas no eixo vertical.
+
+```{r, echo=FALSE}
+library(leem)
+con <- url("https://raw.githubusercontent.com/bendeivide/book-epaec/master/dados/cap02/nerros.RData")
+load(con); close(con)
+nerros |>
+  new_leem(variable = 1) |>
+  tabfreq() |>
+  stickchart()
+```
+
+O gráfico de barras segue uma representação semelhante, utilizando barras para representar as frequências. As barras são apresentadas separadamente, mantendo a distinção entre os diferentes grupos.
+
+```{r, echo=FALSE}
+library(leem)
+regiao <- c(rep("Norte", 7), "Centro-Oeste",
+   "Nordeste")
+regiao |>
+  new_leem(variable = 1) |>
+  tabfreq(namereduction = FALSE) |>
+  barplot(barcol = heat.colors(3), posx2 = -0.2)
+```
+
+O gráfico de setores, ou gráfico de pizza, representa os grupos por meio de setores de um círculo. Cada setor corresponde à frequência percentual do respectivo grupo, sendo o círculo completo equivalente a 100% das observações, ou 360º.
+
+```{r, echo=FALSE}
+library(leem)
+regiao <- c(rep("Norte", 7), "Centro-Oeste",
+  "Nordeste")
+regiao |>
+  new_leem(variable = 1) |>
+  tabfreq(namereduction = FALSE) |>
+  piechart(main = "Estados da Amazônia Legal")
+```
+
+Para variáveis quantitativas contínuas agrupadas em intervalos de classes, pode-se utilizar o histograma de frequências. Os intervalos são representados no eixo horizontal e suas frequências no eixo vertical. Diferentemente do gráfico de barras, no histograma as barras são apresentadas de forma contínua, sem espaçamento entre elas.
+
+```{r, echo=FALSE}
+library(leem)
+con <- url("https://raw.githubusercontent.com/bendeivide/book-epaec/master/dados/cap02/challenger.RData")
+load(con); close(con)
+challenger |>
+  new_leem(variable = 2) |>
+  tabfreq() |>
+  hist()
+```
+
+A partir do histograma pode ser construído o polígono de frequências, utilizando os pontos médios das classes e suas respectivas frequências. Esses pontos são unidos por segmentos de reta, formando o polígono.
+
+```{r, echo=FALSE}
+library(leem)
+con <- url("https://raw.githubusercontent.com/bendeivide/book-epaec/master/dados/cap02/challenger.RData")
+load(con); close(con)
+challenger |>
+  new_leem(variable = 2) |>
+  tabfreq() |>
+  polyfreq(bars = TRUE)
+```
+
+As frequências acumuladas também podem ser representadas graficamente por meio das ogivas. A frequência acumulada “abaixo de” resulta em uma ogiva crescente, enquanto a frequência acumulada “acima de” produz uma ogiva decrescente. A interseção entre essas duas representações está relacionada à determinação gráfica da mediana.
+
+```{r, echo=FALSE}
+library(leem)
+challenger |>
+  new_leem(variable = 2) |>
+  tabfreq() |>
+  ogive(bars = TRUE)
+```
+
+```{r, echo=FALSE}
+library(leem)
+challenger |>
+  new_leem(variable = 2) |>
+  tabfreq() |>
+  ogive(decreasing = TRUE)
+```
+
+#### Medidas de Posição
+
+As medidas de posição são utilizadas para representar a localização dos dados em uma distribuição. Entre as principais medidas apresentadas estão a média aritmética, a mediana e a moda.
+
+A média aritmética considera todas as observações do conjunto. Para uma amostra de tamanho n, é calculada por:
+
+$$\bar{X} = \frac{\displaystyle\sum_{i=1}^{n} X_i}{n}$$ Quando os dados estão organizados em uma distribuição de frequências, o cálculo considera os valores e suas respectivas frequências. Para dados agrupados em intervalos de classes, são utilizados os pontos médios das classes.
+
+Como todas as observações participam do cálculo, a média pode ser influenciada por valores discrepantes, ou seja, valores muito afastados dos demais.
+
+A mediana é determinada a partir da posição ocupada pelos valores após sua ordenação. Ela divide o conjunto de modo que aproximadamente 50% das observações estejam abaixo e 50% acima de seu valor. Para um número ímpar de observações, corresponde ao valor central, enquanto que para um número par de observações, sua determinação considera os dois valores centrais. Diferentemente da média, a mediana não é influenciada pela magnitude dos valores extremos.
+
+Já a moda corresponde ao valor que apresenta maior frequência em um conjunto de dados. De acordo com a quantidade de valores que apresentam frequência máxima, a distribuição pode ser classificada como amodal, unimodal, bimodal, trimodal ou multimodal.
+
+Relembrando o conjunto de dados apresentados no item *Representação Tabular*, a partir do pacote *leem*, é possível definir os conceitos apresentados no presente item.
+
+```{r, echo=FALSE}
+library(leem)
+con <- url("https://raw.githubusercontent.com/bendeivide/book-epaec/master/dados/cap02/challenger.RData")
+load(con); close(con)
+```
+
+- Para os dados agrupados:
+
+```{r, echo=FALSE}
+# Medidas de posicao (dados agrupados)
+challenger |>
+  new_leem(variable = 2) |> # var. quant. continua
+  mpos(grouped = TRUE) # Medidas de posicao
+```
+
+- Para os dados não agrupados:
+
+```{r, echo=FALSE}
+# Medidas de posicao (dados nao agrupados)
+challenger |>
+  new_leem(variable = 2) |> # var. quant. continua
+  mpos(grouped = FALSE) # Medidas de posicao
+```
+
+#### Medidas de Dispersão
+
+As medidas de posição permitem representar um conjunto de dados por meio de valores centrais, como média, mediana e moda. No entanto, essas medidas não são suficientes para caracterizar completamente uma distribuição, uma vez que conjuntos de dados diferentes podem apresentar a mesma medida de posição e, ao mesmo tempo, possuir comportamentos distintos. Nesse sentido, as medidas de dispersão são utilizadas para avaliar o quanto os dados variam dentro de uma distribuição.
+
+A dispersão pode ser analisada inicialmente pela amplitude, obtida pela diferença entre o maior e o menor valor observado:
 
 $$
-\bar{x} = \frac{1}{n}\sum_{i=1}^{n} x_i
+A = X_{(n)} - X_{(1)}
 $$
 
----
+Como a amplitude considera apenas os dois valores extremos do conjunto, duas distribuições podem apresentar a mesma amplitude e, ainda assim, possuir diferentes comportamentos entre seus valores mínimo e máximo.
+
+Para considerar a participação dos demais dados, pode-se avaliar o afastamento de cada valor em relação à média. A partir dessa ideia, tem-se a variância, que considera os quadrados dos desvios das varáveis em relação à média. Para uma população, a variância é dada por:
+
+$$
+\sigma^2 = \frac{\displaystyle \sum_{i=1}^{N} X_i^2 - \frac{1}{N}\left(\displaystyle \sum_{i=1}^{N} X_i\right)^2}{N}
+$$
+
+Já para uma amostra, a variância é dada por:
+
+$$
+s^2 = \frac{\displaystyle \sum_{i=1}^{n} X_i^2 - \frac{1}{n}\left(\displaystyle \sum_{i=1}^{n} X_i\right)^2}{n-1}
+$$
+
+A partir da variância, obtém-se o desvio padrão, calculado por:
+
+$$
+\sigma = \sqrt{\sigma^2}
+$$
+
+Para uma população, ou:
+
+$$
+s = \sqrt{s^2}
+$$
+Para uma amostra.
+
+Ao extrair a raiz quadrada da variância, o desvio padrão passa a ser expresso na mesma unidade dos dados originais, facilitando sua interpretação. Quanto menor seu valor, maior a concentração dos dados em torno da média, da mesma forma que, quanto maior seu valor, maior a dispersão desses dados.
+
+A amplitude, a variância e o desvio padrão são classificados como medidas absolutas de dispersão. Quando se deseja avaliar a dispersão de forma relativa, pode-se utilizar o coeficiente de variação ($CV$), que relaciona o desvio padrão à média da distribuição:
+
+$$
+CV = \frac{s}{\bar{X}} \times 100
+$$
+
+Por ser expresso em porcentagem, o coeficiente de variação permite comparar a variabilidade entre conjuntos de dados. Sua utilização, entretanto, apresenta limitações em situações nas quais a média está próxima de zero ou quando a escala da variável não possui uma origem adequada para essa comparação.
+
+Outra medida de dispersão é o erro padrão da média, relacionado à variação da média amostral em torno da média populacional. Qando o desvio padrão populacional é conhecido, tem-se:
+
+$$
+\sigma_{\bar{X}} = \frac{\sigma}{\sqrt{n}}
+$$
+
+Quando esse valor é desconhecido, utiliza-se o desvio padrão amostral para estimá-lo:
+
+$$
+s_{\bar{X}} = \frac{s}{\sqrt{n}}
+$$
+
+O erro padrão está, portanto, relacionado à precisão da média amostral como estimativa da média da população.
+
+Assim como para as medidas de posição, as medidas de dispersão também podem ser determinadas para dados agrupados. Nessa situação, os cálculos passam a considerar as frequências associadas aos valores e, no caso de dados agrupados em intervalos de classes, seus respectivos pontos médios.
+
+------------------------------------------------------------------------
 
 ## ⚙️ Metodologia
 
-::: {.callout-note}
-Descreva como o experimento foi realizado.
-:::
+Para a aplicação da análise estatística descritiva, foi utilizada uma base de dados proveniente de uma obra de descaracterização de uma barragem industrial, cujo escopo incluía o fechamento do reservatório e a construção de canais periféricos e sumps para drenagem superficial da área. Para este estudo, foi selecionado o conjunto de dados referente ao aterro executado para a construção do canal CP-01.
 
-- Materiais utilizados  
-- Procedimento  
-- Número de repetições  
+A base analisada é composta por 30 resultados de Grau de Compactação (GC), expressos em porcentagem e obtidos a partir de ensaios de Hilf realizados durante o controle tecnológico do aterro. Para a estrutura em questão, foi estabelecido, em projeto, como critério de aceitação um grau de compactação mínimo de 98%.
 
----
+Inicialmente, foram realizadas a organização e a representação tabular dos dados obtidos através do ensaio, seguidas de sua apresentação gráfica. Posteriormente, foram determinadas as medidas de posição, de dispersão e de forma, permitindo avaliar o comportamento central e a variabilidade dos resultados de grau de compactação e a forma da distribuição desses dados.
+
+Os dados obtidos através dos ensaios Hilf estão apresentados a seguir:
+
+```{r, echo=FALSE}
+library(kableExtra)
+
+dados <- read.csv2("ensaiohilf.csv")
+
+knitr::kable(
+  dados,
+  digits = 2,
+  align = "c",
+  caption = "GC Obtidos"
+) |>
+  kable_styling(
+    full_width = FALSE,
+    bootstrap_options = c("striped", "hover", "condensed")
+  )
+```
+
+
+------------------------------------------------------------------------
 
 ## 🔍 Resultados e Discussão
+
+```{r}
+
+```
+
+
 
 Apresente e interprete os resultados obtidos a partir dos dados coletados.
 
@@ -306,7 +548,7 @@ Depois de inserido as informaçõe no arquivo **referencias.bib**, use:
 - Segundo @Rbasico2022
 - Tudo é um objeto em R [@Rbasico2022]
 
-### 📊  Análise de Dados
+### 📊 Análise de Dados
 
 ```{r}
 distancia <- c(10.2, 9.8, 10.5, 10.1, 9.9, 10.3)
