@@ -1,5 +1,5 @@
 ---
-title: "Maria Clara Figueiredo Coelho"
+title: "Maria Clara Figueiredo Coelho e Victória Raspante Marques"
 image: "logo.png"
 links:
   - label: GitHub
