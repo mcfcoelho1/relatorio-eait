@@ -133,22 +133,17 @@ colSums(dados == "")
 ```r
 # Localizar os valores ausentes
 ausentes <- which(dados == "", arr.ind = TRUE)
-```
 
-```{r, echo=FALSE}
-ausentes <- which(dados == "", arr.ind = TRUE)
-```
-
-```r
 # Identificar o corpo de prova e a variável correspondente
 resultado_ausentes <- data.frame(
   CP = dados$id_corpo_prova[ausentes[, 1]],
   Variavel = colnames(dados)[ausentes[, 2]]
 )
-
 ```
+
 ```{r, echo=FALSE}
-# Identificar o corpo de prova e a variável correspondente
+ausentes <- which(dados == "", arr.ind = TRUE)
+
 resultado_ausentes <- data.frame(
   CP = dados$id_corpo_prova[ausentes[, 1]],
   Variavel = colnames(dados)[ausentes[, 2]]
