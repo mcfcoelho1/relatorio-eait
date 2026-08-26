@@ -1,6 +1,6 @@
 ---
 # Só mude aqui!!!!
-author: "Nome do Aluno"
+author: "Maria Clara Figueiredo Coelho e Victória Raspante Marques"
 title: "Relatório de Aula Prática 02"
 bibliography: referencias.bib
 # A partir daqui nao faca alteracoes!!!!!
@@ -28,43 +28,33 @@ execute:
 
 ## 📌 Introdução
 
-Descreva o contexto da prática e sua importância.
+A análise de dados é uma ferramenta de grande valor para o acompanhamento e o controle de qualidade dos materiais empregados nas obras, no âmbito da Engenharia Civil. No controle tecnológico do concreto, informações como resistência à compressão, abatimento, relação água/cimento e idade dos corpos de prova auxiliam na avaliação do desempenho do material e na identificação de possíveis resultados fora do comportamento esperado.
 
-> Exemplo: análise da variabilidade em experimentos físicos utilizando uma catapulta.
+Entretanto, dados obtidos em ensaios, registros de campo e planilhas podem apresentar valores ausentes, erros de digitação e inconsistências de preenchimento. Por esse motivo, antes da realização das análises estatísticas, é importante verificar a qualidade dos registros e realizar os tratamentos necessários para garantir maior confiabilidade aos resultados.
 
+Nesse contexto, este relatório utilizará a linguagem R para inspecionar, tratar e explorar uma base de dados relacionada ao controle tecnológico do concreto, buscando transformar os dados brutos em informações úteis para sua análise e interpretação.
 
 
 ## 🎯 Objetivos
 
 ### Objetivo geral
 
-Descrever o objetivo principal da prática.
+Processar e analisar uma base de dados referente ao controle tecnológico do concreto, utilizando a linguagem R para identificar e tratar inconsistências e obter informações relevantes para a interpretação dos resultados.
 
 ### Objetivos específicos
 
-- Coletar dados experimentais  
-- Aplicar estatística descritiva  
-- Construir gráficos  
-- Interpretar resultados  
-
----
-
-## 📚  Fundamentação Teórica
-
-Apresente os conceitos principais:
-
-- Média
-- Variância
-- Desvio padrão
-- Amostragem
-
-$$
-\bar{x} = \frac{1}{n}\sum_{i=1}^{n} x_i
-$$
+- Inspecionar a estrutura e as características da base de dados;
+- Identificar valores ausentes, erros de digitação e possíveis inconsistências;
+- Padronizar e tratar as variáveis para realização das análises;
+- Aplicar recursos da linguagem R para manipulação e exploração dos dados;
+- Calcular e comparar resultados relacionados às propriedades do concreto;
+- Investigar relações entre variáveis relevantes para o controle tecnológico;
+- Interpretar os resultados obtidos considerando sua aplicação na Engenharia Civil.
 
 ---
 
 ## ⚙️ Metodologia
+
 
 ::: {.callout-note}
 Descreva como o experimento foi realizado.
@@ -78,35 +68,95 @@ Descreva como o experimento foi realizado.
 
 ## 🔍 Resultados e Discussão
 
-Apresente e interprete os resultados obtidos a partir dos dados coletados.
+A base de dados foi importada para o R através da função `read.csv2()` e atribuída a `dados`:
 
-- Descreva os principais resultados numéricos (média, variabilidade, etc.).
-- Comente o comportamento dos dados observados nos gráficos.
-- Indique se há presença de valores discrepantes (outliers).
-- Avalie se os dados apresentam simetria ou tendência.
-
-Em seguida, discuta os resultados à luz dos conceitos teóricos:
-
-- Os resultados estão de acordo com o esperado?
-- Há grande variabilidade? O que isso significa no contexto do experimento?
-- Quais fatores podem ter influenciado os resultados?
-- Existem possíveis fontes de erro experimental?
-
-Procure não apenas descrever, mas **interpretar os dados**.
-
-### 💬 Exemplo de como citar uma referência bibliográfica
-
-Depois de inserido as informaçõe no arquivo **referencias.bib**, use:
-
-- Segundo @Rbasico2022
-- Tudo é um objeto em R [@Rbasico2022]
-
-### 📊  Análise de Dados
-
-```{r}
-distancia <- c(10.2, 9.8, 10.5, 10.1, 9.9, 10.3)
-distancia
+```r
+dados <- read.csv2(
+  "base_processamento_dados_engenharia_civil.csv",
+  stringsAsFactors = FALSE,
+  check.names = FALSE
+)
 ```
+```{r, echo=FALSE}
+dados <- read.csv2(
+  "base_processamento_dados_engenharia_civil.csv",
+  stringsAsFactors = FALSE,
+  check.names = FALSE
+)
+dados
+```
+
+Para obter o valor de observações e de variáveis existentes no banco de dados, é possível utilizar a função `str()` e, para um resumo dessas variáveis, utiliza-se `summary()`:
+
+```r
+str(dados)
+
+summary(dados)
+```
+
+```{r, echo=FALSE}
+str(dados)
+
+summary(dados)
+```
+
+Portanto, essa base de dados possui 100 observações e 10 variáveis.
+
+Além do número de observações e de váriáveis, a função `str()` também apresenta qual é a classe do objeto em questão, neste caso, `data.frame`, e a estrutura de cada variável.
+
+
+As variáveis podem ser classificadas como qualitativas ou quantitativas. As variáveis qualitativas representam características ou categorias, enquanto as quantitativas são expressas por valores numéricos e representam quantidades ou medidas.
+
+Na base analisada, a identificação do corpo de prova, a obra e o tipo de concreto são variáveis qualitativas, enquanto a idade do corpo de prova, a resistência, o consumo de cimento, a relação água/cimento, o abatimento, a densidade e a absorção são variáveis quantitativas. Entretanto, dentre as variáveis quantitativas, apenas a idade do corpo de prova foi reconhecida pelo R como numérica. As demais foram reconhecidas como caracteres (`chr`), o que pode indicar a presença de inconsistências que alteraram a forma como o R interpretou essas variáveis.
+
+A função `summary()` apresenta um resumo das principais características das variáveis de uma base de dados. Para variáveis numéricas, mostra medidas como mínimo, máximo, média, mediana e quartis e, para variáveis de texto, apresenta informações relacionadas à sua estrutura e conteúdo.
+
+O próximo passo é verificar a existência de valores ausentes na base de dados e, para isso, serão realizadas as seguintes etapas:
+
+```r
+# Quantificar o total de valores ausentes
+sum(dados == "")
+```
+
+```{r, echo=FALSE}
+sum(dados == "")
+```
+
+```r
+# Quantificar os valores ausentes por variável
+colSums(dados == "")
+```
+```{r, echo=FALSE}
+colSums(dados == "")
+```
+
+```r
+# Localizar os valores ausentes
+ausentes <- which(dados == "", arr.ind = TRUE)
+```
+
+```{r, echo=FALSE}
+ausentes <- which(dados == "", arr.ind = TRUE)
+```
+
+```r
+# Identificar o corpo de prova e a variável correspondente
+resultado_ausentes <- data.frame(
+  CP = dados$id_corpo_prova[ausentes[, 1]],
+  Variavel = colnames(dados)[ausentes[, 2]]
+)
+
+```
+```{r, echo=FALSE}
+# Identificar o corpo de prova e a variável correspondente
+resultado_ausentes <- data.frame(
+  CP = dados$id_corpo_prova[ausentes[, 1]],
+  Variavel = colnames(dados)[ausentes[, 2]]
+)
+
+resultado_ausentes
+```
+
 
 ## 🧠 Considerações finais
 
@@ -119,8 +169,6 @@ Apresente uma síntese dos principais pontos observados no experimento.
 
 Evite repetir apenas os resultados; foque nas **conclusões e reflexões** sobre a prática realizada.
 
-## Aprenda Quarto
 
-Acesse [Quarto](https://quarto.org/).
 
 ## 📖 Referências
