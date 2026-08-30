@@ -325,10 +325,86 @@ dados_limpos[variaveis_quantitativas] <-
   lapply(dados_limpos[variaveis_quantitativas], as.numeric)
 summary(dados_limpos[variaveis_quantitativas])
 ```
+ 
+A partir dessa visualização, ao comparar as medidas de tendência central com os valores mínimos e máximos das variáveis, observa-se a presença de alguns valores que destoam significativamente do comportamento geral dos dados, indicando possíveis erros de digitação. A idade dos corpos de prova apresenta média de 28 dias, enquanto o valor máximo registrado é de 280 dias. Para o abatimento do concreto, verifica-se média de 121,70 mm e valor máximo de 1.250,00 mm. Em relação à densidade, a média observada é de 2,351 kg/m³, enquanto o valor mínimo corresponde a apenas 238 kg/m³. Por fim, a absorção de água do agregado apresenta média de 1,95%, contrastando com o valor máximo de 18,40%. A seguir, iremos localizar as amostras correspondente a esses dados  e realizar os devidos refinamentos com base nos resultados esperados para as variáveis estudadas.
 
+```r
+dados_limpos$idade_dias[
+  dados_limpos$idade_dias == 280
+] <- 28
+dados_limpos$abatimento_mm[
+  dados_limpos$abatimento_mm == 1250
+] <- 125
+dados_limpos$densidade_kg_m3[
+  dados_limpos$densidade_kg_m3 == 238
+] <- 2380
+dados_limpos$absorção_agregado_pct[
+  dados_limpos$absorção_agregado_pct == 18.4
+] <- 1.84
+```
+```{r, echo=FALSE}
+dados_limpos$idade_dias[
+  dados_limpos$idade_dias == 280
+] <- 28
+dados_limpos$abatimento_mm[
+  dados_limpos$abatimento_mm == 1250
+] <- 125
+dados_limpos$densidade_kg_m3[
+  dados_limpos$densidade_kg_m3 == 238
+] <- 2380
+dados_limpos$absorção_agregado_pct[
+  dados_limpos$absorção_agregado_pct == 18.4
+] <- 1.84
+summary(dados_limpos[variaveis_quantitativas])
+```
 
+Concluído os ajustes das variáveis quantitativas, vamos agora analisar as variáveis qualitativas, de `obra`e `tipo_concreto`. Para isso utilizaremos a função `unique()`, a seguir.
 
+```r
+# Verificação de valores diferentes dentro de cada variável
+unique(dados$obra)
+unique(dados$tipo_concreto)
 
+```
+```{r, echo=FALSE}
+unique(dados$obra)
+unique(dados$tipo_concreto)
+```
+
+Para a variável `obra`, observa-se que as amostras foram coletadas em quatro blocos, identificados como A, B, C e D. Entretanto, foi identificada uma inconsistência na padronização dos dados referentes ao Bloco B, em que alguns registros apresentam um caractere de espaço adicional ao final do texto. Já para a variável `tipo_concreto`, observa-se que as classes de concreto são identificadas pelo padrão de escrita com a letra C maiúscula, seguida do respectivo valor numérico. Entretanto, foi identificado que há registros da classe C30 digitado como "c30", com letra minúscula.
+Essas diferenças faz com que o R interprete os registros como categorias distintas, podendo comprometer o agrupamento das observações e, consequentemente, a obtenção e interpretação dos resultados. Sendo assim, foi feito os devidos ajustes para que as mesma categorias possam ser agrupadas.
+
+```r
+# Remoção de espaços em `obra`
+dados_limpos$obra <- trimws(dados_limpos$obra)
+
+# Alteração para letras maiúsculas em `tipo_concreto`
+dados_limpos$tipo_concreto <- toupper(dados_limpos$tipo_concreto)
+
+```
+```{r, echo=FALSE}
+dados_limpos$obra <- trimws(dados_limpos$obra)
+dados_limpos$tipo_concreto <- toupper(dados_limpos$tipo_concreto)
+unique(dados_limpos$obra)
+unique(dados_limpos$tipo_concreto)
+```
+
+Após a identificação e o tratamento das inconsistências presentes na base de dados, realizou-se uma nova verificação do conjunto de dados `dados_limpos`, com o objetivo de avaliar a estrutura das variáveis e conferir os resultados obtidos após o processo de limpeza.
+
+```r
+str(dados_limpos)
+summary(dados_limpos)
+```
+```{r, echo=FALSE}
+str(dados_limpos)
+summary(dados_limpos)
+```
+
+A partir da aplicação da função `str()`, verificou-se que a base de dados tratada permanece composta por 100 observações e 10 variáveis. Após o processo de limpeza, as variáveis quantitativas foram adequadamente convertidas para o tipo numérico (num), enquanto as variáveis qualitativas permaneceram armazenadas como caracteres (chr).
+
+Por meio da função `summary()`, foi possível verificar o comportamento das variáveis após as correções realizadas. Observa-se que os valores anteriormente identificados como discrepantes foram tratados, resultando em intervalos mais coerentes para as variáveis analisadas. A idade dos corpos de prova passou a variar entre 7 e 56 dias, o abatimento entre 64 e 175 mm, a densidade entre 2.293 e 2.464 kg/m³ e a absorção de água do agregado entre 0,80% e 2,92%.
+
+Além disso, as variáveis resistência à compressão, consumo de cimento e relação água/cimento apresentaram valores entre 19,0 e 47,5 MPa, 295 e 418 kg/m³ e 0,43 e 0,65, respectivamente. Dessa forma, a nova inspeção indica que as inconsistências identificadas nas etapas anteriores foram corrigidas, tornando a base mais adequada para as análises subsequentes.
 
 ## 🧠 Considerações finais
 
