@@ -104,7 +104,6 @@ Portanto, essa base de dados possui 100 observações e 10 variáveis.
 
 Além do número de observações e de váriáveis, a função `str()` também apresenta qual é a classe do objeto em questão, neste caso, `data.frame`, e a estrutura de cada variável.
 
-
 As variáveis podem ser classificadas como qualitativas ou quantitativas. As variáveis qualitativas representam características ou categorias, enquanto as quantitativas são expressas por valores numéricos e representam quantidades ou medidas.
 
 Na base analisada, a identificação do corpo de prova, a obra e o tipo de concreto são variáveis qualitativas, enquanto a idade do corpo de prova, a resistência, o consumo de cimento, a relação água/cimento, o abatimento, a densidade e a absorção são variáveis quantitativas. Entretanto, dentre as variáveis quantitativas, apenas a idade do corpo de prova foi reconhecida pelo R como numérica. As demais foram reconhecidas como caracteres (`chr`), o que pode indicar a presença de inconsistências que alteraram a forma como o R interpretou essas variáveis.
@@ -152,6 +151,8 @@ resultado_ausentes <- data.frame(
 resultado_ausentes
 ```
 
+# a
+
 
 ## 🧠 Considerações finais
 
@@ -162,7 +163,7 @@ Apresente uma síntese dos principais pontos observados no experimento.
 - Comente brevemente sobre a qualidade dos dados coletados.
 - Sugira possíveis melhorias no procedimento experimental.
 
-Evite repetir apenas os resultados; foque nas **conclusões e reflexões** sobre a prática realizada
+Evite repetir apenas os resultados; foque nas **conclusões e reflexões** sobre a prática realizada.
 
 
 
