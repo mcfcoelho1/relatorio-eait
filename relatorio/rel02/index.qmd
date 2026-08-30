@@ -162,7 +162,7 @@ Apresente uma síntese dos principais pontos observados no experimento.
 - Comente brevemente sobre a qualidade dos dados coletados.
 - Sugira possíveis melhorias no procedimento experimental.
 
-Evite repetir apenas os resultados; foque nas **conclusões e reflexões** sobre a prática realizada.
+Evite repetir apenas os resultados; foque nas **conclusões e reflexões** sobre a prática realizada
 
 
 
