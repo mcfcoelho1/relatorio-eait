@@ -151,7 +151,7 @@ resultado_ausentes <- data.frame(
 resultado_ausentes
 ```
 
-Para corrigir as inconsistências nas variáveis quantitativas que foram reconhecidas como (`chr`), iremos utilizar a função `as.numeric()` para tentar converter todos os valores para números. Para isso, as variavéis: idade do corpo de prova; resistência; consumo de cimento; relação água/cimento; abatimento; densidade e absorção foram reunidas e atribuídas a `variaveis_quantitativas`.
+Para verificar e corrigir os dados que apresentam inconsistências dentro das variáveis quantitativas e que causaram o reconhecimento delas como (`chr`), iremos utilizar a função `as.numeric()` para tentar converter todos os valores para números em uma cópia da base de dados para, nomeada como `dados_limpos`,isto é importante para preservar o banco de dados para não perdermos a rastreabilidade dos dados originais. 
 
 ```r
 # Agrupando as variáveis com erro de tipagem
@@ -178,22 +178,22 @@ variaveis_quantitativas
 ```
 
 ```r
-# Cópia da base de dados para realizar conversão de valores`
-dados_convertidos <- dados
+# Copia da base de dados para correção dos dados problemáticos`
+dados_limpos <- dados
 
 ```
 ```{r, echo=FALSE}
-dados_convertidos <- dados
+dados_limpos <- dados
 ```
 
 ```r
 # Convertendo valores para números 
-dados_convertidos[variaveis_quantitativas] <-
+dados_limpos[variaveis_quantitativas] <-
   lapply(dados[variaveis_quantitativas], as.numeric)
 
 ```
 ```{r, echo=FALSE}
-dados_convertidos[variaveis_quantitativas] <-
+dados_limpos[variaveis_quantitativas] <-
   lapply(dados[variaveis_quantitativas], as.numeric)
 ```
 
@@ -202,12 +202,12 @@ Assim, para identificar o corpo de prova e os valores problemáticos por variáv
 
 ```r
 # Identificando quais valores foram transformados em NA 
-problemas <- is.na(dados_convertidos[variaveis_quantitativas]) &
+problemas <- is.na(dados_limpos[variaveis_quantitativas]) &
              dados[variaveis_quantitativas] != ""
 
 ```
 ```{r, echo=FALSE}
-problemas <- is.na(dados_convertidos[variaveis_quantitativas]) &
+problemas <- is.na(dados_limpos[variaveis_quantitativas]) &
              dados[variaveis_quantitativas] != ""
 ```
 
@@ -233,7 +233,102 @@ resultado_problemas <- data.frame(
 resultado_problemas
 ```
 
-Diante disso, podemos observar que provavelmente houve erro de digitação dos dados acima, como a utilização de vírgula ao invés de ponto e o uso de caractere letra ao invés do numeral zero.
+Diante disso, podemos observar que provavelmente houve erro de digitação nos 4 valores apresentados acima, como a utilização de vírgula ao invés de ponto e o uso de caractere letra junto a caractere número. Nesse segundo caso, para a variável `resistencia_mpa`o erro foi a troca da letra "o" pelo numeral zero, sendo o valor correto "30.4", já para a variável `cimento_kg_m3`, a troca não faria sentido em termos de coerência estatística, sendo necessário a exclusão da letra "o", assim o valor correto é "390". Logo, para a correção desse valores, iremos realizar as devidas substituíções e exclusões no `dados_limpos`.
+
+Para a correção da utilização da vírgula no lugar de ponto, utilizaremos a função `gsub()`, que procura um texto e substitui por outro, junto das funções `function(x)`, que cria uma função temporária para que x percorra cada coluna para `lapply()`analisar.
+
+```r
+# Substituindo vírgula por ponto
+dados_limpos[variaveis_quantitativas] <- lapply(
+  dados_limpos[variaveis_quantitativas],
+  function(x) gsub(",", ".", x)
+)
+```
+```{r, echo=FALSE}
+dados_limpos[variaveis_quantitativas] <- lapply(
+  dados_limpos[variaveis_quantitativas],
+  function(x) gsub(",", ".", x)
+)
+```
+
+Já para a correção da letra "o" cada caso foi corrigido isoladamente.
+
+```r
+# Substituindo a letra "o" pelo algarismo zero
+dados_limpos$resistencia_mpa[
+  dados_limpos$id_corpo_prova == "CP-019"
+] <- "30.4"
+
+# Excluíndo a letra "o"
+dados_limpos$cimento_kg_m3[
+  dados_limpos$id_corpo_prova == "CP-064"
+] <- "390"
+)
+```
+```{r, echo=FALSE}
+dados_limpos$resistencia_mpa[
+  dados_limpos$id_corpo_prova == "CP-019"
+] <- "30.4"
+
+dados_limpos$cimento_kg_m3[
+  dados_limpos$id_corpo_prova == "CP-064"
+] <- "390"
+```
+
+Agora, basta alterar todos esses valores corrigidos para números, utilizando `as.numeric()` e conferir a atualização dos dados com `str()`.
+
+```r
+dados_limpos[variaveis_quantitativas] <- lapply(
+  dados_limpos[variaveis_quantitativas],
+  as.numeric
+)
+```
+```{r, echo=FALSE}
+dados_limpos[variaveis_quantitativas] <- lapply(
+  dados_limpos[variaveis_quantitativas],
+  as.numeric
+)
+str(dados_limpos)
+```
+
+Ainda observando o banco de dados, agora será verificado se os dados apresentados como variáveis quantitativas são compatíveis estatisticamente. Inicialmente iremos incluir a variável `idade_dias` na atribuição `variaveis_quantitativas` e utilizar a função `summary()`, para uma visão resumida dos dados estatístico de cada variável.
+
+```r
+# Inclução da variável de idade do corpo de prova e print do resumo estátistico das variáveis quantitativas
+
+variaveis_quantitativas <- c(
+  "idade_dias",
+  "resistencia_mpa",
+  "cimento_kg_m3",
+  "relacao_a_c",
+  "abatimento_mm",
+  "densidade_kg_m3",
+  "absorção_agregado_pct"
+)
+dados_limpos[variaveis_quantitativas] <-
+  lapply(dados_limpos[variaveis_quantitativas], as.numeric)
+  
+summary(dados_limpos[variaveis_quantitativas])
+
+```
+```{r, echo=FALSE}
+variaveis_quantitativas <- c(
+  "idade_dias",
+  "resistencia_mpa",
+  "cimento_kg_m3",
+  "relacao_a_c",
+  "abatimento_mm",
+  "densidade_kg_m3",
+  "absorção_agregado_pct"
+)
+dados_limpos[variaveis_quantitativas] <-
+  lapply(dados_limpos[variaveis_quantitativas], as.numeric)
+summary(dados_limpos[variaveis_quantitativas])
+```
+
+
+
+
 
 ## 🧠 Considerações finais
 
