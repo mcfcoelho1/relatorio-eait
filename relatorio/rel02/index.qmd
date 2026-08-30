@@ -151,8 +151,89 @@ resultado_ausentes <- data.frame(
 resultado_ausentes
 ```
 
-# a
+Para corrigir as inconsistências nas variáveis quantitativas que foram reconhecidas como (`chr`), iremos utilizar a função `as.numeric()` para tentar converter todos os valores para números. Para isso, as variavéis: idade do corpo de prova; resistência; consumo de cimento; relação água/cimento; abatimento; densidade e absorção foram reunidas e atribuídas a `variaveis_quantitativas`.
 
+```r
+# Agrupando as variáveis com erro de tipagem
+variaveis_quantitativas <- c(
+  "resistencia_mpa",
+  "cimento_kg_m3",
+  "relacao_a_c",
+  "abatimento_mm",
+  "densidade_kg_m3",
+  "absorção_agregado_pct"
+)
+
+```
+```{r, echo=FALSE}
+variaveis_quantitativas <- c(
+  "resistencia_mpa",
+  "cimento_kg_m3",
+  "relacao_a_c",
+  "abatimento_mm",
+  "densidade_kg_m3",
+  "absorção_agregado_pct"
+)
+variaveis_quantitativas
+```
+
+```r
+# Cópia da base de dados para realizar conversão de valores`
+dados_convertidos <- dados
+
+```
+```{r, echo=FALSE}
+dados_convertidos <- dados
+```
+
+```r
+# Convertendo valores para números 
+dados_convertidos[variaveis_quantitativas] <-
+  lapply(dados[variaveis_quantitativas], as.numeric)
+
+```
+```{r, echo=FALSE}
+dados_convertidos[variaveis_quantitativas] <-
+  lapply(dados[variaveis_quantitativas], as.numeric)
+```
+
+Após a tentativa de conversão das variáveis para o tipo numérico, observou-se que os valores que não puderam ser convertidos adequadamente foram transformados em NA pelo R.
+Assim, para identificar o corpo de prova e os valores problemáticos por variável, foi desenvolvido os seguintes comandos:
+
+```r
+# Identificando quais valores foram transformados em NA 
+problemas <- is.na(dados_convertidos[variaveis_quantitativas]) &
+             dados[variaveis_quantitativas] != ""
+
+```
+```{r, echo=FALSE}
+problemas <- is.na(dados_convertidos[variaveis_quantitativas]) &
+             dados[variaveis_quantitativas] != ""
+```
+
+```r
+# Localizando as posições em que as conversões apresentaram problemas 
+which(problemas, arr.ind = TRUE)
+posicoes <- which(problemas, arr.ind = TRUE)
+resultado_problemas <- data.frame(
+  CP = dados$id_corpo_prova[posicoes[, 1]],
+  Variavel = colnames(problemas)[posicoes[, 2]],
+  Valor = dados[variaveis_quantitativas][problemas]
+)
+
+```
+```{r, echo=FALSE}
+which(problemas, arr.ind = TRUE)
+posicoes <- which(problemas, arr.ind = TRUE)
+resultado_problemas <- data.frame(
+  CP = dados$id_corpo_prova[posicoes[, 1]],
+  Variavel = colnames(problemas)[posicoes[, 2]],
+  Valor = dados[variaveis_quantitativas][problemas]
+)
+resultado_problemas
+```
+
+Diante disso, podemos observar que provavelmente houve erro de digitação dos dados acima, como a utilização de vírgula ao invés de ponto e o uso de caractere letra ao invés do numeral zero.
 
 ## 🧠 Considerações finais
 
@@ -163,7 +244,7 @@ Apresente uma síntese dos principais pontos observados no experimento.
 - Comente brevemente sobre a qualidade dos dados coletados.
 - Sugira possíveis melhorias no procedimento experimental.
 
-Evite repetir apenas os resultados; foque nas **conclusões e reflexões** sobre a prática realizada.
+Evite repetir apenas os resultados; foque nas **conclusões e reflexões** sobre a `variaveis prática realizada.
 
 
 
