@@ -151,6 +151,8 @@ resultado_ausentes <- data.frame(
 resultado_ausentes
 ```
 
+A princípio, os dados ausentes serão mantidos como "NA", com o objetivo de preservar ao máximo a integridade da base de dados original, evitando a exclusão de observações ou a inferência de valores sem justificativa. Nos casos em que a presença de valores ausentes impossibilitar a realização de determinada análise, será avaliada a exclusão apenas das observações com "NA" nas variáveis envolvidas, mantendo-se os demais registros da base.
+
 Para verificar e corrigir os dados que apresentam inconsistências dentro das variáveis quantitativas e que causaram o reconhecimento delas como (`chr`), iremos utilizar a função `as.numeric()` para tentar converter todos os valores para números em uma cópia da base de dados para, nomeada como `dados_limpos`,isto é importante para preservar o banco de dados para não perdermos a rastreabilidade dos dados originais. 
 
 ```r

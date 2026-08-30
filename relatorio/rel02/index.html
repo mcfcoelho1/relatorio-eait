@@ -135,7 +135,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Data de Publicação</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">30/08/2026, 18:48</p>
+      <p class="date">30/08/2026, 18:56</p>
     </div>
   </div>
   
@@ -599,6 +599,7 @@ absorção_agregado_pct
 5 CP-097 absorção_agregado_pct</code></pre>
 </div>
 </div>
+<p>A princípio, os dados ausentes serão mantidos como “NA”, com o objetivo de preservar ao máximo a integridade da base de dados original, evitando a exclusão de observações ou a inferência de valores sem justificativa. Nos casos em que a presença de valores ausentes impossibilitar a realização de determinada análise, será avaliada a exclusão apenas das observações com “NA” nas variáveis envolvidas, mantendo-se os demais registros da base.</p>
 <p>Para verificar e corrigir os dados que apresentam inconsistências dentro das variáveis quantitativas e que causaram o reconhecimento delas como (<code>chr</code>), iremos utilizar a função <code>as.numeric()</code> para tentar converter todos os valores para números em uma cópia da base de dados para, nomeada como <code>dados_limpos</code>,isto é importante para preservar o banco de dados para não perdermos a rastreabilidade dos dados originais.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Agrupando as variáveis com erro de tipagem</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>variaveis_quantitativas <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
@@ -1452,275 +1453,277 @@ absorção_agregado_pct
 <span id="cb37-151"><a href="#cb37-151" aria-hidden="true" tabindex="-1"></a>resultado_ausentes</span>
 <span id="cb37-152"><a href="#cb37-152" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb37-153"><a href="#cb37-153" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-154"><a href="#cb37-154" aria-hidden="true" tabindex="-1"></a>Para verificar e corrigir os dados que apresentam inconsistências dentro das variáveis quantitativas e que causaram o reconhecimento delas como (<span class="in">`chr`</span>), iremos utilizar a função <span class="in">`as.numeric()`</span> para tentar converter todos os valores para números em uma cópia da base de dados para, nomeada como <span class="in">`dados_limpos`</span>,isto é importante para preservar o banco de dados para não perdermos a rastreabilidade dos dados originais. </span>
+<span id="cb37-154"><a href="#cb37-154" aria-hidden="true" tabindex="-1"></a>A princípio, os dados ausentes serão mantidos como "NA", com o objetivo de preservar ao máximo a integridade da base de dados original, evitando a exclusão de observações ou a inferência de valores sem justificativa. Nos casos em que a presença de valores ausentes impossibilitar a realização de determinada análise, será avaliada a exclusão apenas das observações com "NA" nas variáveis envolvidas, mantendo-se os demais registros da base.</span>
 <span id="cb37-155"><a href="#cb37-155" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-156"><a href="#cb37-156" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
-<span id="cb37-157"><a href="#cb37-157" aria-hidden="true" tabindex="-1"></a><span class="co"># Agrupando as variáveis com erro de tipagem</span></span>
-<span id="cb37-158"><a href="#cb37-158" aria-hidden="true" tabindex="-1"></a>variaveis_quantitativas <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb37-159"><a href="#cb37-159" aria-hidden="true" tabindex="-1"></a>  <span class="st">"resistencia_mpa"</span>,</span>
-<span id="cb37-160"><a href="#cb37-160" aria-hidden="true" tabindex="-1"></a>  <span class="st">"cimento_kg_m3"</span>,</span>
-<span id="cb37-161"><a href="#cb37-161" aria-hidden="true" tabindex="-1"></a>  <span class="st">"relacao_a_c"</span>,</span>
-<span id="cb37-162"><a href="#cb37-162" aria-hidden="true" tabindex="-1"></a>  <span class="st">"abatimento_mm"</span>,</span>
-<span id="cb37-163"><a href="#cb37-163" aria-hidden="true" tabindex="-1"></a>  <span class="st">"densidade_kg_m3"</span>,</span>
-<span id="cb37-164"><a href="#cb37-164" aria-hidden="true" tabindex="-1"></a>  <span class="st">"absorção_agregado_pct"</span></span>
-<span id="cb37-165"><a href="#cb37-165" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb37-166"><a href="#cb37-166" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-167"><a href="#cb37-167" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb37-168"><a href="#cb37-168" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=FALSE}</span></span>
-<span id="cb37-169"><a href="#cb37-169" aria-hidden="true" tabindex="-1"></a>variaveis_quantitativas <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb37-170"><a href="#cb37-170" aria-hidden="true" tabindex="-1"></a>  <span class="st">"resistencia_mpa"</span>,</span>
-<span id="cb37-171"><a href="#cb37-171" aria-hidden="true" tabindex="-1"></a>  <span class="st">"cimento_kg_m3"</span>,</span>
-<span id="cb37-172"><a href="#cb37-172" aria-hidden="true" tabindex="-1"></a>  <span class="st">"relacao_a_c"</span>,</span>
-<span id="cb37-173"><a href="#cb37-173" aria-hidden="true" tabindex="-1"></a>  <span class="st">"abatimento_mm"</span>,</span>
-<span id="cb37-174"><a href="#cb37-174" aria-hidden="true" tabindex="-1"></a>  <span class="st">"densidade_kg_m3"</span>,</span>
-<span id="cb37-175"><a href="#cb37-175" aria-hidden="true" tabindex="-1"></a>  <span class="st">"absorção_agregado_pct"</span></span>
-<span id="cb37-176"><a href="#cb37-176" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb37-177"><a href="#cb37-177" aria-hidden="true" tabindex="-1"></a>variaveis_quantitativas</span>
-<span id="cb37-178"><a href="#cb37-178" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb37-179"><a href="#cb37-179" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-180"><a href="#cb37-180" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
-<span id="cb37-181"><a href="#cb37-181" aria-hidden="true" tabindex="-1"></a><span class="co"># Copia da base de dados para correção dos dados problemáticos`</span></span>
-<span id="cb37-182"><a href="#cb37-182" aria-hidden="true" tabindex="-1"></a>dados_limpos <span class="ot">&lt;-</span> dados</span>
-<span id="cb37-183"><a href="#cb37-183" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-184"><a href="#cb37-184" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb37-185"><a href="#cb37-185" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=FALSE}</span></span>
-<span id="cb37-186"><a href="#cb37-186" aria-hidden="true" tabindex="-1"></a>dados_limpos <span class="ot">&lt;-</span> dados</span>
-<span id="cb37-187"><a href="#cb37-187" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb37-188"><a href="#cb37-188" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-189"><a href="#cb37-189" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
-<span id="cb37-190"><a href="#cb37-190" aria-hidden="true" tabindex="-1"></a><span class="co"># Convertendo valores para números </span></span>
-<span id="cb37-191"><a href="#cb37-191" aria-hidden="true" tabindex="-1"></a>dados_limpos[variaveis_quantitativas] <span class="ot">&lt;-</span></span>
-<span id="cb37-192"><a href="#cb37-192" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lapply</span>(dados[variaveis_quantitativas], as.numeric)</span>
-<span id="cb37-193"><a href="#cb37-193" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-194"><a href="#cb37-194" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb37-195"><a href="#cb37-195" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=FALSE}</span></span>
-<span id="cb37-196"><a href="#cb37-196" aria-hidden="true" tabindex="-1"></a>dados_limpos[variaveis_quantitativas] <span class="ot">&lt;-</span></span>
-<span id="cb37-197"><a href="#cb37-197" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lapply</span>(dados[variaveis_quantitativas], as.numeric)</span>
-<span id="cb37-198"><a href="#cb37-198" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb37-199"><a href="#cb37-199" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-200"><a href="#cb37-200" aria-hidden="true" tabindex="-1"></a>Após a tentativa de conversão das variáveis para o tipo numérico, observou-se que os valores que não puderam ser convertidos adequadamente foram transformados em NA pelo R.</span>
-<span id="cb37-201"><a href="#cb37-201" aria-hidden="true" tabindex="-1"></a>Assim, para identificar o corpo de prova e os valores problemáticos por variável, foi desenvolvido os seguintes comandos:</span>
-<span id="cb37-202"><a href="#cb37-202" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-203"><a href="#cb37-203" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
-<span id="cb37-204"><a href="#cb37-204" aria-hidden="true" tabindex="-1"></a><span class="co"># Identificando quais valores foram transformados em NA </span></span>
-<span id="cb37-205"><a href="#cb37-205" aria-hidden="true" tabindex="-1"></a>problemas <span class="ot">&lt;-</span> <span class="fu">is.na</span>(dados_limpos[variaveis_quantitativas]) <span class="sc">&amp;</span></span>
-<span id="cb37-206"><a href="#cb37-206" aria-hidden="true" tabindex="-1"></a>             dados[variaveis_quantitativas] <span class="sc">!=</span> <span class="st">""</span></span>
-<span id="cb37-207"><a href="#cb37-207" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-208"><a href="#cb37-208" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb37-209"><a href="#cb37-209" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=FALSE}</span></span>
-<span id="cb37-210"><a href="#cb37-210" aria-hidden="true" tabindex="-1"></a>problemas <span class="ot">&lt;-</span> <span class="fu">is.na</span>(dados_limpos[variaveis_quantitativas]) <span class="sc">&amp;</span></span>
-<span id="cb37-211"><a href="#cb37-211" aria-hidden="true" tabindex="-1"></a>             dados[variaveis_quantitativas] <span class="sc">!=</span> <span class="st">""</span></span>
-<span id="cb37-212"><a href="#cb37-212" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb37-213"><a href="#cb37-213" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-214"><a href="#cb37-214" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
-<span id="cb37-215"><a href="#cb37-215" aria-hidden="true" tabindex="-1"></a><span class="co"># Localizando as posições em que as conversões apresentaram problemas </span></span>
-<span id="cb37-216"><a href="#cb37-216" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span>(problemas, <span class="at">arr.ind =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb37-217"><a href="#cb37-217" aria-hidden="true" tabindex="-1"></a>posicoes <span class="ot">&lt;-</span> <span class="fu">which</span>(problemas, <span class="at">arr.ind =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb37-218"><a href="#cb37-218" aria-hidden="true" tabindex="-1"></a>resultado_problemas <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb37-219"><a href="#cb37-219" aria-hidden="true" tabindex="-1"></a>  <span class="at">CP =</span> dados<span class="sc">$</span>id_corpo_prova[posicoes[, <span class="dv">1</span>]],</span>
-<span id="cb37-220"><a href="#cb37-220" aria-hidden="true" tabindex="-1"></a>  <span class="at">Variavel =</span> <span class="fu">colnames</span>(problemas)[posicoes[, <span class="dv">2</span>]],</span>
-<span id="cb37-221"><a href="#cb37-221" aria-hidden="true" tabindex="-1"></a>  <span class="at">Valor =</span> dados[variaveis_quantitativas][problemas]</span>
-<span id="cb37-222"><a href="#cb37-222" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb37-223"><a href="#cb37-223" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-224"><a href="#cb37-224" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb37-225"><a href="#cb37-225" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=FALSE}</span></span>
-<span id="cb37-226"><a href="#cb37-226" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span>(problemas, <span class="at">arr.ind =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb37-227"><a href="#cb37-227" aria-hidden="true" tabindex="-1"></a>posicoes <span class="ot">&lt;-</span> <span class="fu">which</span>(problemas, <span class="at">arr.ind =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb37-228"><a href="#cb37-228" aria-hidden="true" tabindex="-1"></a>resultado_problemas <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb37-229"><a href="#cb37-229" aria-hidden="true" tabindex="-1"></a>  <span class="at">CP =</span> dados<span class="sc">$</span>id_corpo_prova[posicoes[, <span class="dv">1</span>]],</span>
-<span id="cb37-230"><a href="#cb37-230" aria-hidden="true" tabindex="-1"></a>  <span class="at">Variavel =</span> <span class="fu">colnames</span>(problemas)[posicoes[, <span class="dv">2</span>]],</span>
-<span id="cb37-231"><a href="#cb37-231" aria-hidden="true" tabindex="-1"></a>  <span class="at">Valor =</span> dados[variaveis_quantitativas][problemas]</span>
-<span id="cb37-232"><a href="#cb37-232" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb37-233"><a href="#cb37-233" aria-hidden="true" tabindex="-1"></a>resultado_problemas</span>
-<span id="cb37-234"><a href="#cb37-234" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb37-235"><a href="#cb37-235" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-236"><a href="#cb37-236" aria-hidden="true" tabindex="-1"></a>Diante disso, podemos observar que provavelmente houve erro de digitação nos 4 valores apresentados acima, como a utilização de vírgula ao invés de ponto e o uso de caractere letra junto a caractere número. Nesse segundo caso, para a variável <span class="in">`resistencia_mpa`</span>o erro foi a troca da letra "o" pelo numeral zero, sendo o valor correto "30.4", já para a variável <span class="in">`cimento_kg_m3`</span>, a troca não faria sentido em termos de coerência estatística, sendo necessário a exclusão da letra "o", assim o valor correto é "390". Logo, para a correção desse valores, iremos realizar as devidas substituíções e exclusões no <span class="in">`dados_limpos`</span>.</span>
+<span id="cb37-156"><a href="#cb37-156" aria-hidden="true" tabindex="-1"></a>Para verificar e corrigir os dados que apresentam inconsistências dentro das variáveis quantitativas e que causaram o reconhecimento delas como (<span class="in">`chr`</span>), iremos utilizar a função <span class="in">`as.numeric()`</span> para tentar converter todos os valores para números em uma cópia da base de dados para, nomeada como <span class="in">`dados_limpos`</span>,isto é importante para preservar o banco de dados para não perdermos a rastreabilidade dos dados originais. </span>
+<span id="cb37-157"><a href="#cb37-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-158"><a href="#cb37-158" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb37-159"><a href="#cb37-159" aria-hidden="true" tabindex="-1"></a><span class="co"># Agrupando as variáveis com erro de tipagem</span></span>
+<span id="cb37-160"><a href="#cb37-160" aria-hidden="true" tabindex="-1"></a>variaveis_quantitativas <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb37-161"><a href="#cb37-161" aria-hidden="true" tabindex="-1"></a>  <span class="st">"resistencia_mpa"</span>,</span>
+<span id="cb37-162"><a href="#cb37-162" aria-hidden="true" tabindex="-1"></a>  <span class="st">"cimento_kg_m3"</span>,</span>
+<span id="cb37-163"><a href="#cb37-163" aria-hidden="true" tabindex="-1"></a>  <span class="st">"relacao_a_c"</span>,</span>
+<span id="cb37-164"><a href="#cb37-164" aria-hidden="true" tabindex="-1"></a>  <span class="st">"abatimento_mm"</span>,</span>
+<span id="cb37-165"><a href="#cb37-165" aria-hidden="true" tabindex="-1"></a>  <span class="st">"densidade_kg_m3"</span>,</span>
+<span id="cb37-166"><a href="#cb37-166" aria-hidden="true" tabindex="-1"></a>  <span class="st">"absorção_agregado_pct"</span></span>
+<span id="cb37-167"><a href="#cb37-167" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb37-168"><a href="#cb37-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-169"><a href="#cb37-169" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb37-170"><a href="#cb37-170" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=FALSE}</span></span>
+<span id="cb37-171"><a href="#cb37-171" aria-hidden="true" tabindex="-1"></a>variaveis_quantitativas <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb37-172"><a href="#cb37-172" aria-hidden="true" tabindex="-1"></a>  <span class="st">"resistencia_mpa"</span>,</span>
+<span id="cb37-173"><a href="#cb37-173" aria-hidden="true" tabindex="-1"></a>  <span class="st">"cimento_kg_m3"</span>,</span>
+<span id="cb37-174"><a href="#cb37-174" aria-hidden="true" tabindex="-1"></a>  <span class="st">"relacao_a_c"</span>,</span>
+<span id="cb37-175"><a href="#cb37-175" aria-hidden="true" tabindex="-1"></a>  <span class="st">"abatimento_mm"</span>,</span>
+<span id="cb37-176"><a href="#cb37-176" aria-hidden="true" tabindex="-1"></a>  <span class="st">"densidade_kg_m3"</span>,</span>
+<span id="cb37-177"><a href="#cb37-177" aria-hidden="true" tabindex="-1"></a>  <span class="st">"absorção_agregado_pct"</span></span>
+<span id="cb37-178"><a href="#cb37-178" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb37-179"><a href="#cb37-179" aria-hidden="true" tabindex="-1"></a>variaveis_quantitativas</span>
+<span id="cb37-180"><a href="#cb37-180" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb37-181"><a href="#cb37-181" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-182"><a href="#cb37-182" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb37-183"><a href="#cb37-183" aria-hidden="true" tabindex="-1"></a><span class="co"># Copia da base de dados para correção dos dados problemáticos`</span></span>
+<span id="cb37-184"><a href="#cb37-184" aria-hidden="true" tabindex="-1"></a>dados_limpos <span class="ot">&lt;-</span> dados</span>
+<span id="cb37-185"><a href="#cb37-185" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-186"><a href="#cb37-186" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb37-187"><a href="#cb37-187" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=FALSE}</span></span>
+<span id="cb37-188"><a href="#cb37-188" aria-hidden="true" tabindex="-1"></a>dados_limpos <span class="ot">&lt;-</span> dados</span>
+<span id="cb37-189"><a href="#cb37-189" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb37-190"><a href="#cb37-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-191"><a href="#cb37-191" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb37-192"><a href="#cb37-192" aria-hidden="true" tabindex="-1"></a><span class="co"># Convertendo valores para números </span></span>
+<span id="cb37-193"><a href="#cb37-193" aria-hidden="true" tabindex="-1"></a>dados_limpos[variaveis_quantitativas] <span class="ot">&lt;-</span></span>
+<span id="cb37-194"><a href="#cb37-194" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lapply</span>(dados[variaveis_quantitativas], as.numeric)</span>
+<span id="cb37-195"><a href="#cb37-195" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-196"><a href="#cb37-196" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb37-197"><a href="#cb37-197" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=FALSE}</span></span>
+<span id="cb37-198"><a href="#cb37-198" aria-hidden="true" tabindex="-1"></a>dados_limpos[variaveis_quantitativas] <span class="ot">&lt;-</span></span>
+<span id="cb37-199"><a href="#cb37-199" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lapply</span>(dados[variaveis_quantitativas], as.numeric)</span>
+<span id="cb37-200"><a href="#cb37-200" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb37-201"><a href="#cb37-201" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-202"><a href="#cb37-202" aria-hidden="true" tabindex="-1"></a>Após a tentativa de conversão das variáveis para o tipo numérico, observou-se que os valores que não puderam ser convertidos adequadamente foram transformados em NA pelo R.</span>
+<span id="cb37-203"><a href="#cb37-203" aria-hidden="true" tabindex="-1"></a>Assim, para identificar o corpo de prova e os valores problemáticos por variável, foi desenvolvido os seguintes comandos:</span>
+<span id="cb37-204"><a href="#cb37-204" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-205"><a href="#cb37-205" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb37-206"><a href="#cb37-206" aria-hidden="true" tabindex="-1"></a><span class="co"># Identificando quais valores foram transformados em NA </span></span>
+<span id="cb37-207"><a href="#cb37-207" aria-hidden="true" tabindex="-1"></a>problemas <span class="ot">&lt;-</span> <span class="fu">is.na</span>(dados_limpos[variaveis_quantitativas]) <span class="sc">&amp;</span></span>
+<span id="cb37-208"><a href="#cb37-208" aria-hidden="true" tabindex="-1"></a>             dados[variaveis_quantitativas] <span class="sc">!=</span> <span class="st">""</span></span>
+<span id="cb37-209"><a href="#cb37-209" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-210"><a href="#cb37-210" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb37-211"><a href="#cb37-211" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=FALSE}</span></span>
+<span id="cb37-212"><a href="#cb37-212" aria-hidden="true" tabindex="-1"></a>problemas <span class="ot">&lt;-</span> <span class="fu">is.na</span>(dados_limpos[variaveis_quantitativas]) <span class="sc">&amp;</span></span>
+<span id="cb37-213"><a href="#cb37-213" aria-hidden="true" tabindex="-1"></a>             dados[variaveis_quantitativas] <span class="sc">!=</span> <span class="st">""</span></span>
+<span id="cb37-214"><a href="#cb37-214" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb37-215"><a href="#cb37-215" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-216"><a href="#cb37-216" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb37-217"><a href="#cb37-217" aria-hidden="true" tabindex="-1"></a><span class="co"># Localizando as posições em que as conversões apresentaram problemas </span></span>
+<span id="cb37-218"><a href="#cb37-218" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span>(problemas, <span class="at">arr.ind =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb37-219"><a href="#cb37-219" aria-hidden="true" tabindex="-1"></a>posicoes <span class="ot">&lt;-</span> <span class="fu">which</span>(problemas, <span class="at">arr.ind =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb37-220"><a href="#cb37-220" aria-hidden="true" tabindex="-1"></a>resultado_problemas <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb37-221"><a href="#cb37-221" aria-hidden="true" tabindex="-1"></a>  <span class="at">CP =</span> dados<span class="sc">$</span>id_corpo_prova[posicoes[, <span class="dv">1</span>]],</span>
+<span id="cb37-222"><a href="#cb37-222" aria-hidden="true" tabindex="-1"></a>  <span class="at">Variavel =</span> <span class="fu">colnames</span>(problemas)[posicoes[, <span class="dv">2</span>]],</span>
+<span id="cb37-223"><a href="#cb37-223" aria-hidden="true" tabindex="-1"></a>  <span class="at">Valor =</span> dados[variaveis_quantitativas][problemas]</span>
+<span id="cb37-224"><a href="#cb37-224" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb37-225"><a href="#cb37-225" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-226"><a href="#cb37-226" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb37-227"><a href="#cb37-227" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=FALSE}</span></span>
+<span id="cb37-228"><a href="#cb37-228" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span>(problemas, <span class="at">arr.ind =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb37-229"><a href="#cb37-229" aria-hidden="true" tabindex="-1"></a>posicoes <span class="ot">&lt;-</span> <span class="fu">which</span>(problemas, <span class="at">arr.ind =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb37-230"><a href="#cb37-230" aria-hidden="true" tabindex="-1"></a>resultado_problemas <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb37-231"><a href="#cb37-231" aria-hidden="true" tabindex="-1"></a>  <span class="at">CP =</span> dados<span class="sc">$</span>id_corpo_prova[posicoes[, <span class="dv">1</span>]],</span>
+<span id="cb37-232"><a href="#cb37-232" aria-hidden="true" tabindex="-1"></a>  <span class="at">Variavel =</span> <span class="fu">colnames</span>(problemas)[posicoes[, <span class="dv">2</span>]],</span>
+<span id="cb37-233"><a href="#cb37-233" aria-hidden="true" tabindex="-1"></a>  <span class="at">Valor =</span> dados[variaveis_quantitativas][problemas]</span>
+<span id="cb37-234"><a href="#cb37-234" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb37-235"><a href="#cb37-235" aria-hidden="true" tabindex="-1"></a>resultado_problemas</span>
+<span id="cb37-236"><a href="#cb37-236" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb37-237"><a href="#cb37-237" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-238"><a href="#cb37-238" aria-hidden="true" tabindex="-1"></a>Para a correção da utilização da vírgula no lugar de ponto, utilizaremos a função <span class="in">`gsub()`</span>, que procura um texto e substitui por outro, junto das funções <span class="in">`function(x)`</span>, que cria uma função temporária para que x percorra cada coluna para <span class="in">`lapply()`</span>analisar.</span>
+<span id="cb37-238"><a href="#cb37-238" aria-hidden="true" tabindex="-1"></a>Diante disso, podemos observar que provavelmente houve erro de digitação nos 4 valores apresentados acima, como a utilização de vírgula ao invés de ponto e o uso de caractere letra junto a caractere número. Nesse segundo caso, para a variável <span class="in">`resistencia_mpa`</span>o erro foi a troca da letra "o" pelo numeral zero, sendo o valor correto "30.4", já para a variável <span class="in">`cimento_kg_m3`</span>, a troca não faria sentido em termos de coerência estatística, sendo necessário a exclusão da letra "o", assim o valor correto é "390". Logo, para a correção desse valores, iremos realizar as devidas substituíções e exclusões no <span class="in">`dados_limpos`</span>.</span>
 <span id="cb37-239"><a href="#cb37-239" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-240"><a href="#cb37-240" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
-<span id="cb37-241"><a href="#cb37-241" aria-hidden="true" tabindex="-1"></a><span class="co"># Substituindo vírgula por ponto</span></span>
-<span id="cb37-242"><a href="#cb37-242" aria-hidden="true" tabindex="-1"></a>dados_limpos[variaveis_quantitativas] <span class="ot">&lt;-</span> <span class="fu">lapply</span>(</span>
-<span id="cb37-243"><a href="#cb37-243" aria-hidden="true" tabindex="-1"></a>  dados_limpos[variaveis_quantitativas],</span>
-<span id="cb37-244"><a href="#cb37-244" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(x) <span class="fu">gsub</span>(<span class="st">","</span>, <span class="st">"."</span>, x)</span>
-<span id="cb37-245"><a href="#cb37-245" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb37-246"><a href="#cb37-246" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb37-247"><a href="#cb37-247" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=FALSE}</span></span>
-<span id="cb37-248"><a href="#cb37-248" aria-hidden="true" tabindex="-1"></a>dados_limpos[variaveis_quantitativas] <span class="ot">&lt;-</span> <span class="fu">lapply</span>(</span>
-<span id="cb37-249"><a href="#cb37-249" aria-hidden="true" tabindex="-1"></a>  dados_limpos[variaveis_quantitativas],</span>
-<span id="cb37-250"><a href="#cb37-250" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(x) <span class="fu">gsub</span>(<span class="st">","</span>, <span class="st">"."</span>, x)</span>
-<span id="cb37-251"><a href="#cb37-251" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb37-252"><a href="#cb37-252" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb37-253"><a href="#cb37-253" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-254"><a href="#cb37-254" aria-hidden="true" tabindex="-1"></a>Já para a correção da letra "o" cada caso foi corrigido isoladamente.</span>
+<span id="cb37-240"><a href="#cb37-240" aria-hidden="true" tabindex="-1"></a>Para a correção da utilização da vírgula no lugar de ponto, utilizaremos a função <span class="in">`gsub()`</span>, que procura um texto e substitui por outro, junto das funções <span class="in">`function(x)`</span>, que cria uma função temporária para que x percorra cada coluna para <span class="in">`lapply()`</span>analisar.</span>
+<span id="cb37-241"><a href="#cb37-241" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-242"><a href="#cb37-242" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb37-243"><a href="#cb37-243" aria-hidden="true" tabindex="-1"></a><span class="co"># Substituindo vírgula por ponto</span></span>
+<span id="cb37-244"><a href="#cb37-244" aria-hidden="true" tabindex="-1"></a>dados_limpos[variaveis_quantitativas] <span class="ot">&lt;-</span> <span class="fu">lapply</span>(</span>
+<span id="cb37-245"><a href="#cb37-245" aria-hidden="true" tabindex="-1"></a>  dados_limpos[variaveis_quantitativas],</span>
+<span id="cb37-246"><a href="#cb37-246" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(x) <span class="fu">gsub</span>(<span class="st">","</span>, <span class="st">"."</span>, x)</span>
+<span id="cb37-247"><a href="#cb37-247" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb37-248"><a href="#cb37-248" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb37-249"><a href="#cb37-249" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=FALSE}</span></span>
+<span id="cb37-250"><a href="#cb37-250" aria-hidden="true" tabindex="-1"></a>dados_limpos[variaveis_quantitativas] <span class="ot">&lt;-</span> <span class="fu">lapply</span>(</span>
+<span id="cb37-251"><a href="#cb37-251" aria-hidden="true" tabindex="-1"></a>  dados_limpos[variaveis_quantitativas],</span>
+<span id="cb37-252"><a href="#cb37-252" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(x) <span class="fu">gsub</span>(<span class="st">","</span>, <span class="st">"."</span>, x)</span>
+<span id="cb37-253"><a href="#cb37-253" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb37-254"><a href="#cb37-254" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb37-255"><a href="#cb37-255" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-256"><a href="#cb37-256" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
-<span id="cb37-257"><a href="#cb37-257" aria-hidden="true" tabindex="-1"></a><span class="co"># Substituindo a letra "o" pelo algarismo zero</span></span>
-<span id="cb37-258"><a href="#cb37-258" aria-hidden="true" tabindex="-1"></a>dados_limpos<span class="sc">$</span>resistencia_mpa[</span>
-<span id="cb37-259"><a href="#cb37-259" aria-hidden="true" tabindex="-1"></a>  dados_limpos<span class="sc">$</span>id_corpo_prova <span class="sc">==</span> <span class="st">"CP-019"</span></span>
-<span id="cb37-260"><a href="#cb37-260" aria-hidden="true" tabindex="-1"></a>] <span class="ot">&lt;-</span> <span class="st">"30.4"</span></span>
-<span id="cb37-261"><a href="#cb37-261" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-262"><a href="#cb37-262" aria-hidden="true" tabindex="-1"></a><span class="co"># Excluíndo a letra "o"</span></span>
-<span id="cb37-263"><a href="#cb37-263" aria-hidden="true" tabindex="-1"></a>dados_limpos<span class="sc">$</span>cimento_kg_m3[</span>
-<span id="cb37-264"><a href="#cb37-264" aria-hidden="true" tabindex="-1"></a>  dados_limpos<span class="sc">$</span>id_corpo_prova <span class="sc">==</span> <span class="st">"CP-064"</span></span>
-<span id="cb37-265"><a href="#cb37-265" aria-hidden="true" tabindex="-1"></a>] <span class="ot">&lt;-</span> <span class="st">"390"</span></span>
-<span id="cb37-266"><a href="#cb37-266" aria-hidden="true" tabindex="-1"></a><span class="er">)</span></span>
-<span id="cb37-267"><a href="#cb37-267" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb37-268"><a href="#cb37-268" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=FALSE}</span></span>
-<span id="cb37-269"><a href="#cb37-269" aria-hidden="true" tabindex="-1"></a>dados_limpos<span class="sc">$</span>resistencia_mpa[</span>
-<span id="cb37-270"><a href="#cb37-270" aria-hidden="true" tabindex="-1"></a>  dados_limpos<span class="sc">$</span>id_corpo_prova <span class="sc">==</span> <span class="st">"CP-019"</span></span>
-<span id="cb37-271"><a href="#cb37-271" aria-hidden="true" tabindex="-1"></a>] <span class="ot">&lt;-</span> <span class="st">"30.4"</span></span>
-<span id="cb37-272"><a href="#cb37-272" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-273"><a href="#cb37-273" aria-hidden="true" tabindex="-1"></a>dados_limpos<span class="sc">$</span>cimento_kg_m3[</span>
-<span id="cb37-274"><a href="#cb37-274" aria-hidden="true" tabindex="-1"></a>  dados_limpos<span class="sc">$</span>id_corpo_prova <span class="sc">==</span> <span class="st">"CP-064"</span></span>
-<span id="cb37-275"><a href="#cb37-275" aria-hidden="true" tabindex="-1"></a>] <span class="ot">&lt;-</span> <span class="st">"390"</span></span>
-<span id="cb37-276"><a href="#cb37-276" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb37-277"><a href="#cb37-277" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-278"><a href="#cb37-278" aria-hidden="true" tabindex="-1"></a>Agora, basta alterar todos esses valores corrigidos para números, utilizando <span class="in">`as.numeric()`</span> e conferir a atualização dos dados com <span class="in">`str()`</span>.</span>
+<span id="cb37-256"><a href="#cb37-256" aria-hidden="true" tabindex="-1"></a>Já para a correção da letra "o" cada caso foi corrigido isoladamente.</span>
+<span id="cb37-257"><a href="#cb37-257" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-258"><a href="#cb37-258" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb37-259"><a href="#cb37-259" aria-hidden="true" tabindex="-1"></a><span class="co"># Substituindo a letra "o" pelo algarismo zero</span></span>
+<span id="cb37-260"><a href="#cb37-260" aria-hidden="true" tabindex="-1"></a>dados_limpos<span class="sc">$</span>resistencia_mpa[</span>
+<span id="cb37-261"><a href="#cb37-261" aria-hidden="true" tabindex="-1"></a>  dados_limpos<span class="sc">$</span>id_corpo_prova <span class="sc">==</span> <span class="st">"CP-019"</span></span>
+<span id="cb37-262"><a href="#cb37-262" aria-hidden="true" tabindex="-1"></a>] <span class="ot">&lt;-</span> <span class="st">"30.4"</span></span>
+<span id="cb37-263"><a href="#cb37-263" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-264"><a href="#cb37-264" aria-hidden="true" tabindex="-1"></a><span class="co"># Excluíndo a letra "o"</span></span>
+<span id="cb37-265"><a href="#cb37-265" aria-hidden="true" tabindex="-1"></a>dados_limpos<span class="sc">$</span>cimento_kg_m3[</span>
+<span id="cb37-266"><a href="#cb37-266" aria-hidden="true" tabindex="-1"></a>  dados_limpos<span class="sc">$</span>id_corpo_prova <span class="sc">==</span> <span class="st">"CP-064"</span></span>
+<span id="cb37-267"><a href="#cb37-267" aria-hidden="true" tabindex="-1"></a>] <span class="ot">&lt;-</span> <span class="st">"390"</span></span>
+<span id="cb37-268"><a href="#cb37-268" aria-hidden="true" tabindex="-1"></a><span class="er">)</span></span>
+<span id="cb37-269"><a href="#cb37-269" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb37-270"><a href="#cb37-270" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=FALSE}</span></span>
+<span id="cb37-271"><a href="#cb37-271" aria-hidden="true" tabindex="-1"></a>dados_limpos<span class="sc">$</span>resistencia_mpa[</span>
+<span id="cb37-272"><a href="#cb37-272" aria-hidden="true" tabindex="-1"></a>  dados_limpos<span class="sc">$</span>id_corpo_prova <span class="sc">==</span> <span class="st">"CP-019"</span></span>
+<span id="cb37-273"><a href="#cb37-273" aria-hidden="true" tabindex="-1"></a>] <span class="ot">&lt;-</span> <span class="st">"30.4"</span></span>
+<span id="cb37-274"><a href="#cb37-274" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-275"><a href="#cb37-275" aria-hidden="true" tabindex="-1"></a>dados_limpos<span class="sc">$</span>cimento_kg_m3[</span>
+<span id="cb37-276"><a href="#cb37-276" aria-hidden="true" tabindex="-1"></a>  dados_limpos<span class="sc">$</span>id_corpo_prova <span class="sc">==</span> <span class="st">"CP-064"</span></span>
+<span id="cb37-277"><a href="#cb37-277" aria-hidden="true" tabindex="-1"></a>] <span class="ot">&lt;-</span> <span class="st">"390"</span></span>
+<span id="cb37-278"><a href="#cb37-278" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb37-279"><a href="#cb37-279" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-280"><a href="#cb37-280" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
-<span id="cb37-281"><a href="#cb37-281" aria-hidden="true" tabindex="-1"></a>dados_limpos[variaveis_quantitativas] <span class="ot">&lt;-</span> <span class="fu">lapply</span>(</span>
-<span id="cb37-282"><a href="#cb37-282" aria-hidden="true" tabindex="-1"></a>  dados_limpos[variaveis_quantitativas],</span>
-<span id="cb37-283"><a href="#cb37-283" aria-hidden="true" tabindex="-1"></a>  as.numeric</span>
-<span id="cb37-284"><a href="#cb37-284" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb37-285"><a href="#cb37-285" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb37-286"><a href="#cb37-286" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=FALSE}</span></span>
-<span id="cb37-287"><a href="#cb37-287" aria-hidden="true" tabindex="-1"></a>dados_limpos[variaveis_quantitativas] <span class="ot">&lt;-</span> <span class="fu">lapply</span>(</span>
-<span id="cb37-288"><a href="#cb37-288" aria-hidden="true" tabindex="-1"></a>  dados_limpos[variaveis_quantitativas],</span>
-<span id="cb37-289"><a href="#cb37-289" aria-hidden="true" tabindex="-1"></a>  as.numeric</span>
-<span id="cb37-290"><a href="#cb37-290" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb37-291"><a href="#cb37-291" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(dados_limpos)</span>
-<span id="cb37-292"><a href="#cb37-292" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb37-293"><a href="#cb37-293" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-294"><a href="#cb37-294" aria-hidden="true" tabindex="-1"></a>Ainda observando o banco de dados, agora será verificado se os dados apresentados como variáveis quantitativas são compatíveis estatisticamente. Inicialmente iremos incluir a variável <span class="in">`idade_dias`</span> na atribuição <span class="in">`variaveis_quantitativas`</span> e utilizar a função <span class="in">`summary()`</span>, para uma visão resumida dos dados estatístico de cada variável.</span>
+<span id="cb37-280"><a href="#cb37-280" aria-hidden="true" tabindex="-1"></a>Agora, basta alterar todos esses valores corrigidos para números, utilizando <span class="in">`as.numeric()`</span> e conferir a atualização dos dados com <span class="in">`str()`</span>.</span>
+<span id="cb37-281"><a href="#cb37-281" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-282"><a href="#cb37-282" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb37-283"><a href="#cb37-283" aria-hidden="true" tabindex="-1"></a>dados_limpos[variaveis_quantitativas] <span class="ot">&lt;-</span> <span class="fu">lapply</span>(</span>
+<span id="cb37-284"><a href="#cb37-284" aria-hidden="true" tabindex="-1"></a>  dados_limpos[variaveis_quantitativas],</span>
+<span id="cb37-285"><a href="#cb37-285" aria-hidden="true" tabindex="-1"></a>  as.numeric</span>
+<span id="cb37-286"><a href="#cb37-286" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb37-287"><a href="#cb37-287" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb37-288"><a href="#cb37-288" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=FALSE}</span></span>
+<span id="cb37-289"><a href="#cb37-289" aria-hidden="true" tabindex="-1"></a>dados_limpos[variaveis_quantitativas] <span class="ot">&lt;-</span> <span class="fu">lapply</span>(</span>
+<span id="cb37-290"><a href="#cb37-290" aria-hidden="true" tabindex="-1"></a>  dados_limpos[variaveis_quantitativas],</span>
+<span id="cb37-291"><a href="#cb37-291" aria-hidden="true" tabindex="-1"></a>  as.numeric</span>
+<span id="cb37-292"><a href="#cb37-292" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb37-293"><a href="#cb37-293" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(dados_limpos)</span>
+<span id="cb37-294"><a href="#cb37-294" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb37-295"><a href="#cb37-295" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-296"><a href="#cb37-296" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
-<span id="cb37-297"><a href="#cb37-297" aria-hidden="true" tabindex="-1"></a><span class="co"># Inclução da variável de idade do corpo de prova e print do resumo estátistico das variáveis quantitativas</span></span>
-<span id="cb37-298"><a href="#cb37-298" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-299"><a href="#cb37-299" aria-hidden="true" tabindex="-1"></a>variaveis_quantitativas <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb37-300"><a href="#cb37-300" aria-hidden="true" tabindex="-1"></a>  <span class="st">"idade_dias"</span>,</span>
-<span id="cb37-301"><a href="#cb37-301" aria-hidden="true" tabindex="-1"></a>  <span class="st">"resistencia_mpa"</span>,</span>
-<span id="cb37-302"><a href="#cb37-302" aria-hidden="true" tabindex="-1"></a>  <span class="st">"cimento_kg_m3"</span>,</span>
-<span id="cb37-303"><a href="#cb37-303" aria-hidden="true" tabindex="-1"></a>  <span class="st">"relacao_a_c"</span>,</span>
-<span id="cb37-304"><a href="#cb37-304" aria-hidden="true" tabindex="-1"></a>  <span class="st">"abatimento_mm"</span>,</span>
-<span id="cb37-305"><a href="#cb37-305" aria-hidden="true" tabindex="-1"></a>  <span class="st">"densidade_kg_m3"</span>,</span>
-<span id="cb37-306"><a href="#cb37-306" aria-hidden="true" tabindex="-1"></a>  <span class="st">"absorção_agregado_pct"</span></span>
-<span id="cb37-307"><a href="#cb37-307" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb37-308"><a href="#cb37-308" aria-hidden="true" tabindex="-1"></a>dados_limpos[variaveis_quantitativas] <span class="ot">&lt;-</span></span>
-<span id="cb37-309"><a href="#cb37-309" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lapply</span>(dados_limpos[variaveis_quantitativas], as.numeric)</span>
-<span id="cb37-310"><a href="#cb37-310" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb37-311"><a href="#cb37-311" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(dados_limpos[variaveis_quantitativas])</span>
-<span id="cb37-312"><a href="#cb37-312" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-313"><a href="#cb37-313" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb37-314"><a href="#cb37-314" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=FALSE}</span></span>
-<span id="cb37-315"><a href="#cb37-315" aria-hidden="true" tabindex="-1"></a>variaveis_quantitativas <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb37-316"><a href="#cb37-316" aria-hidden="true" tabindex="-1"></a>  <span class="st">"idade_dias"</span>,</span>
-<span id="cb37-317"><a href="#cb37-317" aria-hidden="true" tabindex="-1"></a>  <span class="st">"resistencia_mpa"</span>,</span>
-<span id="cb37-318"><a href="#cb37-318" aria-hidden="true" tabindex="-1"></a>  <span class="st">"cimento_kg_m3"</span>,</span>
-<span id="cb37-319"><a href="#cb37-319" aria-hidden="true" tabindex="-1"></a>  <span class="st">"relacao_a_c"</span>,</span>
-<span id="cb37-320"><a href="#cb37-320" aria-hidden="true" tabindex="-1"></a>  <span class="st">"abatimento_mm"</span>,</span>
-<span id="cb37-321"><a href="#cb37-321" aria-hidden="true" tabindex="-1"></a>  <span class="st">"densidade_kg_m3"</span>,</span>
-<span id="cb37-322"><a href="#cb37-322" aria-hidden="true" tabindex="-1"></a>  <span class="st">"absorção_agregado_pct"</span></span>
-<span id="cb37-323"><a href="#cb37-323" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb37-324"><a href="#cb37-324" aria-hidden="true" tabindex="-1"></a>dados_limpos[variaveis_quantitativas] <span class="ot">&lt;-</span></span>
-<span id="cb37-325"><a href="#cb37-325" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lapply</span>(dados_limpos[variaveis_quantitativas], as.numeric)</span>
-<span id="cb37-326"><a href="#cb37-326" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(dados_limpos[variaveis_quantitativas])</span>
-<span id="cb37-327"><a href="#cb37-327" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb37-328"><a href="#cb37-328" aria-hidden="true" tabindex="-1"></a> </span>
-<span id="cb37-329"><a href="#cb37-329" aria-hidden="true" tabindex="-1"></a>A partir dessa visualização, ao comparar as medidas de tendência central com os valores mínimos e máximos das variáveis, observa-se a presença de alguns valores que destoam significativamente do comportamento geral dos dados, indicando possíveis erros de digitação. A idade dos corpos de prova apresenta média de 28 dias, enquanto o valor máximo registrado é de 280 dias. Para o abatimento do concreto, verifica-se média de 121,70 mm e valor máximo de 1.250,00 mm. Em relação à densidade, a média observada é de 2,351 kg/m³, enquanto o valor mínimo corresponde a apenas 238 kg/m³. Por fim, a absorção de água do agregado apresenta média de 1,95%, contrastando com o valor máximo de 18,40%. A seguir, iremos localizar as amostras correspondente a esses dados  e realizar os devidos refinamentos com base nos resultados esperados para as variáveis estudadas.</span>
-<span id="cb37-330"><a href="#cb37-330" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-331"><a href="#cb37-331" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
-<span id="cb37-332"><a href="#cb37-332" aria-hidden="true" tabindex="-1"></a>dados_limpos<span class="sc">$</span>idade_dias[</span>
-<span id="cb37-333"><a href="#cb37-333" aria-hidden="true" tabindex="-1"></a>  dados_limpos<span class="sc">$</span>idade_dias <span class="sc">==</span> <span class="dv">280</span></span>
-<span id="cb37-334"><a href="#cb37-334" aria-hidden="true" tabindex="-1"></a>] <span class="ot">&lt;-</span> <span class="dv">28</span></span>
-<span id="cb37-335"><a href="#cb37-335" aria-hidden="true" tabindex="-1"></a>dados_limpos<span class="sc">$</span>abatimento_mm[</span>
-<span id="cb37-336"><a href="#cb37-336" aria-hidden="true" tabindex="-1"></a>  dados_limpos<span class="sc">$</span>abatimento_mm <span class="sc">==</span> <span class="dv">1250</span></span>
-<span id="cb37-337"><a href="#cb37-337" aria-hidden="true" tabindex="-1"></a>] <span class="ot">&lt;-</span> <span class="dv">125</span></span>
-<span id="cb37-338"><a href="#cb37-338" aria-hidden="true" tabindex="-1"></a>dados_limpos<span class="sc">$</span>densidade_kg_m3[</span>
-<span id="cb37-339"><a href="#cb37-339" aria-hidden="true" tabindex="-1"></a>  dados_limpos<span class="sc">$</span>densidade_kg_m3 <span class="sc">==</span> <span class="dv">238</span></span>
-<span id="cb37-340"><a href="#cb37-340" aria-hidden="true" tabindex="-1"></a>] <span class="ot">&lt;-</span> <span class="dv">2380</span></span>
-<span id="cb37-341"><a href="#cb37-341" aria-hidden="true" tabindex="-1"></a>dados_limpos<span class="sc">$</span>absorção_agregado_pct[</span>
-<span id="cb37-342"><a href="#cb37-342" aria-hidden="true" tabindex="-1"></a>  dados_limpos<span class="sc">$</span>absorção_agregado_pct <span class="sc">==</span> <span class="fl">18.4</span></span>
-<span id="cb37-343"><a href="#cb37-343" aria-hidden="true" tabindex="-1"></a>] <span class="ot">&lt;-</span> <span class="fl">1.84</span></span>
-<span id="cb37-344"><a href="#cb37-344" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb37-345"><a href="#cb37-345" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=FALSE}</span></span>
-<span id="cb37-346"><a href="#cb37-346" aria-hidden="true" tabindex="-1"></a>dados_limpos<span class="sc">$</span>idade_dias[</span>
-<span id="cb37-347"><a href="#cb37-347" aria-hidden="true" tabindex="-1"></a>  dados_limpos<span class="sc">$</span>idade_dias <span class="sc">==</span> <span class="dv">280</span></span>
-<span id="cb37-348"><a href="#cb37-348" aria-hidden="true" tabindex="-1"></a>] <span class="ot">&lt;-</span> <span class="dv">28</span></span>
-<span id="cb37-349"><a href="#cb37-349" aria-hidden="true" tabindex="-1"></a>dados_limpos<span class="sc">$</span>abatimento_mm[</span>
-<span id="cb37-350"><a href="#cb37-350" aria-hidden="true" tabindex="-1"></a>  dados_limpos<span class="sc">$</span>abatimento_mm <span class="sc">==</span> <span class="dv">1250</span></span>
-<span id="cb37-351"><a href="#cb37-351" aria-hidden="true" tabindex="-1"></a>] <span class="ot">&lt;-</span> <span class="dv">125</span></span>
-<span id="cb37-352"><a href="#cb37-352" aria-hidden="true" tabindex="-1"></a>dados_limpos<span class="sc">$</span>densidade_kg_m3[</span>
-<span id="cb37-353"><a href="#cb37-353" aria-hidden="true" tabindex="-1"></a>  dados_limpos<span class="sc">$</span>densidade_kg_m3 <span class="sc">==</span> <span class="dv">238</span></span>
-<span id="cb37-354"><a href="#cb37-354" aria-hidden="true" tabindex="-1"></a>] <span class="ot">&lt;-</span> <span class="dv">2380</span></span>
-<span id="cb37-355"><a href="#cb37-355" aria-hidden="true" tabindex="-1"></a>dados_limpos<span class="sc">$</span>absorção_agregado_pct[</span>
-<span id="cb37-356"><a href="#cb37-356" aria-hidden="true" tabindex="-1"></a>  dados_limpos<span class="sc">$</span>absorção_agregado_pct <span class="sc">==</span> <span class="fl">18.4</span></span>
-<span id="cb37-357"><a href="#cb37-357" aria-hidden="true" tabindex="-1"></a>] <span class="ot">&lt;-</span> <span class="fl">1.84</span></span>
-<span id="cb37-358"><a href="#cb37-358" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(dados_limpos[variaveis_quantitativas])</span>
-<span id="cb37-359"><a href="#cb37-359" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb37-360"><a href="#cb37-360" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-361"><a href="#cb37-361" aria-hidden="true" tabindex="-1"></a>Concluído os ajustes das variáveis quantitativas, vamos agora analisar as variáveis qualitativas, de <span class="in">`obra`</span>e <span class="in">`tipo_concreto`</span>. Para isso utilizaremos a função <span class="in">`unique()`</span>, a seguir.</span>
+<span id="cb37-296"><a href="#cb37-296" aria-hidden="true" tabindex="-1"></a>Ainda observando o banco de dados, agora será verificado se os dados apresentados como variáveis quantitativas são compatíveis estatisticamente. Inicialmente iremos incluir a variável <span class="in">`idade_dias`</span> na atribuição <span class="in">`variaveis_quantitativas`</span> e utilizar a função <span class="in">`summary()`</span>, para uma visão resumida dos dados estatístico de cada variável.</span>
+<span id="cb37-297"><a href="#cb37-297" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-298"><a href="#cb37-298" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb37-299"><a href="#cb37-299" aria-hidden="true" tabindex="-1"></a><span class="co"># Inclução da variável de idade do corpo de prova e print do resumo estátistico das variáveis quantitativas</span></span>
+<span id="cb37-300"><a href="#cb37-300" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-301"><a href="#cb37-301" aria-hidden="true" tabindex="-1"></a>variaveis_quantitativas <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb37-302"><a href="#cb37-302" aria-hidden="true" tabindex="-1"></a>  <span class="st">"idade_dias"</span>,</span>
+<span id="cb37-303"><a href="#cb37-303" aria-hidden="true" tabindex="-1"></a>  <span class="st">"resistencia_mpa"</span>,</span>
+<span id="cb37-304"><a href="#cb37-304" aria-hidden="true" tabindex="-1"></a>  <span class="st">"cimento_kg_m3"</span>,</span>
+<span id="cb37-305"><a href="#cb37-305" aria-hidden="true" tabindex="-1"></a>  <span class="st">"relacao_a_c"</span>,</span>
+<span id="cb37-306"><a href="#cb37-306" aria-hidden="true" tabindex="-1"></a>  <span class="st">"abatimento_mm"</span>,</span>
+<span id="cb37-307"><a href="#cb37-307" aria-hidden="true" tabindex="-1"></a>  <span class="st">"densidade_kg_m3"</span>,</span>
+<span id="cb37-308"><a href="#cb37-308" aria-hidden="true" tabindex="-1"></a>  <span class="st">"absorção_agregado_pct"</span></span>
+<span id="cb37-309"><a href="#cb37-309" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb37-310"><a href="#cb37-310" aria-hidden="true" tabindex="-1"></a>dados_limpos[variaveis_quantitativas] <span class="ot">&lt;-</span></span>
+<span id="cb37-311"><a href="#cb37-311" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lapply</span>(dados_limpos[variaveis_quantitativas], as.numeric)</span>
+<span id="cb37-312"><a href="#cb37-312" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb37-313"><a href="#cb37-313" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(dados_limpos[variaveis_quantitativas])</span>
+<span id="cb37-314"><a href="#cb37-314" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-315"><a href="#cb37-315" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb37-316"><a href="#cb37-316" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=FALSE}</span></span>
+<span id="cb37-317"><a href="#cb37-317" aria-hidden="true" tabindex="-1"></a>variaveis_quantitativas <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb37-318"><a href="#cb37-318" aria-hidden="true" tabindex="-1"></a>  <span class="st">"idade_dias"</span>,</span>
+<span id="cb37-319"><a href="#cb37-319" aria-hidden="true" tabindex="-1"></a>  <span class="st">"resistencia_mpa"</span>,</span>
+<span id="cb37-320"><a href="#cb37-320" aria-hidden="true" tabindex="-1"></a>  <span class="st">"cimento_kg_m3"</span>,</span>
+<span id="cb37-321"><a href="#cb37-321" aria-hidden="true" tabindex="-1"></a>  <span class="st">"relacao_a_c"</span>,</span>
+<span id="cb37-322"><a href="#cb37-322" aria-hidden="true" tabindex="-1"></a>  <span class="st">"abatimento_mm"</span>,</span>
+<span id="cb37-323"><a href="#cb37-323" aria-hidden="true" tabindex="-1"></a>  <span class="st">"densidade_kg_m3"</span>,</span>
+<span id="cb37-324"><a href="#cb37-324" aria-hidden="true" tabindex="-1"></a>  <span class="st">"absorção_agregado_pct"</span></span>
+<span id="cb37-325"><a href="#cb37-325" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb37-326"><a href="#cb37-326" aria-hidden="true" tabindex="-1"></a>dados_limpos[variaveis_quantitativas] <span class="ot">&lt;-</span></span>
+<span id="cb37-327"><a href="#cb37-327" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lapply</span>(dados_limpos[variaveis_quantitativas], as.numeric)</span>
+<span id="cb37-328"><a href="#cb37-328" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(dados_limpos[variaveis_quantitativas])</span>
+<span id="cb37-329"><a href="#cb37-329" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb37-330"><a href="#cb37-330" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb37-331"><a href="#cb37-331" aria-hidden="true" tabindex="-1"></a>A partir dessa visualização, ao comparar as medidas de tendência central com os valores mínimos e máximos das variáveis, observa-se a presença de alguns valores que destoam significativamente do comportamento geral dos dados, indicando possíveis erros de digitação. A idade dos corpos de prova apresenta média de 28 dias, enquanto o valor máximo registrado é de 280 dias. Para o abatimento do concreto, verifica-se média de 121,70 mm e valor máximo de 1.250,00 mm. Em relação à densidade, a média observada é de 2,351 kg/m³, enquanto o valor mínimo corresponde a apenas 238 kg/m³. Por fim, a absorção de água do agregado apresenta média de 1,95%, contrastando com o valor máximo de 18,40%. A seguir, iremos localizar as amostras correspondente a esses dados  e realizar os devidos refinamentos com base nos resultados esperados para as variáveis estudadas.</span>
+<span id="cb37-332"><a href="#cb37-332" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-333"><a href="#cb37-333" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb37-334"><a href="#cb37-334" aria-hidden="true" tabindex="-1"></a>dados_limpos<span class="sc">$</span>idade_dias[</span>
+<span id="cb37-335"><a href="#cb37-335" aria-hidden="true" tabindex="-1"></a>  dados_limpos<span class="sc">$</span>idade_dias <span class="sc">==</span> <span class="dv">280</span></span>
+<span id="cb37-336"><a href="#cb37-336" aria-hidden="true" tabindex="-1"></a>] <span class="ot">&lt;-</span> <span class="dv">28</span></span>
+<span id="cb37-337"><a href="#cb37-337" aria-hidden="true" tabindex="-1"></a>dados_limpos<span class="sc">$</span>abatimento_mm[</span>
+<span id="cb37-338"><a href="#cb37-338" aria-hidden="true" tabindex="-1"></a>  dados_limpos<span class="sc">$</span>abatimento_mm <span class="sc">==</span> <span class="dv">1250</span></span>
+<span id="cb37-339"><a href="#cb37-339" aria-hidden="true" tabindex="-1"></a>] <span class="ot">&lt;-</span> <span class="dv">125</span></span>
+<span id="cb37-340"><a href="#cb37-340" aria-hidden="true" tabindex="-1"></a>dados_limpos<span class="sc">$</span>densidade_kg_m3[</span>
+<span id="cb37-341"><a href="#cb37-341" aria-hidden="true" tabindex="-1"></a>  dados_limpos<span class="sc">$</span>densidade_kg_m3 <span class="sc">==</span> <span class="dv">238</span></span>
+<span id="cb37-342"><a href="#cb37-342" aria-hidden="true" tabindex="-1"></a>] <span class="ot">&lt;-</span> <span class="dv">2380</span></span>
+<span id="cb37-343"><a href="#cb37-343" aria-hidden="true" tabindex="-1"></a>dados_limpos<span class="sc">$</span>absorção_agregado_pct[</span>
+<span id="cb37-344"><a href="#cb37-344" aria-hidden="true" tabindex="-1"></a>  dados_limpos<span class="sc">$</span>absorção_agregado_pct <span class="sc">==</span> <span class="fl">18.4</span></span>
+<span id="cb37-345"><a href="#cb37-345" aria-hidden="true" tabindex="-1"></a>] <span class="ot">&lt;-</span> <span class="fl">1.84</span></span>
+<span id="cb37-346"><a href="#cb37-346" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb37-347"><a href="#cb37-347" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=FALSE}</span></span>
+<span id="cb37-348"><a href="#cb37-348" aria-hidden="true" tabindex="-1"></a>dados_limpos<span class="sc">$</span>idade_dias[</span>
+<span id="cb37-349"><a href="#cb37-349" aria-hidden="true" tabindex="-1"></a>  dados_limpos<span class="sc">$</span>idade_dias <span class="sc">==</span> <span class="dv">280</span></span>
+<span id="cb37-350"><a href="#cb37-350" aria-hidden="true" tabindex="-1"></a>] <span class="ot">&lt;-</span> <span class="dv">28</span></span>
+<span id="cb37-351"><a href="#cb37-351" aria-hidden="true" tabindex="-1"></a>dados_limpos<span class="sc">$</span>abatimento_mm[</span>
+<span id="cb37-352"><a href="#cb37-352" aria-hidden="true" tabindex="-1"></a>  dados_limpos<span class="sc">$</span>abatimento_mm <span class="sc">==</span> <span class="dv">1250</span></span>
+<span id="cb37-353"><a href="#cb37-353" aria-hidden="true" tabindex="-1"></a>] <span class="ot">&lt;-</span> <span class="dv">125</span></span>
+<span id="cb37-354"><a href="#cb37-354" aria-hidden="true" tabindex="-1"></a>dados_limpos<span class="sc">$</span>densidade_kg_m3[</span>
+<span id="cb37-355"><a href="#cb37-355" aria-hidden="true" tabindex="-1"></a>  dados_limpos<span class="sc">$</span>densidade_kg_m3 <span class="sc">==</span> <span class="dv">238</span></span>
+<span id="cb37-356"><a href="#cb37-356" aria-hidden="true" tabindex="-1"></a>] <span class="ot">&lt;-</span> <span class="dv">2380</span></span>
+<span id="cb37-357"><a href="#cb37-357" aria-hidden="true" tabindex="-1"></a>dados_limpos<span class="sc">$</span>absorção_agregado_pct[</span>
+<span id="cb37-358"><a href="#cb37-358" aria-hidden="true" tabindex="-1"></a>  dados_limpos<span class="sc">$</span>absorção_agregado_pct <span class="sc">==</span> <span class="fl">18.4</span></span>
+<span id="cb37-359"><a href="#cb37-359" aria-hidden="true" tabindex="-1"></a>] <span class="ot">&lt;-</span> <span class="fl">1.84</span></span>
+<span id="cb37-360"><a href="#cb37-360" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(dados_limpos[variaveis_quantitativas])</span>
+<span id="cb37-361"><a href="#cb37-361" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb37-362"><a href="#cb37-362" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-363"><a href="#cb37-363" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
-<span id="cb37-364"><a href="#cb37-364" aria-hidden="true" tabindex="-1"></a><span class="co"># Verificação de valores diferentes dentro de cada variável</span></span>
-<span id="cb37-365"><a href="#cb37-365" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(dados<span class="sc">$</span>obra)</span>
-<span id="cb37-366"><a href="#cb37-366" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(dados<span class="sc">$</span>tipo_concreto)</span>
-<span id="cb37-367"><a href="#cb37-367" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-368"><a href="#cb37-368" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb37-369"><a href="#cb37-369" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=FALSE}</span></span>
-<span id="cb37-370"><a href="#cb37-370" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(dados<span class="sc">$</span>obra)</span>
-<span id="cb37-371"><a href="#cb37-371" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(dados<span class="sc">$</span>tipo_concreto)</span>
-<span id="cb37-372"><a href="#cb37-372" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb37-373"><a href="#cb37-373" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-374"><a href="#cb37-374" aria-hidden="true" tabindex="-1"></a>Para a variável <span class="in">`obra`</span>, observa-se que as amostras foram coletadas em quatro blocos, identificados como A, B, C e D. Entretanto, foi identificada uma inconsistência na padronização dos dados referentes ao Bloco B, em que alguns registros apresentam um caractere de espaço adicional ao final do texto. Já para a variável <span class="in">`tipo_concreto`</span>, observa-se que as classes de concreto são identificadas pelo padrão de escrita com a letra C maiúscula, seguida do respectivo valor numérico. Entretanto, foi identificado que há registros da classe C30 digitado como "c30", com letra minúscula.</span>
-<span id="cb37-375"><a href="#cb37-375" aria-hidden="true" tabindex="-1"></a>Essas diferenças faz com que o R interprete os registros como categorias distintas, podendo comprometer o agrupamento das observações e, consequentemente, a obtenção e interpretação dos resultados. Sendo assim, foi feito os devidos ajustes para que as mesma categorias possam ser agrupadas.</span>
-<span id="cb37-376"><a href="#cb37-376" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-377"><a href="#cb37-377" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
-<span id="cb37-378"><a href="#cb37-378" aria-hidden="true" tabindex="-1"></a><span class="co"># Remoção de espaços em `obra`</span></span>
-<span id="cb37-379"><a href="#cb37-379" aria-hidden="true" tabindex="-1"></a>dados_limpos<span class="sc">$</span>obra <span class="ot">&lt;-</span> <span class="fu">trimws</span>(dados_limpos<span class="sc">$</span>obra)</span>
-<span id="cb37-380"><a href="#cb37-380" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-381"><a href="#cb37-381" aria-hidden="true" tabindex="-1"></a><span class="co"># Alteração para letras maiúsculas em `tipo_concreto`</span></span>
-<span id="cb37-382"><a href="#cb37-382" aria-hidden="true" tabindex="-1"></a>dados_limpos<span class="sc">$</span>tipo_concreto <span class="ot">&lt;-</span> <span class="fu">toupper</span>(dados_limpos<span class="sc">$</span>tipo_concreto)</span>
-<span id="cb37-383"><a href="#cb37-383" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-384"><a href="#cb37-384" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb37-385"><a href="#cb37-385" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=FALSE}</span></span>
-<span id="cb37-386"><a href="#cb37-386" aria-hidden="true" tabindex="-1"></a>dados_limpos<span class="sc">$</span>obra <span class="ot">&lt;-</span> <span class="fu">trimws</span>(dados_limpos<span class="sc">$</span>obra)</span>
-<span id="cb37-387"><a href="#cb37-387" aria-hidden="true" tabindex="-1"></a>dados_limpos<span class="sc">$</span>tipo_concreto <span class="ot">&lt;-</span> <span class="fu">toupper</span>(dados_limpos<span class="sc">$</span>tipo_concreto)</span>
-<span id="cb37-388"><a href="#cb37-388" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(dados_limpos<span class="sc">$</span>obra)</span>
-<span id="cb37-389"><a href="#cb37-389" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(dados_limpos<span class="sc">$</span>tipo_concreto)</span>
-<span id="cb37-390"><a href="#cb37-390" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb37-391"><a href="#cb37-391" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-392"><a href="#cb37-392" aria-hidden="true" tabindex="-1"></a>Após a identificação e o tratamento das inconsistências presentes na base de dados, realizou-se uma nova verificação do conjunto de dados <span class="in">`dados_limpos`</span>, com o objetivo de avaliar a estrutura das variáveis e conferir os resultados obtidos após o processo de limpeza.</span>
+<span id="cb37-363"><a href="#cb37-363" aria-hidden="true" tabindex="-1"></a>Concluído os ajustes das variáveis quantitativas, vamos agora analisar as variáveis qualitativas, de <span class="in">`obra`</span>e <span class="in">`tipo_concreto`</span>. Para isso utilizaremos a função <span class="in">`unique()`</span>, a seguir.</span>
+<span id="cb37-364"><a href="#cb37-364" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-365"><a href="#cb37-365" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb37-366"><a href="#cb37-366" aria-hidden="true" tabindex="-1"></a><span class="co"># Verificação de valores diferentes dentro de cada variável</span></span>
+<span id="cb37-367"><a href="#cb37-367" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(dados<span class="sc">$</span>obra)</span>
+<span id="cb37-368"><a href="#cb37-368" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(dados<span class="sc">$</span>tipo_concreto)</span>
+<span id="cb37-369"><a href="#cb37-369" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-370"><a href="#cb37-370" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb37-371"><a href="#cb37-371" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=FALSE}</span></span>
+<span id="cb37-372"><a href="#cb37-372" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(dados<span class="sc">$</span>obra)</span>
+<span id="cb37-373"><a href="#cb37-373" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(dados<span class="sc">$</span>tipo_concreto)</span>
+<span id="cb37-374"><a href="#cb37-374" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb37-375"><a href="#cb37-375" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-376"><a href="#cb37-376" aria-hidden="true" tabindex="-1"></a>Para a variável <span class="in">`obra`</span>, observa-se que as amostras foram coletadas em quatro blocos, identificados como A, B, C e D. Entretanto, foi identificada uma inconsistência na padronização dos dados referentes ao Bloco B, em que alguns registros apresentam um caractere de espaço adicional ao final do texto. Já para a variável <span class="in">`tipo_concreto`</span>, observa-se que as classes de concreto são identificadas pelo padrão de escrita com a letra C maiúscula, seguida do respectivo valor numérico. Entretanto, foi identificado que há registros da classe C30 digitado como "c30", com letra minúscula.</span>
+<span id="cb37-377"><a href="#cb37-377" aria-hidden="true" tabindex="-1"></a>Essas diferenças faz com que o R interprete os registros como categorias distintas, podendo comprometer o agrupamento das observações e, consequentemente, a obtenção e interpretação dos resultados. Sendo assim, foi feito os devidos ajustes para que as mesma categorias possam ser agrupadas.</span>
+<span id="cb37-378"><a href="#cb37-378" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-379"><a href="#cb37-379" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb37-380"><a href="#cb37-380" aria-hidden="true" tabindex="-1"></a><span class="co"># Remoção de espaços em `obra`</span></span>
+<span id="cb37-381"><a href="#cb37-381" aria-hidden="true" tabindex="-1"></a>dados_limpos<span class="sc">$</span>obra <span class="ot">&lt;-</span> <span class="fu">trimws</span>(dados_limpos<span class="sc">$</span>obra)</span>
+<span id="cb37-382"><a href="#cb37-382" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-383"><a href="#cb37-383" aria-hidden="true" tabindex="-1"></a><span class="co"># Alteração para letras maiúsculas em `tipo_concreto`</span></span>
+<span id="cb37-384"><a href="#cb37-384" aria-hidden="true" tabindex="-1"></a>dados_limpos<span class="sc">$</span>tipo_concreto <span class="ot">&lt;-</span> <span class="fu">toupper</span>(dados_limpos<span class="sc">$</span>tipo_concreto)</span>
+<span id="cb37-385"><a href="#cb37-385" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-386"><a href="#cb37-386" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb37-387"><a href="#cb37-387" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=FALSE}</span></span>
+<span id="cb37-388"><a href="#cb37-388" aria-hidden="true" tabindex="-1"></a>dados_limpos<span class="sc">$</span>obra <span class="ot">&lt;-</span> <span class="fu">trimws</span>(dados_limpos<span class="sc">$</span>obra)</span>
+<span id="cb37-389"><a href="#cb37-389" aria-hidden="true" tabindex="-1"></a>dados_limpos<span class="sc">$</span>tipo_concreto <span class="ot">&lt;-</span> <span class="fu">toupper</span>(dados_limpos<span class="sc">$</span>tipo_concreto)</span>
+<span id="cb37-390"><a href="#cb37-390" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(dados_limpos<span class="sc">$</span>obra)</span>
+<span id="cb37-391"><a href="#cb37-391" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(dados_limpos<span class="sc">$</span>tipo_concreto)</span>
+<span id="cb37-392"><a href="#cb37-392" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb37-393"><a href="#cb37-393" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-394"><a href="#cb37-394" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
-<span id="cb37-395"><a href="#cb37-395" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(dados_limpos)</span>
-<span id="cb37-396"><a href="#cb37-396" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(dados_limpos)</span>
-<span id="cb37-397"><a href="#cb37-397" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb37-398"><a href="#cb37-398" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=FALSE}</span></span>
-<span id="cb37-399"><a href="#cb37-399" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(dados_limpos)</span>
-<span id="cb37-400"><a href="#cb37-400" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(dados_limpos)</span>
-<span id="cb37-401"><a href="#cb37-401" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb37-402"><a href="#cb37-402" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-403"><a href="#cb37-403" aria-hidden="true" tabindex="-1"></a>A partir da aplicação da função <span class="in">`str()`</span>, verificou-se que a base de dados tratada permanece composta por 100 observações e 10 variáveis. Após o processo de limpeza, as variáveis quantitativas foram adequadamente convertidas para o tipo numérico (num), enquanto as variáveis qualitativas permaneceram armazenadas como caracteres (chr).</span>
+<span id="cb37-394"><a href="#cb37-394" aria-hidden="true" tabindex="-1"></a>Após a identificação e o tratamento das inconsistências presentes na base de dados, realizou-se uma nova verificação do conjunto de dados <span class="in">`dados_limpos`</span>, com o objetivo de avaliar a estrutura das variáveis e conferir os resultados obtidos após o processo de limpeza.</span>
+<span id="cb37-395"><a href="#cb37-395" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-396"><a href="#cb37-396" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb37-397"><a href="#cb37-397" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(dados_limpos)</span>
+<span id="cb37-398"><a href="#cb37-398" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(dados_limpos)</span>
+<span id="cb37-399"><a href="#cb37-399" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb37-400"><a href="#cb37-400" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=FALSE}</span></span>
+<span id="cb37-401"><a href="#cb37-401" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(dados_limpos)</span>
+<span id="cb37-402"><a href="#cb37-402" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(dados_limpos)</span>
+<span id="cb37-403"><a href="#cb37-403" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb37-404"><a href="#cb37-404" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-405"><a href="#cb37-405" aria-hidden="true" tabindex="-1"></a>Por meio da função <span class="in">`summary()`</span>, foi possível verificar o comportamento das variáveis após as correções realizadas. Observa-se que os valores anteriormente identificados como discrepantes foram tratados, resultando em intervalos mais coerentes para as variáveis analisadas. A idade dos corpos de prova passou a variar entre 7 e 56 dias, o abatimento entre 64 e 175 mm, a densidade entre 2.293 e 2.464 kg/m³ e a absorção de água do agregado entre 0,80% e 2,92%.</span>
+<span id="cb37-405"><a href="#cb37-405" aria-hidden="true" tabindex="-1"></a>A partir da aplicação da função <span class="in">`str()`</span>, verificou-se que a base de dados tratada permanece composta por 100 observações e 10 variáveis. Após o processo de limpeza, as variáveis quantitativas foram adequadamente convertidas para o tipo numérico (num), enquanto as variáveis qualitativas permaneceram armazenadas como caracteres (chr).</span>
 <span id="cb37-406"><a href="#cb37-406" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-407"><a href="#cb37-407" aria-hidden="true" tabindex="-1"></a>Além disso, as variáveis resistência à compressão, consumo de cimento e relação água/cimento apresentaram valores entre 19,0 e 47,5 MPa, 295 e 418 kg/m³ e 0,43 e 0,65, respectivamente. Dessa forma, a nova inspeção indica que as inconsistências identificadas nas etapas anteriores foram corrigidas, tornando a base mais adequada para as análises subsequentes.</span>
+<span id="cb37-407"><a href="#cb37-407" aria-hidden="true" tabindex="-1"></a>Por meio da função <span class="in">`summary()`</span>, foi possível verificar o comportamento das variáveis após as correções realizadas. Observa-se que os valores anteriormente identificados como discrepantes foram tratados, resultando em intervalos mais coerentes para as variáveis analisadas. A idade dos corpos de prova passou a variar entre 7 e 56 dias, o abatimento entre 64 e 175 mm, a densidade entre 2.293 e 2.464 kg/m³ e a absorção de água do agregado entre 0,80% e 2,92%.</span>
 <span id="cb37-408"><a href="#cb37-408" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-409"><a href="#cb37-409" aria-hidden="true" tabindex="-1"></a><span class="fu">## 🧠 Considerações finais</span></span>
+<span id="cb37-409"><a href="#cb37-409" aria-hidden="true" tabindex="-1"></a>Além disso, as variáveis resistência à compressão, consumo de cimento e relação água/cimento apresentaram valores entre 19,0 e 47,5 MPa, 295 e 418 kg/m³ e 0,43 e 0,65, respectivamente. Dessa forma, a nova inspeção indica que as inconsistências identificadas nas etapas anteriores foram corrigidas, tornando a base mais adequada para as análises subsequentes.</span>
 <span id="cb37-410"><a href="#cb37-410" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-411"><a href="#cb37-411" aria-hidden="true" tabindex="-1"></a>Apresente uma síntese dos principais pontos observados no experimento.</span>
+<span id="cb37-411"><a href="#cb37-411" aria-hidden="true" tabindex="-1"></a><span class="fu">## 🧠 Considerações finais</span></span>
 <span id="cb37-412"><a href="#cb37-412" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-413"><a href="#cb37-413" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Retome o objetivo da prática e indique se ele foi alcançado.</span>
-<span id="cb37-414"><a href="#cb37-414" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Destaque os principais aprendizados obtidos.</span>
-<span id="cb37-415"><a href="#cb37-415" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Comente brevemente sobre a qualidade dos dados coletados.</span>
-<span id="cb37-416"><a href="#cb37-416" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Sugira possíveis melhorias no procedimento experimental.</span>
-<span id="cb37-417"><a href="#cb37-417" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-418"><a href="#cb37-418" aria-hidden="true" tabindex="-1"></a>Evite repetir apenas os resultados; foque nas **conclusões e reflexões** sobre a `variaveis prática realizada.</span>
+<span id="cb37-413"><a href="#cb37-413" aria-hidden="true" tabindex="-1"></a>Apresente uma síntese dos principais pontos observados no experimento.</span>
+<span id="cb37-414"><a href="#cb37-414" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-415"><a href="#cb37-415" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Retome o objetivo da prática e indique se ele foi alcançado.</span>
+<span id="cb37-416"><a href="#cb37-416" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Destaque os principais aprendizados obtidos.</span>
+<span id="cb37-417"><a href="#cb37-417" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Comente brevemente sobre a qualidade dos dados coletados.</span>
+<span id="cb37-418"><a href="#cb37-418" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Sugira possíveis melhorias no procedimento experimental.</span>
 <span id="cb37-419"><a href="#cb37-419" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-420"><a href="#cb37-420" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-420"><a href="#cb37-420" aria-hidden="true" tabindex="-1"></a>Evite repetir apenas os resultados; foque nas **conclusões e reflexões** sobre a `variaveis prática realizada.</span>
 <span id="cb37-421"><a href="#cb37-421" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-422"><a href="#cb37-422" aria-hidden="true" tabindex="-1"></a><span class="fu">## 📖 Referências</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb37-422"><a href="#cb37-422" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-423"><a href="#cb37-423" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-424"><a href="#cb37-424" aria-hidden="true" tabindex="-1"></a><span class="fu">## 📖 Referências</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 
