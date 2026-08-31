@@ -696,6 +696,70 @@ dim(dados_limpos)
 names(dados_limpos)
 ```
 
+#### Aplicando as funções `split()`, `lapply()` e `sapply()`
+
+A base de dados foi dividida de acordo com a variável `tipo_concreto` por meio da função `split()`, resultando em uma lista composta por quatro grupos correspondentes às classes C25, C30, C35 e C40. Em seguida, utilizou-se `sapply()` em conjunto com `nrow()` para determinar o número de observações pertencentes a cada grupo.
+
+```r
+# Criação de uma lista contendo um data.frame para cada tipo de concreto
+dados_por_concreto <- split(
+  dados_limpos,
+  dados_limpos$tipo_concreto
+)
+
+# Quantas observações existem em cada grupo
+sapply(dados_por_concreto, nrow)
+
+```
+```{r, echo=FALSE}
+dados_por_concreto <- split(
+  dados_limpos,
+  dados_limpos$tipo_concreto
+)
+
+sapply(dados_por_concreto, nrow)
+```
+
+Utilizando a estrutura obtida com `split()`, aplicou-se a função `lapply()` para calcular a resistência média à compressão de cada tipo de concreto. A função percorreu individualmente os quatro grupos e aplicou `mean()` à variável `resistencia_mpa`, retornando os resultados na forma de uma lista.
+
+```r
+# Resistência média à compressão de cada tipo de concreto por meio do lapply()
+media_lapply <- lapply(
+  dados_por_concreto,
+  function(x) mean(x$resistencia_mpa)
+)
+```
+```{r, echo=FALSE}
+media_lapply <- lapply(
+  dados_por_concreto,
+  function(x) mean(x$resistencia_mpa)
+)
+
+media_lapply
+```
+
+Agora, de forma similar a anterior, utilizando a estrutura obtida com `split()`, aplicou-se a função `sapply()` para calcular a resistência média à compressão de cada tipo de concreto. Entretanto, o objeto de retorno, agora é um vetor numérico, estrutura bem mais simplificada.
+
+```r
+# Resistência média à compressão de cada tipo de concreto por meio do lapply()
+media_sapply <- sapply(
+  dados_por_concreto,
+  function(x) mean(x$resistencia_mpa)
+)
+```
+```{r, echo=FALSE}
+media_sapply <- sapply(
+  dados_por_concreto,
+  function(x) mean(x$resistencia_mpa)
+)
+
+media_sapply
+```
+
+Os valores das resistências médias obtidos com `sapply()` são equivalentes aos calculados com `lapply()`, uma vez que ambas as funções aplicaram a mesma operação aos grupos criados por `split()`. A diferença está na estrutura do resultado: `lapply()` retorna sempre uma lista, enquanto `sapply()` procura simplificar o resultado e, neste caso, retorna um vetor numérico. Portanto, `sapply()` proporciona uma apresentação mais compacta para resultados simples, enquanto `lapply()` preserva a estrutura de lista.
+
+#### Aplicando a função `apply()`
+
 
 
 ## 🧠 Considerações finais
