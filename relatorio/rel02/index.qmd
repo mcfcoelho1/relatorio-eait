@@ -55,14 +55,37 @@ Processar e analisar uma base de dados referente ao controle tecnológico do con
 
 ## ⚙️ Metodologia
 
+O desenvolvimento deste trabalho será realizado a partir de uma base de dados relacionada ao controle tecnológico do concreto, contendo informações referentes aos corpos de prova, à sua localização na obra, ao tipo de concreto, à idade de ensaio e às características do material. O processamento e a análise dos dados serão realizados utilizando a linguagem R.
 
-::: {.callout-note}
-Descreva como o experimento foi realizado.
-:::
+Inicialmente, será realizada a importação e a inspeção da base de dados, buscando compreender sua estrutura, identificar as variáveis presentes e classificá-las de acordo com suas características. Nessa etapa, também será verificada a forma como as variáveis foram reconhecidas pelo R, permitindo identificar possíveis problemas que possam interferir nas análises posteriores.
 
-- Materiais utilizados  
-- Procedimento  
-- Número de repetições  
+Em seguida, será realizada a investigação da qualidade dos dados, considerando a existência de valores ausentes, possíveis erros de digitação, inconsistências na padronização das variáveis e valores que apresentem comportamento diferente do restante da base. Quando necessário, serão realizadas correções e padronizações, mantendo-se uma cópia dos dados originalmente recebidos para preservar a rastreabilidade das alterações realizadas. Ao final dessa etapa, será obtida uma base tratada para utilização nas análises seguintes.
+
+Após o tratamento, será realizada a exploração estatística dos dados, considerando principalmente as características relacionadas à resistência à compressão do concreto. Serão calculadas medidas descritivas e realizadas análises agrupadas de acordo com o bloco da obra, o tipo de concreto e a idade dos corpos de prova. Para isso, serão utilizadas diferentes funções disponíveis no R para organização, agrupamento e processamento das informações.
+
+Também serão criadas variáveis derivadas a partir dos dados existentes, permitindo realizar comparações entre a resistência observada dos corpos de prova e valores de referência, além de identificar resultados superiores à média de cada classe de concreto. Durante essa etapa, serão aplicadas funções vetorizadas, estruturas condicionais e estruturas de repetição, possibilitando explorar diferentes formas de processamento dos dados na linguagem R.
+
+Por fim, os dados tratados serão utilizados na investigação de situações relacionadas à prática profissional da Engenharia Civil. Serão realizadas comparações entre grupos e analisadas possíveis relações entre a resistência à compressão e outras características do concreto, como idade, consumo de cimento e relação água/cimento. Para complementar a análise, serão utilizadas medidas estatísticas e representações gráficas, buscando fornecer informações que possam contribuir para a interpretação dos resultados do controle tecnológico do concreto.  
+
+Principais funções e comandos utilizados no R:
+
+- `read.csv2()` - importação da base de dados;
+- `str()` e `summary()` - inspeção da estrutura e resumo das variáveis;
+- `is.na()`, `which()` e `colSums()` - identificação e localização de dados ausentes e inconsistências;
+- `as.numeric()` - conversão das variáveis para o tipo numérico;
+- `gsub()`, `trimws()` e `toupper()` - correção e padronização dos dados;
+- `subset()` - seleção e exclusão de observações da base;
+- `mean()` e `sd()` - cálculo de medidas estatísticas;
+- `min()`, `max()`, `which.min()` e `which.max()` - identificação de valores mínimos e máximos;
+- `tapply()` e `aggregate()` - cálculo de estatísticas por grupos;
+- `split()` - divisão da base de dados em grupos;
+- `lapply()`, `sapply()` e `apply()` - aplicação de funções sobre diferentes estruturas de dados;
+- `ave()` - cálculo de médias por grupos associado às observações;
+- `ifelse()` e `if` - aplicação de condições;
+- `for()` - execução de estruturas de repetição;
+- `cor()` - cálculo do coeficiente de correlação entre variáveis;
+- `plot()` - elaboração das representações gráficas;
+- `knitr::kable()` - organização e apresentação das tabelas no relatório.
 
 ---
 
@@ -85,8 +108,12 @@ dados <- read.csv2(
   stringsAsFactors = FALSE,
   check.names = FALSE
 )
-dados
+knitr::kable(
+  dados,
+  align = "c"
+)
 ```
+
 
 Para obter o valor de observações e de variáveis existentes no banco de dados, é possível utilizar a função `str()` e, para um resumo dessas variáveis, utiliza-se `summary()`:
 
@@ -149,14 +176,21 @@ resultado_ausentes <- data.frame(
   Variavel = colnames(dados)[ausentes[, 2]]
 )
 
-resultado_ausentes
+knitr::kable(
+  resultado_ausentes,
+  col.names = c(
+    "Corpo de prova",
+    "Variável com dado ausente"
+  ),
+  align = "c"
+)
 ```
 
-Considerando a baixa ocorrência de dados ausentes em relação ao número total de observações da base, optou-se pela exclusão das linhas que apresentaram-se como vazios. Essa abordagem permite trabalhar com observações completas nas análises subsequentes, sem a necessidade de estimar ou imputar valores não observados. Dessa forma, busca-se preservar a representatividade dos dados efetivamente disponíveis e garantir maior consistência na aplicação das análises estatísticas. A remoção dessas linhas que contém vazios será feita após as análises das Variáveis Quantitativas e Qualitativas.
+Considerando a baixa ocorrência de dados ausentes em relação ao número total de observações da base, optou-se pela exclusão das linhas que apresentaram-se como vazios. Essa abordagem permite trabalhar com observações completas nas análises subsequentes, sem a necessidade de estimar ou imputar valores não observados. Dessa forma, busca-se trabalhar apenas com observações completas e garantir maior consistência na aplicação das análises estatísticas. A remoção dessas linhas que contêm valores ausentes será feita após as análises das Variáveis Quantitativas e Qualitativas.
 
 #### Variáveis quantitativas
 
-Para verificar e corrigir os dados que apresentam inconsistências dentro das variáveis quantitativas e que causaram o reconhecimento delas como `(chr)`, iremos utilizar a função `as.numeric()` para tentar converter todos os valores para números em uma cópia da base de dados, nomeada como `dados_conversao`. Já para o armazenamento dos dados tratados, será atribuído uma cópia da base de dados para `dados_limpos`, importante para manter a integridade dos dados originalmente recebidos, possibilitando a rastreabilidade das alterações realizadas e a comparação entre os dados antes e após o tratamento.
+Para verificar e corrigir os dados que apresentam inconsistências dentro das variáveis quantitativas e que causaram o reconhecimento delas como `(chr)`, será utilizada a função `as.numeric()` para tentar converter todos os valores para números em uma cópia da base de dados, nomeada como `dados_conversao`. Já para o armazenamento dos dados tratados, será atribuído uma cópia da base de dados para `dados_limpos`, importante para manter a integridade dos dados originalmente recebidos, possibilitando a rastreabilidade das alterações realizadas e a comparação entre os dados antes e após o tratamento.
 
 ```r
 # Agrupando as variáveis com erro de tipagem
@@ -235,12 +269,21 @@ resultado_problemas <- data.frame(
   Variavel = colnames(problemas)[posicoes[, 2]],
   Valor = dados[variaveis_quantitativas][problemas]
 )
-resultado_problemas
+
+knitr::kable(
+  resultado_problemas,
+  col.names = c(
+    "Corpo de prova",
+    "Variável",
+    "Valor original"
+  ),
+  align = "c"
+)
 ```
 
-Diante disso, podemos observar que provavelmente houve erro de digitação nos 4 valores apresentados acima, como a utilização de vírgula ao invés de ponto e o uso de caractere letra junto a caractere número. Nesse segundo caso, para a variável `resistencia_mpa`o erro foi a troca da letra "o" pelo numeral zero, sendo o valor correto "30.4", já para a variável `cimento_kg_m3`, a troca não faria sentido em termos de coerência estatística, sendo necessário a exclusão da letra "o", assim o valor correto é "390". Logo, para a correção desse valores, iremos realizar as devidas substituíções e exclusões no `dados_limpos`.
+Diante disso, podemos observar que provavelmente houve erro de digitação nos 4 valores apresentados acima, como a utilização de vírgula ao invés de ponto e o uso de caractere letra junto a caractere número. No primeiro e no segundo caso, houve a utilização de "," para a segregação dos números decimais, onde o correto seria a utilização do ".". Além disso, também no segundo caso, o erro foi a troca da letra "o" pelo numeral zero, sendo o valor correto "30.4". Já para a variável `cimento_kg_m3`, a troca não faria sentido em termos de coerência estatística, sendo necessário a exclusão da letra "o", assim o valor correto é "390". Logo, para a correção desse valores, serão realizadas as devidas substituições e exclusões no `dados_limpos`.
 
-Para a correção da utilização da vírgula no lugar de ponto, utilizaremos a função `gsub()`, que procura um texto e substitui por outro, junto das funções `function(x)`, que cria uma função temporária para que x percorra cada coluna para `lapply()`analisar.
+Para a correção da utilização da vírgula no lugar de ponto, será utilizada a função `gsub()`, que procura um texto e substitui por outro, junto das funções `function(x)`, que cria uma função temporária para que x percorra cada coluna para `lapply()`analisar.
 
 ```r
 # Substituindo vírgula por ponto
@@ -264,11 +307,10 @@ dados_limpos$resistencia_mpa[
   dados_limpos$id_corpo_prova == "CP-019"
 ] <- "30.4"
 
-# Excluíndo a letra "o"
+# Excluindo a letra "o"
 dados_limpos$cimento_kg_m3[
   dados_limpos$id_corpo_prova == "CP-064"
 ] <- "390"
-)
 ```
 ```{r, echo=FALSE}
 dados_limpos$resistencia_mpa[
@@ -296,10 +338,10 @@ dados_limpos[variaveis_quantitativas] <- lapply(
 str(dados_limpos)
 ```
 
-Ainda observando o banco de dados, agora será verificado se os dados apresentados como variáveis quantitativas são compatíveis estatisticamente. Inicialmente iremos incluir a variável `idade_dias` na atribuição `variaveis_quantitativas`, em seguida utilizar a função `summary()`, para uma visão resumida dos dados estatístico de cada variável.
+Ainda observando o banco de dados, agora será verificado se os dados apresentados como variáveis quantitativas são compatíveis estatisticamente. Inicialmente será incluída a variável `idade_dias` na atribuição `variaveis_quantitativas`, em seguida será utilizada a função `summary()`, para uma visão resumida dos dados estatísticos de cada variável.
 
 ```r
-# Inclução da variável de idade do corpo de prova e print do resumo estátistico das variáveis quantitativas
+# Inclução da variável de idade do corpo de prova e print do resumo estatístico das variáveis quantitativas
 
 variaveis_quantitativas <- c(
   "idade_dias",
@@ -331,7 +373,7 @@ dados_limpos[variaveis_quantitativas] <-
 summary(dados_limpos[variaveis_quantitativas])
 ```
  
-A partir dessa visualização, ao comparar as medidas de tendência central com os valores mínimos e máximos das variáveis, observa-se a presença de alguns valores que destoam significativamente do comportamento geral dos dados, indicando possíveis erros de digitação. A idade dos corpos de prova apresenta média de 28 dias, enquanto o valor máximo registrado é de 280 dias. Para o abatimento do concreto, verifica-se média de 121,70 mm e valor máximo de 1.250,00 mm. Em relação à densidade, a média observada é de 2,351 kg/m³, enquanto o valor mínimo corresponde a apenas 238 kg/m³. Por fim, a absorção de água do agregado apresenta média de 1,95%, contrastando com o valor máximo de 18,40%. A seguir, iremos localizar as amostras correspondente a esses dados  e realizar os devidos refinamentos com base nos resultados esperados para as variáveis estudadas.
+A partir dessa visualização, ao comparar as medidas de tendência central com os valores mínimos e máximos das variáveis, observa-se a presença de alguns valores que destoam significativamente do comportamento geral dos dados, indicando possíveis erros de digitação. A idade dos corpos de prova apresenta média de 28 dias, enquanto o valor máximo registrado é de 280 dias. Para o abatimento do concreto, verifica-se média de 121,70 mm e valor máximo de 1.250,00 mm. Em relação à densidade, a média observada é de 2.351 kg/m³, enquanto o valor mínimo corresponde a apenas 238 kg/m³. Por fim, a absorção de água do agregado apresenta média de 1,95%, contrastando com o valor máximo de 18,40%. A seguir, iremos localizar as amostras correspondente a esses dados  e realizar os devidos refinamentos com base nos resultados esperados para as variáveis estudadas.
 
 ```r
 dados_limpos$idade_dias[
@@ -364,7 +406,7 @@ dados_limpos$absorção_agregado_pct[
 
 #### Variáveis qualitativas
 
-Concluído os ajustes das variáveis quantitativas, vamos agora analisar as variáveis qualitativas, de `obra`e `tipo_concreto`. Para isso utilizaremos a função `unique()`, a seguir.
+Concluídos os ajustes das variáveis quantitativas, serão analisadas agora as variáveis qualitativas, de `obra` e `tipo_concreto`. Para isso, será utilizada a função `unique()`, a seguir.
 
 ```r
 # Verificação de valores diferentes dentro de cada variável
@@ -377,8 +419,9 @@ unique(dados$obra)
 unique(dados$tipo_concreto)
 ```
 
-Para a variável `obra`, observa-se que as amostras foram coletadas em quatro blocos, identificados como A, B, C e D. Entretanto, foi identificada uma inconsistência na padronização dos dados referentes ao Bloco B, em que alguns registros apresentam um caractere de espaço adicional ao final do texto. Já para a variável `tipo_concreto`, observa-se que as classes de concreto são identificadas pelo padrão de escrita com a letra C maiúscula, seguida do respectivo valor numérico. Entretanto, foi identificado que há registros da classe C30 digitado como "c30", com letra minúscula.
-Essas diferenças faz com que o R interprete os registros como categorias distintas, podendo comprometer o agrupamento das observações e, consequentemente, a obtenção e interpretação dos resultados. Sendo assim, foi feito os devidos ajustes para que as mesma categorias possam ser agrupadas.
+Para a variável `obra`, observa-se que as amostras foram coletadas em quatro blocos, identificados como A, B, C e D. Entretanto, foi identificada uma inconsistência na padronização dos dados referentes ao Bloco B, em que alguns registros apresentam um caractere de espaço adicional ao final do texto. Já para a variável `tipo_concreto`, observa-se que as classes de concreto são identificadas pelo padrão de escrita com a letra C maiúscula, seguida do respectivo valor numérico. Entretanto, foi identificado que há registros da classe C30 digitados como "c30", com letra minúscula.
+  
+Essas diferenças fazem com que o R interprete os registros como categorias distintas, podendo comprometer o agrupamento das observações e, consequentemente, a obtenção e interpretação dos resultados. Sendo assim, foram feitos os devidos ajustes para que as mesmas categorias possam ser agrupadas.
 
 ```r
 # Remoção de espaços em `obra`
@@ -395,7 +438,7 @@ unique(dados_limpos$obra)
 unique(dados_limpos$tipo_concreto)
 ```
 
-Por fim, será feita a remoção das linhas em que há falta de preenchimento de dados, itentificados pelos corpos de prova CP-092, CP-038, CP-015, CP-077 e CP-097, no item 4.2.1 Dados Ausentes.
+Por fim, será feita a remoção das linhas que apresentam dados ausentes, identificados pelos corpos de prova CP-092, CP-038, CP-015, CP-077 e CP-097, no item 4.2.1 Dados Ausentes.
 
 ```R
 dados_limpos <- subset(
@@ -438,11 +481,11 @@ A partir da aplicação da função `str()`, verificou-se que a base de dados tr
 
 Por meio da função `summary()`, foi possível verificar o comportamento das variáveis após as correções realizadas. Observa-se que os valores anteriormente identificados como discrepantes foram tratados, resultando em intervalos mais coerentes para as variáveis analisadas. A idade dos corpos de prova passou a variar entre 7 e 56 dias, o abatimento entre 64 e 175 mm, a densidade entre 2.293 e 2.464 kg/m³ e a absorção de água do agregado entre 0,80% e 2,92%.
 
-Além disso, as variáveis resistência à compressão, consumo de cimento e relação água/cimento apresentaram valores entre 19,0 e 47,5 MPa, 295 e 418 kg/m³ e 0,43 e 0,65, respectivamente. Dessa forma, a nova inspeção indica que as inconsistências identificadas nas etapas anteriores foram corrigidas, tornando a base mais adequada para as análises subsequentes.
+Além disso, as variáveis resistência à compressão, consumo de cimento e relação água/cimento apresentaram valores entre 21,3 e 47,5 MPa, 295 e 418 kg/m³ e 0,43 e 0,65, respectivamente. Dessa forma, a nova inspeção indica que as inconsistências identificadas nas etapas anteriores foram corrigidas, tornando a base mais adequada para as análises subsequentes.
 
 ### Exploração dos dados
 
-#### Resitência Média
+#### Resistência Média
 
 Após o tratamento da base de dados, procedeu-se à análise estatística descritiva da resistência à compressão dos corpos de prova. Inicialmente, calculou-se a resistência média à compressão considerando todos os corpos de prova presentes na base de dados após o processo de tratamento, utilizado a função `mean()`.
 
@@ -453,7 +496,15 @@ media_resistencia <- mean(dados_limpos$resistencia_mpa)
 ```{r, echo=FALSE}
 media_resistencia <- mean(dados_limpos$resistencia_mpa)
 
-media_resistencia
+resultado_media_geral <- data.frame(
+  media = round(media_resistencia, 2)
+)
+
+knitr::kable(
+  resultado_media_geral,
+  col.names = "Resistência média (MPa)",
+  align = "c"
+)
 ```
 
 Em seguida, a resistência média foi determinada individualmente para cada bloco da obra. Para isso, utilizou-se a função `tapply()`, agrupando os valores de resistência à compressão de acordo com a variável obra e aplicando a função `mean()` a cada grupo.
@@ -488,7 +539,23 @@ media_por_obra <- tapply(
   dados_limpos$obra,
   mean
 )
-media_por_obra
+
+tabela_media_obra <- data.frame(
+  bloco = names(media_por_obra),
+  resistencia_media = round(
+    as.numeric(media_por_obra),
+    2
+  )
+)
+
+knitr::kable(
+  tabela_media_obra,
+  col.names = c(
+    "Bloco",
+    "Resistência média (MPa)"
+  ),
+  align = "c"
+)
 
 #Resistência média por tipo de concreto
 media_por_concreto <- tapply(
@@ -496,7 +563,23 @@ media_por_concreto <- tapply(
   dados_limpos$tipo_concreto,
   mean
 )
-media_por_concreto
+
+tabela_media_concreto <- data.frame(
+  tipo_concreto = names(media_por_concreto),
+  resistencia_media = round(
+    as.numeric(media_por_concreto),
+    2
+  )
+)
+
+knitr::kable(
+  tabela_media_concreto,
+  col.names = c(
+    "Tipo de concreto",
+    "Resistência média (MPa)"
+  ),
+  align = "c"
+)
 
 #Resistência média por idade
 media_por_idade <- tapply(
@@ -504,7 +587,23 @@ media_por_idade <- tapply(
   dados_limpos$idade_dias,
   mean
 )
-media_por_idade
+
+tabela_media_idade <- data.frame(
+  idade = names(media_por_idade),
+  resistencia_media = round(
+    as.numeric(media_por_idade),
+    2
+  )
+)
+
+knitr::kable(
+  tabela_media_idade,
+  col.names = c(
+    "Idade (dias)",
+    "Resistência média (MPa)"
+  ),
+  align = "c"
+)
 ```
 
 A partir das resistências médias obtidas para cada bloco da obra, realizou-se a comparação entre os grupos com o objetivo de identificar os blocos que apresentaram a maior e a menor resistência média à compressão. Para isso, foram utilizadas as funções `max()` e `min()` para obtenção dos valores extremos e `which.max()` e `which.min()` para obtenção dos valores extremos com a identificação das respectivas posições no conjunto de resultados.
@@ -532,7 +631,7 @@ paste("Menor resistência média:", bloco_menor, "-", round(menor_media_bloco, 2
 
 ```
 
-A resistência média à compressão foi avaliada para cada classe de concreto presente na base de dados (C25, C30, C35 e C40), calculada anteriormente por meio da função `tapply()`. De forma similar à comapração realizada para cada bloco, utilizou-se as funções `max()`, `which.max()` e `names()` para determinar a maior resistência média e identificar a classe de concreto correspondente.
+A resistência média à compressão foi avaliada para cada classe de concreto presente na base de dados (C25, C30, C35 e C40), calculada anteriormente por meio da função `tapply()`. De forma similar à comparação realizada para cada bloco, utilizou-se as funções `max()`, `which.max()` e `names()` para determinar a maior resistência média e identificar a classe de concreto correspondente.
 
 ```r
 # Identificação da maior resistência média
@@ -541,10 +640,26 @@ concreto_maior <- names(which.max(media_por_concreto))
 
 ```
 ```{r, echo=FALSE}
-maior_media_concreto <- max(media_por_obra)
-concreto_maior <- names(which.max(media_por_concreto))
+maior_media_concreto <- max(media_por_concreto)
+concreto_maior <- names(
+  which.max(media_por_concreto))
 
-paste("Maior resistência média:", concreto_maior, "-", round(maior_media_concreto, 2), "MPa")
+resultado_maior_concreto <- data.frame(
+  tipo_concreto = concreto_maior,
+  resistencia_media = round(
+    maior_media_concreto,
+    2
+  )
+)
+
+knitr::kable(
+  resultado_maior_concreto,
+  col.names = c(
+    "Tipo de concreto",
+    "Maior resistência média (MPa)"
+  ),
+  align = "c"
+)
 ```
 
 Com o objetivo de comparar simultaneamente diferentes características dos concretos, utilizou-se a função `aggregate()` para calcular as médias de resistência à compressão, consumo de cimento, relação água/cimento, abatimento e densidade para cada classe de concreto. A variável `tipo_concreto` foi utilizada como critério de agrupamento, enquanto a função `mean()` foi aplicada às variáveis quantitativas selecionadas.
@@ -576,7 +691,25 @@ resultado_aggregate <- aggregate(
   FUN = mean
 )
 
-resultado_aggregate
+resultado_aggregate_formatado <- resultado_aggregate
+
+resultado_aggregate_formatado[, -1] <- round(
+  resultado_aggregate_formatado[, -1],
+  2
+)
+
+knitr::kable(
+  resultado_aggregate_formatado,
+  col.names = c(
+    "Tipo de concreto",
+    "Resistência (MPa)",
+    "Cimento (kg/m³)",
+    "Relação a/c",
+    "Abatimento (mm)",
+    "Densidade (kg/m³)"
+  ),
+  align = "c"
+)
 ```
 
 A partir dos resultados obtidos por meio da função aggregate(), observa-se um aumento progressivo da resistência média à compressão entre as classes de concreto, variando de 27,45 MPa para o C25 a 43,33 MPa para o C40. Esse aumento é acompanhado pelo crescimento do consumo médio de cimento, que passa de aproximadamente 322,35 kg/m³ no C25 para 404,13 kg/m³ no C40.
@@ -587,9 +720,9 @@ Para a densidade, não se observa a mesma tendência crescente ou decrescente ap
 
 Dessa forma, os resultados da base analisada indicam que as classes de maior resistência estão associadas a maiores consumos médios de cimento e menores relações água/cimento, enquanto a densidade apresenta menor variação entre as diferentes classes.
 
-#### Resitência Relativa
+#### Resistência Relativa
 
-Para o cálculo da variável `resistencia_relativa`, foram adotadas como referência as resistências características das classes de concreto, conforme a ABNT NBR 8953:2015: 25 MPa (C25), 30 MPa (C30), 35 MPa (C35) e 40 MPa (C40). A variável foi obtida pela razão entre a resistência observada e a respectiva referência, sendo que valores iguais, superiores ou inferiores a 1 indicam, respectivamente, resistência equivalente, acima ou abaixo da referência adotada. Assim, para criar a variável `resistencia_relativa` já incluindo-a no banco de dados tratados `dados_limpos`, utilizou-se a função `ifelse()`, cuja atribuição é verificar uma condição para cada linha e retornar um valor quando ela é verdadeira e outro quando é falsa.
+Para o cálculo da variável `resistencia_relativa`, foram adotadas como referência as resistências características das classes de concreto, conforme a ABNT NBR 8953:2015: 25 MPa (C25), 30 MPa (C30), 35 MPa (C35) e 40 MPa (C40). A variável foi obtida pela razão entre a resistência observada e a respectiva referência, sendo que valores iguais, superiores ou inferiores a 1 indicam, respectivamente, resistência equivalente, acima ou abaixo da referência adotada. Assim, para criar a variável `resistencia_relativa` já incluindo-a no banco de dados tratados, armazenado em `dados_limpos`, utilizou-se a função `ifelse()`, cuja atribuição é verificar uma condição para cada linha e retornar um valor quando ela é verdadeira e outro quando é falsa.
 
 ```r
 # Criação da Resitência de Referência para apoio
@@ -619,7 +752,7 @@ dados_limpos$resistencia_referencia <- ifelse(
 ```
 
 ```r
-# Criação da Resitência Relativa
+# Criação da Resistência Relativa
 dados_limpos$resistencia_relativa <-
   dados_limpos$resistencia_mpa /
   dados_limpos$resistencia_referencia
@@ -630,7 +763,7 @@ dados_limpos$resistencia_relativa <-
   dados_limpos$resistencia_referencia
 ```
 
-Após a crianção da variável `resistencia_relativa`, será feita a exclusão da variável `resistencia_referencia` que foi criada como apoio.
+Após a criação da variável `resistencia_relativa`, será feita a exclusão da variável `resistencia_referencia`, que foi criada como apoio.
 
 ```r
 # Exclusão da variável resitência referência
@@ -641,9 +774,9 @@ dados_limpos$resistencia_referencia <- NULL
 ```
 
 
-#### Classificação quanto a resitência
+#### Classificação quanto a resistência
 
-Para a variável classificacao, adotou-se como critério a comparação entre a resistência observada e a resistência de referência definida para cada classe. Os corpos de prova com `resistencia_relativa` maior ou igual a 1 foram classificados como “Igual ou acima da referência”, enquanto aqueles com valor inferior a 1 foram classificados como “Abaixo da referência”.
+Para a variável classificação, adotou-se como critério a comparação entre a resistência observada e a resistência de referência definida para cada classe. Os corpos de prova com `resistencia_relativa` maior ou igual a 1 foram classificados como “Igual ou acima da referência”, enquanto aqueles com valor inferior a 1 foram classificados como “Abaixo da referência”.
 
 ```r
 # Criação da variável Classificação
@@ -674,8 +807,8 @@ media_tipo <- ave(
 # Criação da variável Acima da Média
 dados_limpos$acima_media <-
   dados_limpos$resistencia_mpa > media_tipo
-
 ```
+
 ```{r, echo=FALSE}
 media_tipo <- ave(
   dados_limpos$resistencia_mpa,
@@ -729,31 +862,63 @@ media_lapply <- lapply(
   function(x) mean(x$resistencia_mpa)
 )
 ```
+
 ```{r, echo=FALSE}
 media_lapply <- lapply(
   dados_por_concreto,
   function(x) mean(x$resistencia_mpa)
 )
 
-media_lapply
+tabela_media_lapply <- data.frame(
+  tipo_concreto = names(media_lapply),
+  resistencia_media = round(
+    unname(unlist(media_lapply)),
+    2
+  )
+)
+
+knitr::kable(
+  tabela_media_lapply,
+  col.names = c(
+    "Tipo de concreto",
+    "Resistência média (MPa)"
+  ),
+  align = "c"
+)
 ```
 
-Agora, de forma similar a anterior, utilizando a estrutura obtida com `split()`, aplicou-se a função `sapply()` para calcular a resistência média à compressão de cada tipo de concreto. Entretanto, o objeto de retorno, agora é um vetor numérico, estrutura bem mais simplificada.
+Agora, de forma similar à anterior, utilizando a estrutura obtida com `split()`, aplicou-se a função `sapply()` para calcular a resistência média à compressão de cada tipo de concreto. Entretanto, o objeto de retorno, agora é um vetor numérico, estrutura bem mais simplificada.
 
 ```r
-# Resistência média à compressão de cada tipo de concreto por meio do lapply()
+# Resistência média à compressão de cada tipo de concreto por meio do sapply()
 media_sapply <- sapply(
   dados_por_concreto,
   function(x) mean(x$resistencia_mpa)
 )
 ```
+
 ```{r, echo=FALSE}
 media_sapply <- sapply(
   dados_por_concreto,
   function(x) mean(x$resistencia_mpa)
 )
 
-media_sapply
+tabela_media_sapply <- data.frame(
+  tipo_concreto = names(media_sapply),
+  resistencia_media = round(
+    as.numeric(media_sapply),
+    2
+  )
+)
+
+knitr::kable(
+  tabela_media_sapply,
+  col.names = c(
+    "Tipo de concreto",
+    "Resistência média (MPa)"
+  ),
+  align = "c"
+)
 ```
 
 Os valores das resistências médias obtidos com `sapply()` são equivalentes aos calculados com `lapply()`, uma vez que ambas as funções aplicaram a mesma operação aos grupos criados por `split()`. A diferença está na estrutura do resultado: `lapply()` retorna sempre uma lista, enquanto `sapply()` procura simplificar o resultado e, neste caso, retorna um vetor numérico. Portanto, `sapply()` proporciona uma apresentação mais compacta para resultados simples, enquanto `lapply()` preserva a estrutura de lista.
@@ -783,6 +948,7 @@ media_variaveis <- apply(
 )
 
 ```
+
 ```{r, echo=FALSE}
 variaveis_concreto <- dados_limpos[
   c(
@@ -815,6 +981,7 @@ resumo_observacoes <- apply(
 )
 
 ```
+
 ```{r, echo=FALSE}
 resumo_observacoes <- apply(
   variaveis_concreto,
@@ -833,7 +1000,7 @@ Entretanto, essa medida não possui uma interpretação física, uma vez que com
 
 #### Aplicando as funções `for()` e `if()`
 
-Para identificar os corpos de prova com resistência superior à média de sua respectiva classe, utilizou-se uma estrutura de repetição for para percorrer individualmente as observações da base. Para cada registro, foi calculada a resistência média correspondente ao seu tipo de concreto e, por meio da estrutura condicional if, verificou-se se a resistência observada era superior a essa média. Quando a condição foi atendida, o identificador do corpo de prova foi armazenado no vetor `cp_acima_media`.
+Para identificar os corpos de prova com resistência superior à média de sua respectiva classe, utilizou-se uma estrutura de repetição `for()` para percorrer individualmente as observações da base. Para cada registro, foi calculada a resistência média correspondente ao seu tipo de concreto e, por meio da estrutura condicional if, verificou-se se a resistência observada era superior a essa média. Quando a condição foi atendida, o identificador do corpo de prova foi armazenado no vetor `cp_acima_media`.
 
 ```r
 # Criando o vetor para armazenar os CP que atendem ao critério
@@ -859,6 +1026,7 @@ for (i in 1:nrow(dados_limpos)) {
 }
 
 ```
+
 ```{r, echo=FALSE}
 cp_acima_media <- c()
 
@@ -900,6 +1068,7 @@ cp_acima_media_vet <- dados_limpos$id_corpo_prova[
 
 cp_acima_media_vet
 ```
+
 ```{r, echo=FALSE}
 media_por_linha <- ave(
   dados_limpos$resistencia_mpa,
@@ -919,18 +1088,661 @@ As duas abordagens produziram o mesmo resultado, porém diferem na forma de exec
 
 A abordagem vetorizada pode ser considerada mais simples e mais legível, pois requer menos etapas e expressa diretamente a operação desejada. Também tende a ser mais eficiente, especialmente para conjuntos de dados maiores, uma vez que evita o controle explícito de cada iteração no código R. Entretanto, a solução com for e if é útil pois são funções primitivas do R e não necessitam de intalação de pacote de funções.
 
+### Questões relacionadas à prática profissional
+
+Após as etapas de inspeção, tratamento e exploração da base de dados, as informações obtidas podem ser utilizadas na análise de situações mais próximas da prática profissional da Engenharia Civil. Nesta etapa, busca-se interpretar os dados do controle tecnológico do concreto e verificar se eles fornecem suporte a determinadas afirmações relacionadas ao desempenho dos materiais empregados na obra.
+
+Uma das questões levantadas refere-se ao desempenho dos concretos utilizados nos diferentes blocos da obra, mais especificamente à afirmação de que os concretos empregados no Bloco C apresentam desempenho superior aos utilizados nos demais blocos.
+
+Para realizar uma primeira avaliação dessa afirmação, será calculada a resistência média à compressão dos corpos de prova de cada bloco. Entretanto, como a base apresenta diferentes classes de concreto, a análise também será realizada considerando separadamente cada tipo de concreto, evitando que diferenças na composição dos grupos influenciem diretamente a comparação entre os blocos.
+
+Além disso, será verificada a quantidade de corpos de prova correspondente a cada bloco, permitindo uma melhor compreensão dos grupos utilizados na comparação.
+
+```r
+# Calculando a resistência média por bloco da obra
+media_resistencia_bloco <- aggregate(
+  resistencia_mpa ~ obra,
+  data = dados_limpos,
+  FUN = mean,
+  na.rm = TRUE
+)
+```
+
+```{r, echo=FALSE}
+media_resistencia_bloco <- aggregate(
+  resistencia_mpa ~ obra,
+  data = dados_limpos,
+  FUN = mean,
+  na.rm = TRUE
+)
+
+knitr::kable(
+  media_resistencia_bloco,
+  col.names = c(
+    "Bloco",
+    "Resistência média (MPa)"
+  ),
+  align = "c"
+)
+```
+
+```r
+# Calculando a resistência média por bloco e tipo de concreto
+media_bloco_tipo <- aggregate(
+  resistencia_mpa ~ obra + tipo_concreto,
+  data = dados_limpos,
+  FUN = mean,
+  na.rm = TRUE
+)
+```
+
+```{r, echo=FALSE}
+media_bloco_tipo <- aggregate(
+  resistencia_mpa ~ obra + tipo_concreto,
+  data = dados_limpos,
+  FUN = mean,
+  na.rm = TRUE
+)
+
+knitr::kable(
+  media_bloco_tipo,
+  col.names = c(
+    "Bloco",
+    "Tipo de concreto",
+    "Resistência média (MPa)"
+  ),
+  align = "c"
+)
+```
+
+A partir dos resultados obtidos, é possível concluir que a afirmação “Os concretos utilizados no Bloco C apresentam desempenho superior aos utilizados nos demais blocos.” não corresponde com os dados disponíveis. O bloco C, neste caso, apresenta a menor média entre os blocos.
+
+Analisando, ainda, entre os tipos de concreto, essa afirmação só se faz verdadeira para o concreto C40.
+
+Outra situação que pode ser investigada a partir dos dados disponíveis é a possível relação entre o consumo de cimento e a resistência à compressão do concreto. Nesse caso, busca-se verificar a afirmação de que maiores consumos de cimento tendem a estar associados a maiores valores de resistência.
+
+Para essa análise, serão consideradas conjuntamente as variáveis referentes ao consumo de cimento, expresso em kg/m³, e à resistência à compressão, expressa em MPa. Inicialmente, será utilizado um gráfico de dispersão, com o objetivo de observar o comportamento conjunto das duas variáveis e identificar a existência de uma possível tendência entre elas. Em seguida, será calculado o coeficiente de correlação, permitindo avaliar a intensidade e o sentido da associação observada.
+
+```r
+# Relação entre consumo de cimento e resistência à compressão
+plot(
+  dados_limpos$cimento_kg_m3,
+  dados_limpos$resistencia_mpa,
+  main = "Consumo de cimento × Resistência à compressão",
+  xlab = "Consumo de cimento (kg/m³)",
+  ylab = "Resistência à compressão (MPa)",
+  pch = 19
+)
+```
+
+```{r, echo=FALSE}
+plot(
+  dados_limpos$cimento_kg_m3,
+  dados_limpos$resistencia_mpa,
+  main = "Consumo de cimento × Resistência à compressão",
+  xlab = "Consumo de cimento (kg/m³)",
+  ylab = "Resistência à compressão (MPa)",
+  pch = 19
+)
+```
+
+De forma complementar, será calculado o coeficiente de correlação entre o consumo de cimento e a resistência à compressão. Essa medida permitirá avaliar o sentido e a intensidade da associação entre as duas variáveis, contribuindo para verificar, em termos descritivos, se os dados apresentam comportamento compatível com a afirmação proposta.
+
+```r
+# Calculando a correlação entre consumo de cimento e resistência
+cor(
+  dados_limpos$cimento_kg_m3,
+  dados_limpos$resistencia_mpa,
+  use = "complete.obs"
+)
+```
+
+```{r, echo=FALSE}
+cor(
+  dados_limpos$cimento_kg_m3,
+  dados_limpos$resistencia_mpa,
+  use = "complete.obs"
+)
+```
+
+O gráfico de dispersão apresenta uma tendência crescente entre as variáveis analisadas, indicando que maiores consumos de cimento estão, de modo geral, associados a maiores valores de resistência à compressão. Apesar da dispersão existente entre os resultados, observa-se um padrão de crescimento.
+
+Essa tendência é confirmada pelo coeficiente de correlação obtido, de aproximadamente 0,773, que indica uma correlação positiva forte entre o consumo de cimento e a resistência à compressão. Dessa forma, os dados analisados fornecem suporte, em termos descritivos, à afirmação de que o aumento do consumo de cimento tende a estar associado ao aumento da resistência do concreto.
+
+Entretanto, essa relação não deve ser interpretada isoladamente como uma relação de causa e efeito, uma vez que a resistência do concreto também pode ser influenciada por outras características, como a relação água/cimento, a idade do corpo de prova e a classe do concreto.
+
+Outra relação relevante para a avaliação das características do concreto envolve a relação água/cimento e a resistência à compressão. A relação água/cimento representa a proporção entre a quantidade de água e de cimento utilizada na mistura e constitui uma variável importante para a análise do comportamento do concreto.
+
+Para investigar o comportamento dessas variáveis na base estudada, será elaborado um gráfico de dispersão relacionando a resistência à compressão com a relação água/cimento. A representação gráfica permitirá verificar a existência de possíveis tendências ou padrões entre os resultados.
+
+```r
+# Relação entre água/cimento e resistência à compressão
+plot(
+  dados_limpos$relacao_a_c,
+  dados_limpos$resistencia_mpa,
+  main = "Relação água/cimento × Resistência à compressão",
+  xlab = "Relação água/cimento",
+  ylab = "Resistência à compressão (MPa)",
+  pch = 19
+)
+```
+
+```{r, echo=FALSE}
+plot(
+  dados_limpos$relacao_a_c,
+  dados_limpos$resistencia_mpa,
+  main = "Relação água/cimento × Resistência à compressão",
+  xlab = "Relação água/cimento",
+  ylab = "Resistência à compressão (MPa)",
+  pch = 19
+)
+```
+
+De forma complementar, será calculado o coeficiente de correlação entre as duas variáveis, permitindo avaliar o sentido e a intensidade da associação observada e contribuindo para uma interpretação mais completa dos dados.
+
+```r
+# Calculando a correlação entre relação água/cimento e resistência
+cor(
+  dados_limpos$relacao_a_c,
+  dados_limpos$resistencia_mpa,
+)
+```
+
+```{r, echo=FALSE}
+cor(
+  dados_limpos$relacao_a_c,
+  dados_limpos$resistencia_mpa,
+)
+```
+
+O gráfico de dispersão evidencia uma tendência decrescente entre as variáveis analisadas, indicando que maiores valores da relação água/cimento estão, de modo geral, associados a menores valores de resistência à compressão.
+
+Essa tendência é confirmada pelo coeficiente de correlação obtido, de aproximadamente −0,758, indicando uma correlação negativa forte entre a relação água/cimento e a resistência à compressão.
+
+O comportamento observado apresenta coerência do ponto de vista técnico, uma vez que o excesso de água em relação à quantidade de cimento favorece o aumento da porosidade do concreto após o endurecimento, contribuindo para a redução da resistência mecânica. Dessa forma, mantidas as demais condições, menores relações água/cimento tendem a resultar em concretos com maiores resistências à compressão.
+
+A idade do corpo de prova também é uma variável relevante na avaliação da resistência do concreto, uma vez que o material tende a desenvolver resistência ao longo do tempo em função da continuidade das reações de hidratação do cimento.
+
+Para verificar esse comportamento na base analisada, será calculada a resistência média à compressão para cada idade dos corpos de prova. A comparação entre esses valores permitirá identificar se existe uma tendência de aumento da resistência com o avanço da idade.
+
+```r
+# Calculando a resistência média por idade do corpo de prova
+media_resistencia_idade <- aggregate(
+  resistencia_mpa ~ idade_dias,
+  data = dados_limpos,
+  FUN = mean,
+  na.rm = TRUE
+)
+```
+
+```{r, echo=FALSE}
+media_resistencia_idade <- aggregate(
+  resistencia_mpa ~ idade_dias,
+  data = dados_limpos,
+  FUN = mean,
+  na.rm = TRUE
+)
+
+knitr::kable(
+  media_resistencia_idade,
+  col.names = c(
+    "Idade (dias)",
+    "Resistência média (MPa)"
+  ),
+  align = "c"
+)
+```
+
+```r
+# Representando a resistência média em função da idade
+plot(
+  media_resistencia_idade$idade_dias,
+  media_resistencia_idade$resistencia_mpa,
+  type = "b",
+  main = "Resistência média × Idade do corpo de prova",
+  xlab = "Idade (dias)",
+  ylab = "Resistência média à compressão (MPa)"
+)
+```
+
+```{r, echo=FALSE}
+plot(
+  media_resistencia_idade$idade_dias,
+  media_resistencia_idade$resistencia_mpa,
+  type = "b",
+  main = "Resistência média × Idade do corpo de prova",
+  xlab = "Idade (dias)",
+  ylab = "Resistência média à compressão (MPa)"
+)
+```
+
+Os resultados mostram um aumento da resistência média entre 7 e 14 dias, passando de 28,78 MPa para 35,83 MPa. Entretanto, esse crescimento não se mantém nas idades seguintes, sendo observadas resistências médias de 34,96 MPa aos 28 dias e 33,12 MPa aos 56 dias.
+
+Apesar desse comportamento, não se pode concluir que a resistência do concreto diminui com o avanço da idade. As médias foram obtidas a partir de diferentes corpos de prova e incluem concretos de classes distintas, de modo que a composição de cada grupo pode influenciar diretamente os valores encontrados.
+
+Como a base reúne diferentes classes de concreto, a comparação apenas entre as médias gerais de cada idade pode ser influenciada pela composição dos grupos analisados. Uma determinada idade pode apresentar, por exemplo, maior participação de concretos de classes mais resistentes, enquanto outra pode concentrar concretos de classes inferiores.
+
+Dessa forma, para avaliar melhor o comportamento da resistência ao longo do tempo, a análise será complementada pelo cálculo da resistência média considerando conjuntamente a idade do corpo de prova e o tipo de concreto. Essa comparação permite observar a variação da resistência dentro de cada classe, reduzindo a influência das diferenças existentes entre os tipos de concreto.
+
+```r
+# Calculando a resistência média por idade e tipo de concreto
+media_idade_tipo <- aggregate(
+  resistencia_mpa ~ idade_dias + tipo_concreto,
+  data = dados_limpos,
+  FUN = mean,
+  na.rm = TRUE
+)
+```
+
+```{r, echo=FALSE}
+media_idade_tipo <- aggregate(
+  resistencia_mpa ~ idade_dias + tipo_concreto,
+  data = dados_limpos,
+  FUN = mean,
+  na.rm = TRUE
+)
+
+knitr::kable(
+  media_idade_tipo,
+  col.names = c(
+    "Idade (dias)",
+    "Tipo de concreto",
+    "Resistência média (MPa)"
+  ),
+  align = "c"
+)
+```
+
+Ao analisar os resultados separadamente para cada tipo de concreto, o comportamento da resistência ao longo do tempo fica mais evidente. Para os concretos C30 e C35, observa-se um aumento da resistência média conforme a idade avança, sendo esse crescimento mais expressivo para o C35. No concreto C25, ocorre um aumento inicial até os 14 dias, seguido de pequenas variações, enquanto o C40 apresenta uma pequena redução aos 14 dias e volta a aumentar aos 28 dias.
+
+Essa análise mostra que a comparação por tipo de concreto representa melhor o comportamento dos dados do que a utilização apenas das médias gerais por idade. As pequenas variações encontradas são esperadas, já que os resultados correspondem a diferentes corpos de prova, que podem apresentar diferenças entre si mesmo pertencendo à mesma classe.
+
+De forma geral, os dados indicam uma tendência de ganho de resistência com o avanço da idade, embora esse comportamento não ocorra de maneira uniforme para todas as classes analisadas.
+
+Por fim, considerando uma situação de controle tecnológico do concreto, é importante selecionar informações que apresentem de forma objetiva o comportamento dos resultados obtidos e que possam auxiliar na avaliação do material utilizado na obra.
+
+Dentre as análises realizadas, foram selecionadas cinco informações estatísticas consideradas mais relevantes para compor esse tipo de relatório: a resistência média por classe de concreto, a resistência média por idade, a variabilidade dos resultados de resistência, a relação entre o consumo de cimento e a resistência e a relação entre água/cimento e resistência.
+
+A resistência média por classe de concreto é uma das principais informações a serem apresentadas, pois permite avaliar o comportamento médio dos concretos C25, C30, C35 e C40 e comparar os resultados obtidos entre as diferentes classes utilizadas na obra. Além disso, a resistência média por idade contribui para acompanhar o desenvolvimento da resistência ao longo do tempo.
+
+Outro aspecto importante é a variabilidade dos resultados de resistência, que pode ser avaliada por meio do desvio padrão. Essa medida complementa a análise da média e permite verificar a dispersão dos resultados, fornecendo uma indicação da uniformidade dos concretos ensaiados.
+
+Também se destacam as relações entre características do concreto e sua resistência. A análise entre o consumo de cimento e a resistência à compressão apresentou correlação positiva forte, com coeficiente de 0,773, indicando que maiores consumos de cimento estiveram associados, de modo geral, a maiores resistências. Já a análise da relação água/cimento e resistência apresentou correlação negativa forte, de −0,758, mostrando que maiores relações água/cimento estiveram associadas a menores valores de resistência.
+
+Em conjunto, essas informações permitem apresentar uma visão mais abrangente do comportamento dos concretos analisados, considerando os valores médios de resistência, a variação dos resultados e sua relação com características do material. Dessa forma, os dados podem contribuir para uma avaliação mais adequada dos resultados obtidos no controle tecnológico.
+
+### Desafio Final
+
+A partir das etapas desenvolvidas ao longo do relatório, foi elaborado um script reunindo os principais procedimentos necessários para inspecionar, tratar e analisar uma base de dados proveniente do controle tecnológico do concreto. A proposta é organizar essas etapas de forma sequencial, permitindo identificar possíveis erros de coleta ou digitação antes da realização das análises estatísticas.
+
+O script contempla a inspeção inicial da base, a identificação de valores ausentes e inconsistências, a padronização e correção dos dados, a criação de uma versão limpa da base e a obtenção de estatísticas descritivas e variáveis derivadas. Ao final, também são produzidas informações que podem contribuir para a interpretação dos resultados.
+
+```r
+# DESAFIO FINAL - PROCESSAMENTO DOS DADOS
+
+
+# 1. IMPORTAÇÃO E INSPEÇÃO INICIAL
+
+# Importando a base de dados
+dados <- read.csv2(
+  "base_processamento_dados_engenharia_civil.csv",
+  stringsAsFactors = FALSE,
+  check.names = FALSE
+)
+
+# Verificando a estrutura e o resumo da base
+str(dados)
+summary(dados)
+
+
+# 2. IDENTIFICAÇÃO DOS VALORES AUSENTES
+
+# Quantificando o total de valores ausentes
+sum(dados == "")
+
+# Quantificando os valores ausentes por variável
+colSums(dados == "")
+
+# Localizando os valores ausentes
+ausentes <- which(dados == "", arr.ind = TRUE)
+
+# Identificando o corpo de prova e a variável correspondente
+resultado_ausentes <- data.frame(
+  CP = dados$id_corpo_prova[ausentes[, 1]],
+  Variavel = colnames(dados)[ausentes[, 2]]
+)
+
+resultado_ausentes
+
+
+# 3. IDENTIFICAÇÃO DE PROBLEMAS NAS VARIÁVEIS QUANTITATIVAS
+
+# Agrupando as variáveis quantitativas com erro de tipagem
+variaveis_quantitativas <- c(
+  "resistencia_mpa",
+  "cimento_kg_m3",
+  "relacao_a_c",
+  "abatimento_mm",
+  "densidade_kg_m3",
+  "absorção_agregado_pct"
+)
+
+# Criando cópias da base para conversão e tratamento
+dados_conversao <- dados_limpos <- dados
+
+# Tentando converter os valores para números
+dados_conversao[variaveis_quantitativas] <-
+  lapply(
+    dados[variaveis_quantitativas],
+    as.numeric
+  )
+
+# Identificando valores que não puderam ser convertidos
+problemas <- is.na(
+  dados_conversao[variaveis_quantitativas]
+) & dados[variaveis_quantitativas] != ""
+
+# Localizando os registros problemáticos
+posicoes <- which(
+  problemas,
+  arr.ind = TRUE
+)
+
+resultado_problemas <- data.frame(
+  CP = dados$id_corpo_prova[posicoes[, 1]],
+  Variavel = colnames(problemas)[posicoes[, 2]],
+  Valor = dados[variaveis_quantitativas][problemas]
+)
+
+resultado_problemas
+
+
+# 4. CORREÇÃO DAS VARIÁVEIS QUANTITATIVAS
+
+# Substituindo vírgulas por pontos
+dados_limpos[variaveis_quantitativas] <- lapply(
+  dados_limpos[variaveis_quantitativas],
+  function(x) gsub(",", ".", x)
+)
+
+# Corrigindo o valor do CP-019
+dados_limpos$resistencia_mpa[
+  dados_limpos$id_corpo_prova == "CP-019"
+] <- "30.4"
+
+# Corrigindo o valor do CP-064
+dados_limpos$cimento_kg_m3[
+  dados_limpos$id_corpo_prova == "CP-064"
+] <- "390"
+
+# Convertendo as variáveis quantitativas para números
+dados_limpos[variaveis_quantitativas] <- lapply(
+  dados_limpos[variaveis_quantitativas],
+  as.numeric
+)
+
+# Incluindo a idade entre as variáveis quantitativas
+variaveis_quantitativas <- c(
+  "idade_dias",
+  "resistencia_mpa",
+  "cimento_kg_m3",
+  "relacao_a_c",
+  "abatimento_mm",
+  "densidade_kg_m3",
+  "absorção_agregado_pct"
+)
+
+# Verificando o comportamento das variáveis
+summary(
+  dados_limpos[variaveis_quantitativas]
+)
+
+# Corrigindo valores discrepantes identificados
+dados_limpos$idade_dias[
+  dados_limpos$idade_dias == 280
+] <- 28
+
+dados_limpos$abatimento_mm[
+  dados_limpos$abatimento_mm == 1250
+] <- 125
+
+dados_limpos$densidade_kg_m3[
+  dados_limpos$densidade_kg_m3 == 238
+] <- 2380
+
+dados_limpos$absorção_agregado_pct[
+  dados_limpos$absorção_agregado_pct == 18.4
+] <- 1.84
+
+
+# 5. PADRONIZAÇÃO DAS VARIÁVEIS QUALITATIVAS
+
+# Verificando as categorias existentes
+unique(dados$obra)
+unique(dados$tipo_concreto)
+
+# Removendo espaços adicionais da variável obra
+dados_limpos$obra <- trimws(
+  dados_limpos$obra
+)
+
+# Padronizando o tipo de concreto em letras maiúsculas
+dados_limpos$tipo_concreto <- toupper(
+  dados_limpos$tipo_concreto
+)
+
+# Conferindo as categorias após a padronização
+unique(dados_limpos$obra)
+unique(dados_limpos$tipo_concreto)
+
+
+# 6. PRODUÇÃO DA BASE LIMPA
+
+# Removendo os corpos de prova com dados ausentes
+dados_limpos <- subset(
+  dados_limpos,
+  !(id_corpo_prova %in% c(
+    "CP-092",
+    "CP-038",
+    "CP-015",
+    "CP-077",
+    "CP-097"
+  ))
+)
+
+# Conferindo a base após o processo de limpeza
+str(dados_limpos)
+summary(dados_limpos)
+
+
+# 7. ESTATÍSTICAS DESCRITIVAS
+
+# Resistência média geral
+media_resistencia <- mean(
+  dados_limpos$resistencia_mpa
+)
+
+media_resistencia
+
+# Resistência média por bloco
+media_por_obra <- tapply(
+  dados_limpos$resistencia_mpa,
+  dados_limpos$obra,
+  mean
+)
+
+media_por_obra
+
+# Resistência média por tipo de concreto
+media_por_concreto <- tapply(
+  dados_limpos$resistencia_mpa,
+  dados_limpos$tipo_concreto,
+  mean
+)
+
+media_por_concreto
+
+# Resistência média por idade
+media_por_idade <- tapply(
+  dados_limpos$resistencia_mpa,
+  dados_limpos$idade_dias,
+  mean
+)
+
+media_por_idade
+
+# Médias das principais propriedades por tipo de concreto
+resultado_aggregate <- aggregate(
+  cbind(
+    resistencia_mpa,
+    cimento_kg_m3,
+    relacao_a_c,
+    abatimento_mm,
+    densidade_kg_m3
+  ) ~ tipo_concreto,
+  data = dados_limpos,
+  FUN = mean
+)
+
+resultado_aggregate
+
+
+# 8. CRIAÇÃO DAS VARIÁVEIS DERIVADAS
+
+# Criando a resistência de referência de cada classe
+dados_limpos$resistencia_referencia <- ifelse(
+  dados_limpos$tipo_concreto == "C25", 25,
+  ifelse(
+    dados_limpos$tipo_concreto == "C30", 30,
+    ifelse(
+      dados_limpos$tipo_concreto == "C35", 35,
+      40
+    )
+  )
+)
+
+# Criando a resistência relativa
+dados_limpos$resistencia_relativa <-
+  dados_limpos$resistencia_mpa /
+  dados_limpos$resistencia_referencia
+
+# Removendo a variável utilizada como apoio
+dados_limpos$resistencia_referencia <- NULL
+
+# Classificando os corpos de prova em relação à referência
+dados_limpos$classificacao <- ifelse(
+  dados_limpos$resistencia_relativa >= 1,
+  "Igual ou acima da referência",
+  "Abaixo da referência"
+)
+
+# Calculando a resistência média de cada classe
+media_tipo <- ave(
+  dados_limpos$resistencia_mpa,
+  dados_limpos$tipo_concreto,
+  FUN = mean
+)
+
+# Identificando os corpos de prova acima da média da classe
+dados_limpos$acima_media <-
+  dados_limpos$resistencia_mpa > media_tipo
+
+# Conferindo as novas variáveis
+str(dados_limpos)
+
+
+# 9. INFORMAÇÕES RELEVANTES PARA A OBRA
+
+# Resistência média por tipo de concreto
+aggregate(
+  resistencia_mpa ~ tipo_concreto,
+  data = dados_limpos,
+  FUN = mean
+)
+
+# Desvio padrão da resistência por tipo de concreto
+aggregate(
+  resistencia_mpa ~ tipo_concreto,
+  data = dados_limpos,
+  FUN = sd
+)
+
+# Resistência média por idade e tipo de concreto
+media_idade_tipo <- aggregate(
+  resistencia_mpa ~ idade_dias + tipo_concreto,
+  data = dados_limpos,
+  FUN = mean
+)
+
+media_idade_tipo
+
+# Correlação entre consumo de cimento e resistência
+cor(
+  dados_limpos$cimento_kg_m3,
+  dados_limpos$resistencia_mpa,
+  use = "complete.obs"
+)
+
+# Correlação entre relação água/cimento e resistência
+cor(
+  dados_limpos$relacao_a_c,
+  dados_limpos$resistencia_mpa,
+  use = "complete.obs"
+)
+
+
+# 10. REPRESENTAÇÃO GRÁFICA DAS PRINCIPAIS RELAÇÕES
+
+# Consumo de cimento × resistência
+plot(
+  dados_limpos$cimento_kg_m3,
+  dados_limpos$resistencia_mpa,
+  main = "Consumo de cimento × Resistência à compressão",
+  xlab = "Consumo de cimento (kg/m³)",
+  ylab = "Resistência à compressão (MPa)",
+  pch = 19
+)
+
+# Relação água/cimento × resistência
+plot(
+  dados_limpos$relacao_a_c,
+  dados_limpos$resistencia_mpa,
+  main = "Relação água/cimento × Resistência à compressão",
+  xlab = "Relação água/cimento",
+  ylab = "Resistência à compressão (MPa)",
+  pch = 19
+)
+
+# Resistência média × idade
+media_resistencia_idade <- aggregate(
+  resistencia_mpa ~ idade_dias,
+  data = dados_limpos,
+  FUN = mean
+)
+
+plot(
+  media_resistencia_idade$idade_dias,
+  media_resistencia_idade$resistencia_mpa,
+  type = "b",
+  main = "Resistência média × Idade do corpo de prova",
+  xlab = "Idade (dias)",
+  ylab = "Resistência média à compressão (MPa)"
+)
+```
+
 
 ## 🧠 Considerações finais
 
-Apresente uma síntese dos principais pontos observados no experimento.
+O desenvolvimento deste trabalho permitiu aplicar os principais conceitos de processamento e análise de dados a partir de dados relacionados à resistência de concretos aplicados em uma obra. A inspeção inicial mostrou a importância de verificar a qualidade das informações antes da realização dos cálculos, uma vez que foram encontrados dados ausentes, erros de digitação, diferenças de padronização e valores incompatíveis com o comportamento esperado das variáveis. Após a identificação e correção desses problemas, foi possível obter uma base mais consistente para as análises.
 
-- Retome o objetivo da prática e indique se ele foi alcançado.
-- Destaque os principais aprendizados obtidos.
-- Comente brevemente sobre a qualidade dos dados coletados.
-- Sugira possíveis melhorias no procedimento experimental.
+A exploração dos dados mostrou diferenças no comportamento das classes de concreto e permitiu observar relações importantes entre suas características. As classes de maior resistência apresentaram, de forma geral, maiores consumos médios de cimento e menores relações água/cimento. Essa relação também foi observada nas análises de correlação, em que o consumo de cimento apresentou associação positiva com a resistência à compressão, enquanto a relação água/cimento apresentou associação negativa.
 
-Evite repetir apenas os resultados; foque nas **conclusões e reflexões** sobre a `variaveis prática realizada.
+A análise da resistência em função da idade também mostrou a importância de interpretar os resultados considerando as características dos grupos analisados. Quando observadas apenas as médias gerais por idade, não foi identificado um crescimento contínuo da resistência. Entretanto, a separação dos resultados por classe de concreto permitiu visualizar melhor a tendência de ganho de resistência ao longo do tempo, embora com variações entre as classes.
 
+Outro aspecto importante foi a utilização de diferentes recursos da linguagem R para chegar a resultados semelhantes. Funções de agrupamento, estruturas de repetição, condicionais e operações vetorizadas permitiram compreender diferentes possibilidades para o tratamento e a exploração de uma mesma base de dados. A criação de variáveis derivadas também contribuiu para transformar os dados originais em informações mais úteis para a avaliação dos corpos de prova.
+
+De forma geral, o trabalho mostrou que a análise estatística não se resume à realização de cálculos. A qualidade da interpretação depende também da inspeção, organização e tratamento adequado dos dados, além da compreensão do contexto em que foram obtidos. Nesse sentido, a utilização do R se mostrou uma ferramenta útil para organizar o processo de análise e auxiliar na interpretação de informações relacionadas ao controle tecnológico do concreto.
 
 
 ## 📖 Referências
+ASSOCIAÇÃO BRASILEIRA DE NORMAS TÉCNICAS. ABNT NBR 8953:2015: concreto para fins estruturais - classificação pela massa específica, por grupos de resistência e consistência. Rio de Janeiro: ABNT, 2015.
