@@ -68,6 +68,8 @@ Descreva como o experimento foi realizado.
 
 ## 🔍 Resultados e Discussão
 
+### Importação do banco de dados
+
 A base de dados foi importada para o R através da função `read.csv2()` e atribuída a `dados`:
 
 ```r
@@ -90,13 +92,10 @@ Para obter o valor de observações e de variáveis existentes no banco de dados
 
 ```r
 str(dados)
-
 summary(dados)
 ```
-
 ```{r, echo=FALSE}
 str(dados)
-
 summary(dados)
 ```
 
@@ -110,13 +109,16 @@ Na base analisada, a identificação do corpo de prova, a obra e o tipo de concr
 
 A função `summary()` apresenta um resumo das principais características das variáveis de uma base de dados. Para variáveis numéricas, mostra medidas como mínimo, máximo, média, mediana e quartis e, para variáveis de texto, apresenta informações relacionadas à sua estrutura e conteúdo.
 
+### Investigação e Limpeza dos Dados
+
+#### Dados ausentes
+
 O próximo passo é verificar a existência de valores ausentes na base de dados e, para isso, serão realizadas as seguintes etapas:
 
 ```r
 # Quantificar o total de valores ausentes
 sum(dados == "")
 ```
-
 ```{r, echo=FALSE}
 sum(dados == "")
 ```
@@ -139,7 +141,6 @@ resultado_ausentes <- data.frame(
   Variavel = colnames(dados)[ausentes[, 2]]
 )
 ```
-
 ```{r, echo=FALSE}
 ausentes <- which(dados == "", arr.ind = TRUE)
 
@@ -151,9 +152,11 @@ resultado_ausentes <- data.frame(
 resultado_ausentes
 ```
 
-A princípio, os dados ausentes serão mantidos como "NA", com o objetivo de preservar ao máximo a integridade da base de dados original, evitando a exclusão de observações ou a inferência de valores sem justificativa. Nos casos em que a presença de valores ausentes impossibilitar a realização de determinada análise, será avaliada a exclusão apenas das observações com "NA" nas variáveis envolvidas, mantendo-se os demais registros da base.
+Considerando a baixa ocorrência de dados ausentes em relação ao número total de observações da base, optou-se pela exclusão das linhas que apresentaram-se como vazios. Essa abordagem permite trabalhar com observações completas nas análises subsequentes, sem a necessidade de estimar ou imputar valores não observados. Dessa forma, busca-se preservar a representatividade dos dados efetivamente disponíveis e garantir maior consistência na aplicação das análises estatísticas. A remoção dessas linhas que contém vazios será feita após as análises das Variáveis Quantitativas e Qualitativas.
 
-Para verificar e corrigir os dados que apresentam inconsistências dentro das variáveis quantitativas e que causaram o reconhecimento delas como (`chr`), iremos utilizar a função `as.numeric()` para tentar converter todos os valores para números em uma cópia da base de dados para, nomeada como `dados_limpos`,isto é importante para preservar o banco de dados para não perdermos a rastreabilidade dos dados originais. 
+#### Variáveis quantitativas
+
+Para verificar e corrigir os dados que apresentam inconsistências dentro das variáveis quantitativas e que causaram o reconhecimento delas como `(chr)`, iremos utilizar a função `as.numeric()` para tentar converter todos os valores para números em uma cópia da base de dados, nomeada como `dados_conversao`. Já para o armazenamento dos dados tratados, será atribuído uma cópia da base de dados para `dados_limpos`, importante para manter a integridade dos dados originalmente recebidos, possibilitando a rastreabilidade das alterações realizadas e a comparação entre os dados antes e após o tratamento.
 
 ```r
 # Agrupando as variáveis com erro de tipagem
@@ -180,22 +183,22 @@ variaveis_quantitativas
 ```
 
 ```r
-# Copia da base de dados para correção dos dados problemáticos`
-dados_limpos <- dados
+# Copia da base de dados para conversão e tratamento dos dados problemáticos`
+dados_conversao <- dados_limpos <- dados
 
 ```
 ```{r, echo=FALSE}
-dados_limpos <- dados
+dados_conversao <- dados_limpos <- dados
 ```
 
 ```r
 # Convertendo valores para números 
-dados_limpos[variaveis_quantitativas] <-
+dados_conversao[variaveis_quantitativas] <-
   lapply(dados[variaveis_quantitativas], as.numeric)
 
 ```
 ```{r, echo=FALSE}
-dados_limpos[variaveis_quantitativas] <-
+dados_conversao[variaveis_quantitativas] <-
   lapply(dados[variaveis_quantitativas], as.numeric)
 ```
 
@@ -204,12 +207,12 @@ Assim, para identificar o corpo de prova e os valores problemáticos por variáv
 
 ```r
 # Identificando quais valores foram transformados em NA 
-problemas <- is.na(dados_limpos[variaveis_quantitativas]) &
+problemas <- is.na(dados_conversao[variaveis_quantitativas]) &
              dados[variaveis_quantitativas] != ""
 
 ```
 ```{r, echo=FALSE}
-problemas <- is.na(dados_limpos[variaveis_quantitativas]) &
+problemas <- is.na(dados_conversao[variaveis_quantitativas]) &
              dados[variaveis_quantitativas] != ""
 ```
 
@@ -293,7 +296,7 @@ dados_limpos[variaveis_quantitativas] <- lapply(
 str(dados_limpos)
 ```
 
-Ainda observando o banco de dados, agora será verificado se os dados apresentados como variáveis quantitativas são compatíveis estatisticamente. Inicialmente iremos incluir a variável `idade_dias` na atribuição `variaveis_quantitativas` e utilizar a função `summary()`, para uma visão resumida dos dados estatístico de cada variável.
+Ainda observando o banco de dados, agora será verificado se os dados apresentados como variáveis quantitativas são compatíveis estatisticamente. Inicialmente iremos incluir a variável `idade_dias` na atribuição `variaveis_quantitativas`, em seguida utilizar a função `summary()`, para uma visão resumida dos dados estatístico de cada variável.
 
 ```r
 # Inclução da variável de idade do corpo de prova e print do resumo estátistico das variáveis quantitativas
@@ -357,8 +360,9 @@ dados_limpos$densidade_kg_m3[
 dados_limpos$absorção_agregado_pct[
   dados_limpos$absorção_agregado_pct == 18.4
 ] <- 1.84
-summary(dados_limpos[variaveis_quantitativas])
 ```
+
+#### Variáveis qualitativas
 
 Concluído os ajustes das variáveis quantitativas, vamos agora analisar as variáveis qualitativas, de `obra`e `tipo_concreto`. Para isso utilizaremos a função `unique()`, a seguir.
 
@@ -391,6 +395,34 @@ unique(dados_limpos$obra)
 unique(dados_limpos$tipo_concreto)
 ```
 
+Por fim, será feita a remoção das linhas em que há falta de preenchimento de dados, itentificados pelos corpos de prova CP-092, CP-038, CP-015, CP-077 e CP-097, no item 4.2.1 Dados Ausentes.
+
+```R
+dados_limpos <- subset(
+  dados_limpos,
+  !(id_corpo_prova %in% c(
+    "CP-092",
+    "CP-038",
+    "CP-015",
+    "CP-077",
+    "CP-097"
+  ))
+)
+
+```
+```{r, echo=FALSE}
+dados_limpos <- subset(
+  dados_limpos,
+  !(id_corpo_prova %in% c(
+    "CP-092",
+    "CP-038",
+    "CP-015",
+    "CP-077",
+    "CP-097"
+  ))
+)
+```
+
 Após a identificação e o tratamento das inconsistências presentes na base de dados, realizou-se uma nova verificação do conjunto de dados `dados_limpos`, com o objetivo de avaliar a estrutura das variáveis e conferir os resultados obtidos após o processo de limpeza.
 
 ```r
@@ -402,11 +434,30 @@ str(dados_limpos)
 summary(dados_limpos)
 ```
 
-A partir da aplicação da função `str()`, verificou-se que a base de dados tratada permanece composta por 100 observações e 10 variáveis. Após o processo de limpeza, as variáveis quantitativas foram adequadamente convertidas para o tipo numérico (num), enquanto as variáveis qualitativas permaneceram armazenadas como caracteres (chr).
+A partir da aplicação da função `str()`, verificou-se que a base de dados tratada agora é composta por 95 observações e 10 variáveis. Após o processo de limpeza, as variáveis quantitativas foram adequadamente convertidas para o tipo numérico (num), enquanto as variáveis qualitativas permaneceram armazenadas como caracteres (chr).
 
 Por meio da função `summary()`, foi possível verificar o comportamento das variáveis após as correções realizadas. Observa-se que os valores anteriormente identificados como discrepantes foram tratados, resultando em intervalos mais coerentes para as variáveis analisadas. A idade dos corpos de prova passou a variar entre 7 e 56 dias, o abatimento entre 64 e 175 mm, a densidade entre 2.293 e 2.464 kg/m³ e a absorção de água do agregado entre 0,80% e 2,92%.
 
 Além disso, as variáveis resistência à compressão, consumo de cimento e relação água/cimento apresentaram valores entre 19,0 e 47,5 MPa, 295 e 418 kg/m³ e 0,43 e 0,65, respectivamente. Dessa forma, a nova inspeção indica que as inconsistências identificadas nas etapas anteriores foram corrigidas, tornando a base mais adequada para as análises subsequentes.
+
+### Exploração dos dados
+
+Após o tratamento da base de dados, procedeu-se à análise estatística descritiva da resistência à compressão dos corpos de prova.
+
+Para a resistência média geral foi utilizado a função `mean()`
+
+```r
+media_resistencia <- mean(dados_limpos$resistencia_mpa)
+
+```
+```{r, echo=FALSE}
+media_resistencia <- mean(dados_limpos$resistencia_mpa)
+
+media_resistencia
+
+```
+
+
 
 ## 🧠 Considerações finais
 
