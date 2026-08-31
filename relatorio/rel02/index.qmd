@@ -442,9 +442,7 @@ Além disso, as variáveis resistência à compressão, consumo de cimento e rel
 
 ### Exploração dos dados
 
-Após o tratamento da base de dados, procedeu-se à análise estatística descritiva da resistência à compressão dos corpos de prova.
-
-Para a resistência média geral foi utilizado a função `mean()`
+Após o tratamento da base de dados, procedeu-se à análise estatística descritiva da resistência à compressão dos corpos de prova. Inicialmente, calculou-se a resistência média à compressão considerando todos os corpos de prova presentes na base de dados após o processo de tratamento, utilizado a função `mean()`.
 
 ```r
 media_resistencia <- mean(dados_limpos$resistencia_mpa)
@@ -454,8 +452,138 @@ media_resistencia <- mean(dados_limpos$resistencia_mpa)
 media_resistencia <- mean(dados_limpos$resistencia_mpa)
 
 media_resistencia
+```
+
+Em seguida, a resistência média foi determinada individualmente para cada bloco da obra. Para isso, utilizou-se a função `tapply()`, agrupando os valores de resistência à compressão de acordo com a variável obra e aplicando a função `mean()` a cada grupo.
+
+```r
+# Resistência média por bloco da obra
+media_por_obra <- tapply(
+  dados_limpos$resistencia_mpa,
+  dados_limpos$obra,
+  mean
+)
+
+# Resistência média por tipo de concreto
+media_por_concreto <- tapply(
+  dados_limpos$resistencia_mpa,
+  dados_limpos$tipo_concreto,
+  mean
+)
+
+# Resistência média por idade
+media_por_idade <- tapply(
+  dados_limpos$resistencia_mpa,
+  dados_limpos$idade_dias,
+  mean
+)
 
 ```
+```{r, echo=FALSE}
+# Resistência média por bloco da obra
+media_por_obra <- tapply(
+  dados_limpos$resistencia_mpa,
+  dados_limpos$obra,
+  mean
+)
+media_por_obra
+
+#Resistência média por tipo de concreto
+media_por_concreto <- tapply(
+  dados_limpos$resistencia_mpa,
+  dados_limpos$tipo_concreto,
+  mean
+)
+media_por_concreto
+
+#Resistência média por idade
+media_por_idade <- tapply(
+  dados_limpos$resistencia_mpa,
+  dados_limpos$idade_dias,
+  mean
+)
+media_por_idade
+```
+
+A partir das resistências médias obtidas para cada bloco da obra, realizou-se a comparação entre os grupos com o objetivo de identificar os blocos que apresentaram a maior e a menor resistência média à compressão. Para isso, foram utilizadas as funções `max()` e `min()` para obtenção dos valores extremos e `which.max()` e `which.min()` para obtenção dos valores extremos com a identificação das respectivas posições no conjunto de resultados.
+
+```r
+# Identificação da maior resistência média
+maior_media_bloco <- max(media_por_obra)
+bloco_maior <- names(which.max(media_por_obra))
+
+# Identificação da menor resistência média
+menor_media_bloco <- min(media_por_obra)
+bloco_menor <- names(which.min(media_por_obra))
+
+```
+```{r, echo=FALSE}
+maior_media_bloco <- max(media_por_obra)
+bloco_maior <- names(which.max(media_por_obra))
+
+paste("Maior resistência média:", bloco_maior, "-", round(maior_media_bloco, 2), "MPa")
+
+menor_media_bloco <- min(media_por_obra)
+bloco_menor <- names(which.min(media_por_obra))
+
+paste("Menor resistência média:", bloco_menor, "-", round(menor_media_bloco, 2), "MPa")
+
+```
+
+A resistência média à compressão foi avaliada para cada classe de concreto presente na base de dados (C25, C30, C35 e C40), calculada anteriormente por meio da função `tapply()`. De forma similar à comapração realizada para cada bloco, utilizou-se as funções `max()`, `which.max()` e `names()` para determinar a maior resistência média e identificar a classe de concreto correspondente.
+
+```r
+# Identificação da maior resistência média
+maior_media_concreto <- max(media_por_obra)
+concreto_maior <- names(which.max(media_por_concreto))
+
+```
+```{r, echo=FALSE}
+maior_media_concreto <- max(media_por_obra)
+concreto_maior <- names(which.max(media_por_concreto))
+
+paste("Maior resistência média:", concreto_maior, "-", round(maior_media_concreto, 2), "MPa")
+```
+
+Com o objetivo de comparar simultaneamente diferentes características dos concretos, utilizou-se a função `aggregate()` para calcular as médias de resistência à compressão, consumo de cimento, relação água/cimento, abatimento e densidade para cada classe de concreto. A variável `tipo_concreto` foi utilizada como critério de agrupamento, enquanto a função `mean()` foi aplicada às variáveis quantitativas selecionadas.
+
+```r
+# Calculando as estatísticas por cada grupo
+resultado_aggregate <- aggregate(
+  cbind(
+    resistencia_mpa,
+    cimento_kg_m3,
+    relacao_a_c,
+    abatimento_mm,
+    densidade_kg_m3
+  ) ~ tipo_concreto,
+  data = dados_limpos,
+  FUN = mean
+)
+```
+```{r, echo=FALSE}
+resultado_aggregate <- aggregate(
+  cbind(
+    resistencia_mpa,
+    cimento_kg_m3,
+    relacao_a_c,
+    abatimento_mm,
+    densidade_kg_m3
+  ) ~ tipo_concreto,
+  data = dados_limpos,
+  FUN = mean
+)
+
+resultado_aggregate
+```
+
+A partir dos resultados obtidos por meio da função aggregate(), observa-se um aumento progressivo da resistência média à compressão entre as classes de concreto, variando de 27,45 MPa para o C25 a 43,33 MPa para o C40. Esse aumento é acompanhado pelo crescimento do consumo médio de cimento, que passa de aproximadamente 322,35 kg/m³ no C25 para 404,13 kg/m³ no C40.
+
+Em contrapartida, observa-se uma redução progressiva da relação água/cimento, com valores médios variando de 0,62 para o C25 a 0,48 para o C40. O abatimento médio também apresenta tendência de redução entre as classes, passando de 113,58 mm no C25 para 104,94 mm no C40.
+
+Para a densidade, não se observa a mesma tendência crescente ou decrescente apresentada pelas demais variáveis, uma vez que os valores médios permanecem relativamente próximos entre as quatro classes de concreto, variando entre aproximadamente 2.362,50 e 2.383,47 kg/m³.
+
+Dessa forma, os resultados da base analisada indicam que as classes de maior resistência estão associadas a maiores consumos médios de cimento e menores relações água/cimento, enquanto a densidade apresenta menor variação entre as diferentes classes.
 
 
 
