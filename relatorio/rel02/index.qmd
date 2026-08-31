@@ -760,6 +760,164 @@ Os valores das resistências médias obtidos com `sapply()` são equivalentes ao
 
 #### Aplicando a função `apply()`
 
+Foram selecionadas as variáveis quantitativas relacionadas às propriedades do concreto: resistência à compressão, consumo de cimento, relação água/cimento, abatimento, densidade e absorção do agregado. Em seguida, utilizou-se a função `apply()` com `MARGIN = 2` para calcular a média de cada variável, uma vez que as propriedades estão dispostas nas colunas da base de dados.
+
+```r
+# Atribuindo as variáveis relacionadas às propriedades do concreto à variaveis_concreto
+variaveis_concreto <- dados_limpos[
+  c(
+    "resistencia_mpa",
+    "cimento_kg_m3",
+    "relacao_a_c",
+    "abatimento_mm",
+    "densidade_kg_m3",
+    "absorção_agregado_pct"
+  )
+]
+
+# Obtendo a média através de apply() com MARGIN = 2
+media_variaveis <- apply(
+  variaveis_concreto,
+  MARGIN = 2,
+  FUN = mean
+)
+
+```
+```{r, echo=FALSE}
+variaveis_concreto <- dados_limpos[
+  c(
+    "resistencia_mpa",
+    "cimento_kg_m3",
+    "relacao_a_c",
+    "abatimento_mm",
+    "densidade_kg_m3",
+    "absorção_agregado_pct"
+  )
+]
+
+media_variaveis <- apply(
+  variaveis_concreto,
+  MARGIN = 2,
+  FUN = mean
+)
+
+media_variaveis
+```
+
+Agora, utilizando a função `apply()` com `MARGIN = 1`, calculou-se a média das variáveis quantitativas selecionadas para cada corpo de prova, obtendo-se uma medida resumo por observação.
+
+```r
+# Obtendo a média através de apply() com MARGIN = 1
+resumo_observacoes <- apply(
+  variaveis_concreto,
+  MARGIN = 1,
+  FUN = mean
+)
+
+```
+```{r, echo=FALSE}
+resumo_observacoes <- apply(
+  variaveis_concreto,
+  MARGIN = 1,
+  FUN = mean
+)
+
+resumo_observacoes
+```
+
+Assim, para cada corpo de prova, o R calculou uma média envolvendo:
+
+resistência + cimento + relação a/c + abatimento + densidade + absorção
+
+Entretanto, essa medida não possui uma interpretação física, uma vez que combina propriedades em diferentes unidades e escalas, como MPa, kg/m³, mm, % e grandezas adimensionais. Dessa forma, embora o cálculo seja matematicamente possível e permita demonstrar a aplicação da função `apply()` por linhas, o valor resultante não representa, uma propriedade física do concreto.
+
+#### Aplicando as funções `for()` e `if()`
+
+Para identificar os corpos de prova com resistência superior à média de sua respectiva classe, utilizou-se uma estrutura de repetição for para percorrer individualmente as observações da base. Para cada registro, foi calculada a resistência média correspondente ao seu tipo de concreto e, por meio da estrutura condicional if, verificou-se se a resistência observada era superior a essa média. Quando a condição foi atendida, o identificador do corpo de prova foi armazenado no vetor `cp_acima_media`.
+
+```r
+# Criando o vetor para armazenar os CP que atendem ao critério
+cp_acima_media <- c()
+
+# Aplicando as estruturas for() e if()
+for (i in 1:nrow(dados_limpos)) {
+
+  media_classe <- mean(
+    dados_limpos$resistencia_mpa[
+      dados_limpos$tipo_concreto == dados_limpos$tipo_concreto[i]
+    ]
+  )
+
+  if (dados_limpos$resistencia_mpa[i] > media_classe) {
+
+    cp_acima_media <- c(
+      cp_acima_media,
+      dados_limpos$id_corpo_prova[i]
+    )
+
+  }
+}
+
+```
+```{r, echo=FALSE}
+cp_acima_media <- c()
+
+for (i in 1:nrow(dados_limpos)) {
+
+  media_classe <- mean(
+    dados_limpos$resistencia_mpa[
+      dados_limpos$tipo_concreto == dados_limpos$tipo_concreto[i]
+    ]
+  )
+
+  if (dados_limpos$resistencia_mpa[i] > media_classe) {
+
+    cp_acima_media <- c(
+      cp_acima_media,
+      dados_limpos$id_corpo_prova[i]
+    )
+
+  }
+}
+
+print("corpos de prova cuja resistência ficou acima da média da respectiva classe:")
+cp_acima_media
+```
+
+De forma analóga, utilizou-se a função `ave()` para obter os CP que estão acima da média.
+
+```r
+# Aplicando a função ave()
+media_por_linha <- ave(
+  dados_limpos$resistencia_mpa,
+  dados_limpos$tipo_concreto,
+  FUN = mean
+)
+
+cp_acima_media_vet <- dados_limpos$id_corpo_prova[
+  dados_limpos$resistencia_mpa > media_por_linha
+]
+
+cp_acima_media_vet
+```
+```{r, echo=FALSE}
+media_por_linha <- ave(
+  dados_limpos$resistencia_mpa,
+  dados_limpos$tipo_concreto,
+  FUN = mean
+)
+
+cp_acima_media_vet <- dados_limpos$id_corpo_prova[
+  dados_limpos$resistencia_mpa > media_por_linha
+]
+
+print("corpos de prova cuja resistência ficou acima da média da respectiva classe:")
+cp_acima_media_vet
+```
+
+As duas abordagens produziram o mesmo resultado, porém diferem na forma de execução. Na primeira solução, a estrutura for percorre cada observação individualmente e o if verifica se a resistência está acima da média de sua classe. Já na abordagem vetorizada, a função `ave()` calcula as médias por classe e a comparação é realizada simultaneamente para todas as observações.
+
+A abordagem vetorizada pode ser considerada mais simples e mais legível, pois requer menos etapas e expressa diretamente a operação desejada. Também tende a ser mais eficiente, especialmente para conjuntos de dados maiores, uma vez que evita o controle explícito de cada iteração no código R. Entretanto, a solução com for e if é útil pois são funções primitivas do R e não necessitam de intalação de pacote de funções.
 
 
 ## 🧠 Considerações finais
