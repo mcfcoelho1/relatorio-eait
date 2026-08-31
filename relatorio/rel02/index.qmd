@@ -442,6 +442,8 @@ Além disso, as variáveis resistência à compressão, consumo de cimento e rel
 
 ### Exploração dos dados
 
+#### Resitência Média
+
 Após o tratamento da base de dados, procedeu-se à análise estatística descritiva da resistência à compressão dos corpos de prova. Inicialmente, calculou-se a resistência média à compressão considerando todos os corpos de prova presentes na base de dados após o processo de tratamento, utilizado a função `mean()`.
 
 ```r
@@ -584,6 +586,115 @@ Em contrapartida, observa-se uma redução progressiva da relação água/ciment
 Para a densidade, não se observa a mesma tendência crescente ou decrescente apresentada pelas demais variáveis, uma vez que os valores médios permanecem relativamente próximos entre as quatro classes de concreto, variando entre aproximadamente 2.362,50 e 2.383,47 kg/m³.
 
 Dessa forma, os resultados da base analisada indicam que as classes de maior resistência estão associadas a maiores consumos médios de cimento e menores relações água/cimento, enquanto a densidade apresenta menor variação entre as diferentes classes.
+
+#### Resitência Relativa
+
+Para o cálculo da variável `resistencia_relativa`, foram adotadas como referência as resistências características das classes de concreto, conforme a ABNT NBR 8953:2015: 25 MPa (C25), 30 MPa (C30), 35 MPa (C35) e 40 MPa (C40). A variável foi obtida pela razão entre a resistência observada e a respectiva referência, sendo que valores iguais, superiores ou inferiores a 1 indicam, respectivamente, resistência equivalente, acima ou abaixo da referência adotada. Assim, para criar a variável `resistencia_relativa` já incluindo-a no banco de dados tratados `dados_limpos`, utilizou-se a função `ifelse()`, cuja atribuição é verificar uma condição para cada linha e retornar um valor quando ela é verdadeira e outro quando é falsa.
+
+```r
+# Criação da Resitência de Referência para apoio
+dados_limpos$resistencia_referencia <- ifelse(
+  dados_limpos$tipo_concreto == "C25", 25,
+  ifelse(
+    dados_limpos$tipo_concreto == "C30", 30,
+    ifelse(
+      dados_limpos$tipo_concreto == "C35", 35,
+      40
+    )
+  )
+)
+```
+```{r, echo=FALSE}
+dados_limpos$resistencia_referencia <- ifelse(
+  dados_limpos$tipo_concreto == "C25", 25,
+  ifelse(
+    dados_limpos$tipo_concreto == "C30", 30,
+    ifelse(
+      dados_limpos$tipo_concreto == "C35", 35,
+      40
+    )
+  )
+)
+
+```
+
+```r
+# Criação da Resitência Relativa
+dados_limpos$resistencia_relativa <-
+  dados_limpos$resistencia_mpa /
+  dados_limpos$resistencia_referencia
+```
+```{r, echo=FALSE}
+dados_limpos$resistencia_relativa <-
+  dados_limpos$resistencia_mpa /
+  dados_limpos$resistencia_referencia
+```
+
+Após a crianção da variável `resistencia_relativa`, será feita a exclusão da variável `resistencia_referencia` que foi criada como apoio.
+
+```r
+# Exclusão da variável resitência referência
+dados_limpos$resistencia_referencia <- NULL
+```
+```{r, echo=FALSE}
+dados_limpos$resistencia_referencia <- NULL
+```
+
+
+#### Classificação quanto a resitência
+
+Para a variável classificacao, adotou-se como critério a comparação entre a resistência observada e a resistência de referência definida para cada classe. Os corpos de prova com `resistencia_relativa` maior ou igual a 1 foram classificados como “Igual ou acima da referência”, enquanto aqueles com valor inferior a 1 foram classificados como “Abaixo da referência”.
+
+```r
+# Criação da variável Classificação
+dados_limpos$classificacao <- ifelse(
+  dados_limpos$resistencia_relativa >= 1,
+  "Igual ou acima da referência",
+  "Abaixo da referência"
+)
+```
+```{r, echo=FALSE}
+dados_limpos$classificacao <- ifelse(
+  dados_limpos$resistencia_relativa >= 1,
+  "Igual ou acima da referência",
+  "Abaixo da referência"
+)
+```
+
+Por fim, foi criada a variável `lógica acima_media`, destinada a indicar se a resistência à compressão de cada corpo de prova é superior à resistência média de sua respectiva classe de concreto. Para isso, utilizou-se a função `ave()`, que permitiu calcular a resistência média por `tipo_concreto` e associar o respectivo valor médio a cada observação. Em seguida, a resistência individual foi comparada à média de sua classe, atribuindo-se `TRUE` quando o valor observado foi superior à média e `FALSE` nos demais casos.
+
+```r
+# Calculando a resistência média por tipo de concreto e já associando a cada CP
+media_tipo <- ave(
+  dados_limpos$resistencia_mpa,
+  dados_limpos$tipo_concreto,
+  FUN = mean
+)
+
+# Criação da variável Acima da Média
+dados_limpos$acima_media <-
+  dados_limpos$resistencia_mpa > media_tipo
+
+```
+```{r, echo=FALSE}
+media_tipo <- ave(
+  dados_limpos$resistencia_mpa,
+  dados_limpos$tipo_concreto,
+  FUN = mean
+)
+
+dados_limpos$acima_media <-
+  dados_limpos$resistencia_mpa > media_tipo
+
+names(dados_limpos)
+```
+
+Assim, a base de dados `dados_limpos` é composta por 95 observações e 13 variáveis: 
+
+```{r, echo=FALSE}
+dim(dados_limpos)
+names(dados_limpos)
+```
 
 
 
