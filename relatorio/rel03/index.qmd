@@ -141,9 +141,11 @@ tipos_variaveis |>
 
 Dessa forma, verificou-se que `idade_dias`, `abatimento_mm` e `densidade_kg_m3` foram reconhecidas pelo R como variáveis numéricas. Por outro lado, `id_corpo_prova`, `obra`, `tipo_concreto`, `resistencia_mpa`, `cimento_kg_m3`, `relacao_a_c` e `absorção_agregado_pct` foram reconhecidas como texto. Entretanto, `resistencia_mpa`, `cimento_kg_m3`, `relacao_a_c` e `absorção_agregado_pct` representam grandezas quantitativas e, portanto, indica a possível presença de inconsistências de formatação ou digitação nessas variáveis. 
 
-### Investigação e Limpeza dos Dados
+### Investigação dos Dados
 
-Inicialmente, observou-se a presença de dados ausentes, utilizando a função `is.na()` em conjunto com `summarise()` e `across()`, permitindo contabilizar a quantidade de valores ausentes em cada variável da base. Em seguida, foi utilizada a função `if_any()` para identificar as observações que apresentavam pelo menos um valor ausente.
+#### Dados Ausentes
+
+Para observar se há dados ausentes, utilizando a função `is.na()` em conjunto com `summarise()` e `across()`, permitindo contabilizar a quantidade de valores ausentes em cada variável da base. Em seguida, foi utilizada a função `if_any()` para identificar as observações que apresentavam pelo menos um valor ausente.
 
 ```{R}
 dados |>
@@ -177,12 +179,92 @@ registros_ausentes |>
     caption = "Observações contendo valores ausentes",
     digits = 2
   )
-
 ```
 
 A análise identificou cinco valores ausentes na base de dados, distribuídos entre as variáveis `resistencia_mpa`, `relacao_a_c`, `abatimento_mm`, `densidade_kg_m3` e `absorção_agregado_pct`, cada uma apresentando um registro ausente. As demais variáveis não apresentaram valores ausentes. A análise das observações permite localizar exatamente os corpos de prova associados a essas ausências, o que será importante para definir posteriormente o tratamento mais adequado para cada caso.
 
 Ressalta-se uma diferença em relação ao procedimento adotado no Relatório 02, em que a base foi importada utilizando a função `read.csv2()`, da `Base R`, e os campos sem preenchimento foram mantidos como strings vazias (`""`), sendo necessário identificá-los por meio da comparação `dados == ""`. No presente relatório, a importação foi realizada com a função `read_csv2()`, do pacote `readr`, que reconhece os campos vazios como valores ausentes (`NA`). Dessa forma, a identificação das ausências pode ser realizada diretamente com `is.na()`.
+
+#### Variáveis Quantitativas
+
+Considerando que algumas variáveis de natureza quantitativa foram reconhecidas pelo R como texto, realizou-se uma tentativa de conversão de seus valores para o formato numérico. Para facilitar a investigação, as variáveis foram reorganizadas com `pivot_longer()` e convertidas temporariamente por meio de `parse_double()`. Foram considerados potencialmente problemáticos os registros originalmente preenchidos cuja tentativa de conversão resultou em NA, permitindo identificar automaticamente os valores incompatíveis com o formato numérico esperado.
+
+```{R}
+variaveis_quantitativas_texto <- c(
+  "resistencia_mpa",
+  "cimento_kg_m3",
+  "relacao_a_c",
+  "absorção_agregado_pct"
+)
+
+problemas_identificados <- dados |>
+  select(
+    id_corpo_prova,
+    all_of(variaveis_quantitativas_texto)
+  ) |>
+  pivot_longer(
+    cols = all_of(variaveis_quantitativas_texto),
+    names_to = "Variável",
+    values_to = "Valor"
+  ) |>
+  mutate(
+    valor_teste = parse_double(Valor)
+  ) |>
+  filter(
+    !is.na(Valor) & is.na(valor_teste)
+  ) |>
+  select(
+    id_corpo_prova,
+    Variável,
+    Valor
+  )
+
+problemas_identificados |>
+  knitr::kable(
+    caption = "Valores com inconsistências de formatação ou digitação",
+    col.names = c(
+      "Corpo de prova",
+      "Variável",
+      "Valor identificado"
+    )
+  )
+```
+
+A tentativa de conversão das variáveis quantitativas originalmente reconhecidas como texto permitiu identificar quatro registros com problemas de formatação ou digitação. Nos corpos de prova CP-008 e CP-045, foram encontrados valores com vírgula como separador decimal (38,7 e 0,55, respectivamente). Nos corpos de prova CP-019 e CP-064, foram identificados caracteres alfabéticos em valores que deveriam ser exclusivamente numéricos, correspondentes a 3O,4 e 390O, indicando a utilização da letra “O” no lugar do algarismo zero.
+
+#### Variáveis Quanlitativas
+
+Para verificar se todas as categorias de `obra` estão escritas de forma padronizada, utilizou-se as funções `count()` e `distinct()`.
+
+```{R}
+dados |>
+  count(obra) |>
+  knitr::kable(
+    caption = "Frequência das categorias da variável obra",
+    col.names = c("Obra", "Frequência")
+  )
+
+dados |>
+  distinct(obra) |>
+  arrange(obra)
+```
+
+Observa-se que a variável `obra`esta corretamente padronizada com quatro categorias de blocos. Com base no Relatório 02, era esperado que houvesse uma inconsistência de espaço adicional após uma das categorias. Entretanto, na importação realizada com `read_csv2()`, do pacote `readr`, esse espaço não foi identificado, uma vez que a função realiza, por padrão, o tratamento de espaços em branco durante a leitura dos dados. Dessa forma, a inconsistência presente no arquivo original não foi mantida na base importada no Relatório 03.
+
+Já para verificar se todas as categorias da variável `tipo_concreto` estão escritas de forma padronizada, utilizou-se a função `count()`.
+
+```{R}
+dados |>
+  count(tipo_concreto) |>
+  knitr::kable(
+    caption = "Frequência das categorias da variável tipo_concreto",
+    col.names = c("Tipo de concreto", "Frequência")
+  )
+```
+
+Assim, foram identificadas cinco categorias distintas na variável `tipo_concreto`: C25, C30, C35, C40 e c30. Observa-se que a categoria c30, registrada em uma única observação, representa a mesma classe de concreto que C30, diferenciando-se apenas pelo uso de letras minúsculas. Dessa forma, identifica-se uma inconsistência na padronização dessa variável.
+
+### Limpando a Base de Dados
 
 ## 🧠 Considerações finais
 
