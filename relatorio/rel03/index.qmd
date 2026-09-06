@@ -18,6 +18,7 @@ format:
     theme: bootstrap
     #css: styles.css
     code-fold: true
+    code-summary: "Código"
     code-tools: true
 execute:
   echo: true
@@ -49,21 +50,6 @@ Descrever o objetivo principal da prática.
 
 ---
 
-## 📚  Fundamentação Teórica
-
-Apresente os conceitos principais:
-
-- Média
-- Variância
-- Desvio padrão
-- Amostragem
-
-$$
-\bar{x} = \frac{1}{n}\sum_{i=1}^{n} x_i
-$$
-
----
-
 ## ⚙️ Metodologia
 
 ::: {.callout-note}
@@ -78,35 +64,125 @@ Descreva como o experimento foi realizado.
 
 ## 🔍 Resultados e Discussão
 
-Apresente e interprete os resultados obtidos a partir dos dados coletados.
+### Importação do banco de dados
 
-- Descreva os principais resultados numéricos (média, variabilidade, etc.).
-- Comente o comportamento dos dados observados nos gráficos.
-- Indique se há presença de valores discrepantes (outliers).
-- Avalie se os dados apresentam simetria ou tendência.
-
-Em seguida, discuta os resultados à luz dos conceitos teóricos:
-
-- Os resultados estão de acordo com o esperado?
-- Há grande variabilidade? O que isso significa no contexto do experimento?
-- Quais fatores podem ter influenciado os resultados?
-- Existem possíveis fontes de erro experimental?
-
-Procure não apenas descrever, mas **interpretar os dados**.
-
-### 💬 Exemplo de como citar uma referência bibliográfica
-
-Depois de inserido as informaçõe no arquivo **referencias.bib**, use:
-
-- Segundo @Rbasico2022
-- Tudo é um objeto em R [@Rbasico2022]
-
-### 📊  Análise de Dados
+A base de dados foi importada para o R através da função `read_csv2()`e atribuída a `dados`.
 
 ```{r}
-distancia <- c(10.2, 9.8, 10.5, 10.1, 9.9, 10.3)
-distancia
+library(tidyverse)
+
+dados <- read_csv2(
+  "base_processamento_dados_engenharia_civil.csv",
+  show_col_types = FALSE
+)
 ```
+
+Para verificar a correta importação dos dados, foram visualizadas as seis primeiras e as seis últimas observações da base utilizando, respectivamente, as funções `slice_head()` e `slice_tail()`.
+
+```{r}
+dados |>
+  slice_head(n = 6) |>
+  knitr::kable(
+    caption = "Primeiras observações da base de dados",
+    digits = 2
+  )
+
+dados |>
+  slice_tail(n = 6) |>
+  knitr::kable(
+    caption = "Últimas observações da base de dados",
+    digits = 2
+  )
+
+```
+
+Para verificar as dimensões da base, utilizou-se `summarise()`, em conjunto com `n()` para contabilizar o número de observações e `ncol()` para obter a quantidade de variáveis.
+
+```{r}
+dados |>
+  summarise(
+    observacoes = n(),
+    variaveis = ncol(dados)
+  ) |>
+  knitr::kable(
+    caption = "Dimensões da base de dados"
+  )
+```
+
+Portanto, a base de dados é composta por 100 observações e 10 variáveis.
+
+```{r}
+dados |>
+  glimpse()
+
+```
+
+A estrutura da base foi inspecionada por meio da função `glimpse()`. Com o resultado obtido, já é possível verificar como o R reconheceu as variáveis, mas para uma visualização mais clara, utilizaremos a função `class()` aplicada às colunas da base por meio de `across()`
+
+```{R}
+tipos_variaveis <- dados |>
+  summarise(
+    across(
+      everything(),
+      ~ class(.x)
+    )
+  ) |>
+  pivot_longer(
+    cols = everything(),
+    names_to = "Variável",
+    values_to = "Tipo reconhecido pelo R"
+  )
+
+tipos_variaveis |>
+  knitr::kable(
+    caption = "Tipos das variáveis reconhecidos pelo R"
+  )
+```
+
+Dessa forma, verificou-se que `idade_dias`, `abatimento_mm` e `densidade_kg_m3` foram reconhecidas pelo R como variáveis numéricas. Por outro lado, `id_corpo_prova`, `obra`, `tipo_concreto`, `resistencia_mpa`, `cimento_kg_m3`, `relacao_a_c` e `absorção_agregado_pct` foram reconhecidas como texto. Entretanto, `resistencia_mpa`, `cimento_kg_m3`, `relacao_a_c` e `absorção_agregado_pct` representam grandezas quantitativas e, portanto, indica a possível presença de inconsistências de formatação ou digitação nessas variáveis. 
+
+### Investigação e Limpeza dos Dados
+
+Inicialmente, observou-se a presença de dados ausentes, utilizando a função `is.na()` em conjunto com `summarise()` e `across()`, permitindo contabilizar a quantidade de valores ausentes em cada variável da base. Em seguida, foi utilizada a função `if_any()` para identificar as observações que apresentavam pelo menos um valor ausente.
+
+```{R}
+dados |>
+  summarise(
+    across(
+      everything(),
+      ~ sum(is.na(.x))
+    )
+  ) |>
+  pivot_longer(
+    cols = everything(),
+    names_to = "Variável",
+    values_to = "Valores ausentes"
+  ) |>
+  knitr::kable(
+    caption = "Quantidade de valores ausentes por variável"
+  )
+
+registros_ausentes <- dados |>
+  mutate(
+    possui_na = if_any(
+      everything(),
+      is.na
+    )
+  ) |>
+  filter(possui_na) |>
+  select(-possui_na)
+
+registros_ausentes |>
+  knitr::kable(
+    caption = "Observações contendo valores ausentes",
+    digits = 2
+  )
+
+```
+
+A análise identificou cinco valores ausentes na base de dados, distribuídos entre as variáveis `resistencia_mpa`, `relacao_a_c`, `abatimento_mm`, `densidade_kg_m3` e `absorção_agregado_pct`, cada uma apresentando um registro ausente. As demais variáveis não apresentaram valores ausentes. A análise das observações permite localizar exatamente os corpos de prova associados a essas ausências, o que será importante para definir posteriormente o tratamento mais adequado para cada caso.
+
+Ressalta-se uma diferença em relação ao procedimento adotado no Relatório 02, em que a base foi importada utilizando a função `read.csv2()`, da `Base R`, e os campos sem preenchimento foram mantidos como strings vazias (`""`), sendo necessário identificá-los por meio da comparação `dados == ""`. No presente relatório, a importação foi realizada com a função `read_csv2()`, do pacote `readr`, que reconhece os campos vazios como valores ausentes (`NA`). Dessa forma, a identificação das ausências pode ser realizada diretamente com `is.na()`.
 
 ## 🧠 Considerações finais
 
