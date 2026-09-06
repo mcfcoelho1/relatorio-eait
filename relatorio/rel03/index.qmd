@@ -1,6 +1,6 @@
 ---
 # Só mude aqui!!!!
-author: "Nome do Aluno"
+author: "Maria Clara Figueiredo e Victória Raspante"
 title: "Relatório de Aula Prática 03"
 bibliography: referencias.bib
 # A partir daqui nao faca alteracoes!!!!!
