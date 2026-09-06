@@ -266,6 +266,140 @@ Assim, foram identificadas cinco categorias distintas na variável `tipo_concret
 
 ### Limpando a Base de Dados
 
+Antes de iniciar a etapa de limpeza e transformação dos dados, foi criada uma cópia da base original, denominada dados_limpos, conforme apresentado no código a seguir. 
+
+```{R}
+dados_limpos <- dados
+```
+
+Importante destacar que a preservação da base original é recomendável para garantir a rastreabilidade das alterações realizadas durante o processamento dos dados. Dessa forma, caso seja necessário revisar alguma decisão de limpeza ou comparar os valores tratados com os registros inicialmente importados, a base original permanece disponível e inalterada. 
+
+#### Dados Ausentes
+
+Considerando a baixa ocorrência de dados ausentes em relação ao número total de observações da base, optou-se pela exclusão das linhas que apresentaram-se como vazios. Essa abordagem permite trabalhar com observações completas nas análises subsequentes, sem a necessidade de estimar ou imputar valores não observados. Dessa forma, utilizou-se a função `drop_na()`, do pacote `tidyr`, que exclui as linhas contendo pelo menos um valor NA. Considerando que foram previamente identificadas cinco observações com dados ausentes, a base passou de 100 para 95 registros após o tratamento.
+
+```{R}
+dados_limpos <- dados_limpos |>
+  drop_na()
+```
+
+Para conferir o resultado aplicou-se `summarise()`, `n()` e `is.na()`.
+
+```{R}
+dados_limpos |>
+  summarise(
+    across(everything(), ~ sum(is.na(.x)))
+  ) |>
+  pivot_longer(
+    cols = everything(),
+    names_to = "Variável",
+    values_to = "Valores ausentes"
+  ) |>
+  knitr::kable(
+    caption = "Verificação dos valores ausentes após o tratamento",
+    col.names = c("Variável", "Valores ausentes")
+  )
+```
+
+#### Variáveis Quantitativas
+
+Após a identificação das inconsistências de digitação e formatação nas variáveis quantitativas, realizou-se o tratamento dos registros no objeto `dados_limpos`. As vírgulas utilizadas como separador decimal foram substituídas por pontos. Os registros contendo a letra “O” foram tratados individualmente, considerando a natureza de cada erro: em 3O,4, a letra foi substituída pelo algarismo zero, resultando em 30.4, enquanto em 390O a letra excedente foi removida, resultando em 390.
+
+```{R}
+dados_limpos <- dados_limpos |>
+  mutate(
+    resistencia_mpa = resistencia_mpa |>
+      str_replace_all(",", ".") |>
+      str_replace("3O.4", "30.4"),
+    
+    relacao_a_c = relacao_a_c |>
+      str_replace_all(",", "."),
+    
+    cimento_kg_m3 = cimento_kg_m3 |>
+      str_replace("390O", "390")
+  )
+
+dados_limpos <- dados_limpos |>
+  mutate(
+    resistencia_mpa = parse_double(resistencia_mpa),
+    cimento_kg_m3 = parse_double(cimento_kg_m3),
+    relacao_a_c = parse_double(relacao_a_c),
+    absorção_agregado_pct = parse_double(absorção_agregado_pct)
+  )
+```
+
+A Tabela abaixo apresenta os registros após a correção das inconsistências de digitação e formatação identificadas nas variáveis quantitativas.
+
+```{R}
+dados_limpos |>
+  filter(
+    id_corpo_prova %in% c(
+      "CP-008",
+      "CP-019",
+      "CP-045",
+      "CP-064"
+    )
+  ) |>
+  select(
+    id_corpo_prova,
+    resistencia_mpa,
+    cimento_kg_m3,
+    relacao_a_c
+  ) |>
+  knitr::kable(
+    caption = "Registros após a correção das inconsistências",
+    col.names = c(
+      "Corpo de prova",
+      "Resistência (MPa)",
+      "Cimento (kg/m³)",
+      "Relação a/c"
+    )
+  )
+
+```
+
+Logo, os registros anteriormente identificados com inconsistências de digitação e formatação foram corrigidos, resultando na padronização do separador decimal e na correção dos caracteres indevidamente inseridos nos valores.
+
+Em seguida, aplicou-se a função `summary()` para realizar uma análise estatística dos dados.
+
+```{R}
+dados_limpos |>
+  summary()
+```
+
+
+
+#### Variáveis Qualitativas
+
+Para a variável qualitativa tipo_concreto, foi identificada uma inconsistência relacionada ao uso de letras minúsculas. Para padronizar os registros, utilizou-se a função `str_to_upper()`, do pacote `stringr`, convertendo os caracteres para letras maiúsculas.
+
+```{R}
+dados_limpos <- dados_limpos |>
+  mutate(
+    tipo_concreto = str_to_upper(tipo_concreto)
+  )
+
+dados_limpos |>
+  count(tipo_concreto) |>
+  knitr::kable(
+    caption = "Categorias da variável tipo_concreto após a padronização",
+    col.names = c("Tipo de concreto", "Frequência")
+  )
+```
+
+Dessa forma, a categoria c30 foi padronizada para C30, mantendo-se inalteradas as demais categorias que já apresentavam a grafia adequada.
+
+Agora, com a base de dados limpa de inconsistências,tem-se:
+
+```{R}
+dados_limpos |>
+  glimpse()
+
+dados_limpos |>
+  summary()
+```
+
+
 ## 🧠 Considerações finais
 
 Apresente uma síntese dos principais pontos observados no experimento.
