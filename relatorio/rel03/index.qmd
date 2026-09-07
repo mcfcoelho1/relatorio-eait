@@ -593,14 +593,108 @@ medias_tipo_concreto |>
   )
 ```
 
+Os resultados mostram que o aumento da classe do concreto está associado ao aumento da resistência média à compressão e do consumo médio de cimento. A resistência média aumentou de 27,45 MPa, para o concreto C25, para 43,33 MPa, no C40, enquanto o consumo médio de cimento passou de 322,35 kg/m³ para 404,12 kg/m³.
+
+Em relação à razão água/cimento, observa-se comportamento inverso, com redução de 0,62 no C25 para 0,48 no C40. O abatimento médio também apresentou redução gradual entre as classes, variando de 113,58 mm no C25 a 104,94 mm no C40. Por outro lado, a densidade apresentou valores relativamente próximos entre as classes, variando entre 2.362,50 e 2.383,47 kg/m³. De modo geral, os resultados evidenciam diferenças nas características médias dos concretos em função de suas respectivas classes.
 
 #### Resistência Relativa
 
+Para o cálculo da resistência relativa, adotou-se como resistência de referência o valor correspondente à classe de resistência de cada concreto, sendo 25 MPa para C25, 30 MPa para C30, 35 MPa para C35 e 40 MPa para C40. A variável `resistencia_referencia` foi definida utilizando-se a função `case_when()`, enquanto a variável `resistencia_relativa` foi obtida pela razão entre a resistência à compressão observada e a respectiva resistência de referência.
 
+```{R}
+dados_limpos <- dados_limpos |>
+  mutate(
+    resistencia_referencia = case_when(
+      tipo_concreto == "C25" ~ 25,
+      tipo_concreto == "C30" ~ 30,
+      tipo_concreto == "C35" ~ 35,
+      tipo_concreto == "C40" ~ 40
+    ),
+    resistencia_relativa = resistencia_mpa / resistencia_referencia
+  )
+
+dados_limpos <- dados_limpos |>
+  select(-resistencia_referencia)
+
+dados_limpos |>
+  select(
+    id_corpo_prova,
+    tipo_concreto,
+    resistencia_mpa,
+    resistencia_relativa
+  ) |>
+  slice_head(n = 10) |>
+  knitr::kable(
+    caption = "Resistência relativa dos corpos de prova",
+    col.names = c(
+      "Corpo de prova",
+      "Tipo de concreto",
+      "Resistência (MPa)",
+      "Resistência relativa"
+    ),
+    digits = 2
+  )
+```
+
+A resistência relativa permite comparar a resistência observada com a resistência de referência de cada classe de concreto. Valores superiores a 1,00 indicam resistência acima da referência, enquanto valores inferiores a 1,00 indicam resistência abaixo da referência.
 
 #### Classificação quanto a Resistência
 
+Para a classificação dos corpos de prova, utilizou-se como critério a resistência relativa calculada anteriormente. Os corpos de prova com resistência relativa inferior a 1 foram classificados como “Abaixo da referência”, enquanto aqueles com valor igual ou superior a 1 foram classificados como “Atende ou supera a referência”. Esse critério permite avaliar a resistência observada em relação ao valor de referência adotado para cada classe de concreto.
 
+```{R}
+dados_limpos <- dados_limpos |>
+  mutate(
+    classificacao = case_when(
+      resistencia_relativa < 1 ~ "Abaixo da referência",
+      resistencia_relativa >= 1 ~ "Atende ou supera a referência"
+    )
+  )
+
+dados_limpos |>
+  count(classificacao) |>
+  knitr::kable(
+    caption = "Classificação dos corpos de prova quanto à resistência",
+    col.names = c("Classificação", "Frequência")
+  )
+
+```
+
+Com base nos resultados, dos 95 corpos de prova analisados, 72 atenderam ou superaram a resistência de referência, enquanto 23 apresentaram resistência abaixo da referência. Dessa forma, observa-se predominância de corpos de prova com resistência igual ou superior ao valor adotado como referência para sua respectiva classe de concreto.
+
+Para verificar se a resistência de cada corpo de prova se encontra acima da média de sua respectiva classe de concreto, os dados foram agrupados por `tipo_concreto`. Em seguida, utilizou-se `mutate()` para criar a variável lógica `acima_media`, que assume `TRUE` quando a resistência observada é superior à média do grupo e `FALSE` caso contrário.
+
+```{R}
+dados_limpos <- dados_limpos |>
+  group_by(tipo_concreto) |>
+  mutate(
+    acima_media = resistencia_mpa > mean(resistencia_mpa)
+  ) |>
+  ungroup()
+
+dados_limpos |>
+  count(tipo_concreto, acima_media) |>
+  knitr::kable(
+    caption = "Classificação dos corpos de prova em relação à média de sua classe",
+    col.names = c(
+      "Tipo de concreto",
+      "Acima da média",
+      "Frequência"
+    )
+  )
+```
+
+A variável `acima_media` permitiu identificar a distribuição dos corpos de prova em relação à resistência média de cada classe de concreto. Para as classes C25, C30, C35 e C40, foram identificados, respectivamente, 16, 15, 9 e 8 corpos de prova com resistência superior à média de sua respectiva classe.
+
+### Agrupamento dos Dados
+
+### Reorganizando Variáveis
+
+### Visualização dos Dados
+
+### Questões relacionadas à prática profissional
+
+### Desafio Final
 
 ## 🧠 Considerações finais
 
