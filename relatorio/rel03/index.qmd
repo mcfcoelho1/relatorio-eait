@@ -890,23 +890,152 @@ dados_limpos |>
 
 Em comparação com a utilização de vários comandos separados, o uso de `across()` torna o código mais compacto e facilita sua manutenção, pois permite aplicar simultaneamente as mesmas funções a um conjunto de variáveis. Dessa forma, caso seja necessário incluir novas variáveis ou estatísticas na análise, a alteração pode ser realizada em um único trecho do código, reduzindo repetições e tornando a análise mais organizada.
 
-### Visualização dos Dados
+### Textos e Categorias
+
+Na sequência, foram avaliados os valores da variável obra com o objetivo de identificar possíveis inconsistências textuais. Para a padronização, utilizaram-se funções do pacote `stringr`, removendo espaços excedentes no início ou no final dos textos e uniformizando o uso de letras maiúsculas e minúsculas.
 
 ```{R}
+dados_limpos <- dados_limpos |>
+  mutate(
+    obra = str_trim(obra),
+    obra = str_to_title(obra)
+  )
 
+dados |>
+  transmute(
+    Antes = obra,
+    Depois = str_to_title(str_trim(obra))
+  ) |>
+  distinct()
 ```
+
+Após a padronização, os valores da variável obra passaram a apresentar uma estrutura textual uniforme, reduzindo o risco de que diferenças de formatação sejam interpretadas como categorias distintas durante as análises.
+
+Na sequência, utilizou-se a função `str_detect()` para localizar os registros que apresentam o padrão textual "Bloco B" na variável `obra`. A função identifica a presença do padrão especificado e, em conjunto com `filter()`, permite selecionar apenas as observações correspondentes.
+
+```{R}
+dados_limpos |>
+  filter(
+    str_detect(obra, "Bloco B")
+  ) |>
+  select(
+    id_corpo_prova,
+    obra,
+    tipo_concreto,
+    resistencia_mpa
+  ) |>
+  knitr::kable(
+    caption = "Registros identificados pelo padrão textual 'Bloco B'",
+    col.names = c(
+      "Corpo de prova",
+      "Obra",
+      "Tipo de concreto",
+      "Resistência (MPa)"
+    ),
+    digits = 2
+  )
+```
+
+Além disso, a utilização de padrões de texto auxilia no diagnóstico de bases de dados, permitindo localizar categorias específicas e identificar possíveis inconsistências de preenchimento, como diferenças de grafia, uso de letras maiúsculas e minúsculas ou caracteres indesejados. Essa verificação contribui para a padronização e maior consistência dos dados antes das análises.
+
+### Visualização dos Dados
+
+- Distribuição da resistência à compressão entre as diferentes classes de concreto
+
+Para comparar a distribuição da resistência à compressão entre as diferentes classes de concreto,  foi elaborado um gráfico do tipo `boxplot`. Essa representação permite visualizar a posição central dos dados, sua dispersão e possíveis valores extremos em cada grupo.
+
+```{R}
+ggplot(
+  dados_limpos,
+  aes(
+    x = tipo_concreto,
+    y = resistencia_mpa
+  )
+) +
+  geom_boxplot() +
+  labs(
+    title = "Distribuição da resistência à compressão por tipo de concreto",
+    x = "Tipo de concreto",
+    y = "Resistência à compressão (MPa)"
+  ) +
+  theme_minimal()
+```
+
+A partir do gráfico, observa-se um aumento progressivo dos valores de resistência à compressão conforme aumenta a classe do concreto. A classe C25 apresenta os menores valores, seguida pelas classes C30, C35 e C40. Além disso, as medianas acompanham essa tendência crescente, indicando que concretos de classes superiores apresentam, de forma geral, maiores resistências. A dispersão dos resultados apresenta variações entre as classes, sendo possível avaliar pelo boxplot a amplitude e a concentração dos valores em cada grupo.
+
+- Relação entre o consumo de cimento e a resistência à compressão do concreto
+
+Para investigar a relação entre o consumo de cimento e a resistência à compressão do concreto, foi elaborado um gráfico de dispersão. Cada ponto representa uma observação da base de dados, enquanto a linha de tendência permite visualizar o comportamento geral da relação entre as variáveis.
+
+```{R}
+ggplot(
+  dados_limpos,
+  aes(
+    x = cimento_kg_m3,
+    y = resistencia_mpa
+  )
+) +
+  geom_point() +
+  geom_smooth(
+    method = "lm",
+    se = FALSE
+  ) +
+  labs(
+    title = "Relação entre consumo de cimento e resistência à compressão",
+    x = "Consumo de cimento (kg/m³)",
+    y = "Resistência à compressão (MPa)"
+  ) +
+  theme_minimal()
+```
+
+A partir do gráfico, observa-se uma tendência crescente entre o consumo de cimento e a resistência à compressão, indicando que maiores consumos de cimento estão, de forma geral, associados a maiores valores de resistência. A inclinação positiva da linha de tendência fornece evidência visual compatível com a afirmação de que, à medida que aumenta o consumo de cimento, a resistência do concreto tende a aumentar. No entanto, os pontos não se encontram perfeitamente alinhados, indicando que a resistência também pode ser influenciada por outras características da mistura, além do consumo de cimento.
+
+- Relação entre a relação água/cimento e a resistência à compressão
+
+Para investigar a relação entre a relação água/cimento e a resistência à compressão, foi elaborado um gráfico de dispersão. Também foi adicionada uma linha de tendência linear para facilitar a identificação do comportamento geral entre as duas variáveis.
+
+```{R}
+ggplot(
+  dados_limpos,
+  aes(
+    x = relacao_a_c,
+    y = resistencia_mpa
+  )
+) +
+  geom_point() +
+  geom_smooth(
+    method = "lm",
+    se = FALSE
+  ) +
+  labs(
+    title = "Relação entre água/cimento e resistência à compressão",
+    x = "Relação água/cimento",
+    y = "Resistência à compressão (MPa)"
+  ) +
+  theme_minimal()
+```
+
+A partir do gráfico, observa-se uma tendência decrescente entre a relação água/cimento e a resistência à compressão, indicando que menores valores da relação a/c tendem a estar associados a maiores valores de resistência. A inclinação negativa da linha de tendência reforça visualmente esse comportamento. Entretanto, verifica-se dispersão dos pontos ao redor da linha, indicando que a resistência não depende exclusivamente da relação água/cimento.
 
 ### Questões relacionadas à prática profissional
 
+
+
 ```{R}
 
 ```
+
+
 
 ### Desafio Final
 
+
+
 ```{R}
 
 ```
+
+
 
 ## 🧠 Considerações finais
 
