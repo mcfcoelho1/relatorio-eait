@@ -688,13 +688,86 @@ A variável `acima_media` permitiu identificar a distribuição dos corpos de pr
 
 ### Agrupamento dos Dados
 
+Para verificar a distribuição das observações entre as diferentes classes de concreto, os dados foram agrupados pela variável `tipo_concreto`. Em seguida, utilizou-se `summarise()` em conjunto com `n()` para determinar a quantidade de corpos de prova pertencentes a cada classe.
+
+```{R}
+dados_limpos |>
+  group_by(tipo_concreto) |>
+  summarise(
+    quantidade = n()
+  ) |>
+  knitr::kable(
+    caption = "Quantidade de observações por tipo de concreto",
+    col.names = c(
+      "Tipo de concreto",
+      "Quantidade de observações"
+    )
+  )
+```
+
+A distribuição dos corpos de prova entre as classes de concreto não é uniforme. A classe C30 apresentou o maior número de observações, com 32 registros, seguida pelas classes C25, com 26, C35, com 21, e C40, com 16 observações.
+
+Para comparar a resistência média entre as diferentes classes de concreto, os dados foram agrupados por `tipo_concreto` e resumidos por meio das funções `group_by()` e `summarise()`. Posteriormente, utilizou-se `arrange()` para ordenar os resultados de forma decrescente em relação à resistência média.
+
+```{R}
+dados_limpos |>
+  group_by(tipo_concreto) |>
+  summarise(
+    resistencia_media = mean(resistencia_mpa)
+  ) |>
+  arrange(desc(resistencia_media)) |>
+  knitr::kable(
+    caption = "Resistência média por tipo de concreto",
+    col.names = c(
+      "Tipo de concreto",
+      "Resistência média (MPa)"
+    ),
+    digits = 2
+  )
+```
+
+Assim como visto anteriormente, a classe C40 apresenta a maior resistência média, seguida pelas classes C35, C30 e C25, com 43,33 MPa, 37,14 MPa, 32,08 MPa e 27,45 MPa, respectivamente.
+
+Para caracterizar a distribuição da resistência à compressão em cada classe de concreto, foram calculados o número de observações, a média, a mediana, o desvio-padrão e os valores mínimo e máximo. Para isso, os dados foram agrupados por `tipo_concreto` e as estatísticas foram obtidas simultaneamente por meio da função `summarise()`.
+
+```{R}
+dados_limpos |>
+  group_by(tipo_concreto) |>
+  summarise(
+    quantidade = n(),
+    media = mean(resistencia_mpa),
+    mediana = median(resistencia_mpa),
+    desvio_padrao = sd(resistencia_mpa),
+    minimo = min(resistencia_mpa),
+    maximo = max(resistencia_mpa)
+  ) |>
+  knitr::kable(
+    caption = "Estatísticas da resistência por tipo de concreto",
+    col.names = c(
+      "Tipo de concreto",
+      "N",
+      "Média (MPa)",
+      "Mediana (MPa)",
+      "Desvio-padrão (MPa)",
+      "Mínimo (MPa)",
+      "Máximo (MPa)"
+    ),
+    digits = 2
+  )
+```
+
+
 ### Reorganizando Variáveis
+
 
 ### Visualização dos Dados
 
+
 ### Questões relacionadas à prática profissional
 
+
 ### Desafio Final
+
 
 ## 🧠 Considerações finais
 
