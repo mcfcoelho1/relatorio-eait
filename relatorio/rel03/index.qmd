@@ -71,8 +71,10 @@ A base de dados foi importada para o R através da função `read_csv2()`e atrib
 ```{r}
 library(tidyverse)
 
-dados <- read_csv2(
+dados <- read_delim(
   "base_processamento_dados_engenharia_civil.csv",
+  delim = ";",
+  locale = locale(decimal_mark = "."),
   show_col_types = FALSE
 )
 ```
@@ -139,7 +141,7 @@ tipos_variaveis |>
   )
 ```
 
-Dessa forma, verificou-se que `idade_dias`, `abatimento_mm` e `densidade_kg_m3` foram reconhecidas pelo R como variáveis numéricas. Por outro lado, `id_corpo_prova`, `obra`, `tipo_concreto`, `resistencia_mpa`, `cimento_kg_m3`, `relacao_a_c` e `absorção_agregado_pct` foram reconhecidas como texto. Entretanto, `resistencia_mpa`, `cimento_kg_m3`, `relacao_a_c` e `absorção_agregado_pct` representam grandezas quantitativas e, portanto, indica a possível presença de inconsistências de formatação ou digitação nessas variáveis. 
+Dessa forma, verificou-se que `idade_dias`, `abatimento_mm`, `densidade_kg_m3` e `absorção_agregado_pct` foram reconhecidas pelo R como variáveis numéricas. Por outro lado, `id_corpo_prova`, `obra`, `tipo_concreto`, `resistencia_mpa`, `cimento_kg_m3` e `relacao_a_c` foram reconhecidas como texto. Entretanto, `resistencia_mpa`, `cimento_kg_m3`e `relacao_a_c` representam grandezas quantitativas e, portanto, indica a possível presença de inconsistências de formatação ou digitação nessas variáveis. 
 
 ### Investigação dos Dados
 
@@ -193,8 +195,7 @@ Considerando que algumas variáveis de natureza quantitativa foram reconhecidas 
 variaveis_quantitativas_texto <- c(
   "resistencia_mpa",
   "cimento_kg_m3",
-  "relacao_a_c",
-  "absorção_agregado_pct"
+  "relacao_a_c"
 )
 
 problemas_identificados <- dados |>
@@ -232,7 +233,7 @@ problemas_identificados |>
 
 A tentativa de conversão das variáveis quantitativas originalmente reconhecidas como texto permitiu identificar quatro registros com problemas de formatação ou digitação. Nos corpos de prova CP-008 e CP-045, foram encontrados valores com vírgula como separador decimal (38,7 e 0,55, respectivamente). Nos corpos de prova CP-019 e CP-064, foram identificados caracteres alfabéticos em valores que deveriam ser exclusivamente numéricos, correspondentes a 3O,4 e 390O, indicando a utilização da letra “O” no lugar do algarismo zero.
 
-#### Variáveis Quanlitativas
+#### Variáveis Qualitativas
 
 Para verificar se todas as categorias de `obra` estão escritas de forma padronizada, utilizou-se as funções `count()` e `distinct()`.
 
@@ -249,7 +250,7 @@ dados |>
   arrange(obra)
 ```
 
-Observa-se que a variável `obra`esta corretamente padronizada com quatro categorias de blocos. Com base no Relatório 02, era esperado que houvesse uma inconsistência de espaço adicional após uma das categorias. Entretanto, na importação realizada com `read_csv2()`, do pacote `readr`, esse espaço não foi identificado, uma vez que a função realiza, por padrão, o tratamento de espaços em branco durante a leitura dos dados. Dessa forma, a inconsistência presente no arquivo original não foi mantida na base importada no Relatório 03.
+Observa-se que a variável `obra` apresenta uma inconsistência de padronização, um dos registros da categoria "Bloco B" apresenta um espaço adicional ao final do texto, fazendo com que o R o reconheça como uma categoria diferente de "Bloco B".
 
 Já para verificar se todas as categorias da variável `tipo_concreto` estão escritas de forma padronizada, utilizou-se a função `count()`.
 
@@ -264,7 +265,7 @@ dados |>
 
 Assim, foram identificadas cinco categorias distintas na variável `tipo_concreto`: C25, C30, C35, C40 e c30. Observa-se que a categoria c30, registrada em uma única observação, representa a mesma classe de concreto que C30, diferenciando-se apenas pelo uso de letras minúsculas. Dessa forma, identifica-se uma inconsistência na padronização dessa variável.
 
-### Limpando a Base de Dados
+### Limpeza da Base de Dados
 
 Antes de iniciar a etapa de limpeza e transformação dos dados, foi criada uma cópia da base original, denominada dados_limpos, conforme apresentado no código a seguir. 
 
@@ -323,8 +324,7 @@ dados_limpos <- dados_limpos |>
   mutate(
     resistencia_mpa = parse_double(resistencia_mpa),
     cimento_kg_m3 = parse_double(cimento_kg_m3),
-    relacao_a_c = parse_double(relacao_a_c),
-    absorção_agregado_pct = parse_double(absorção_agregado_pct)
+    relacao_a_c = parse_double(relacao_a_c)
   )
 ```
 
@@ -367,16 +367,81 @@ dados_limpos |>
   summary()
 ```
 
+Observa-se, ainda, alguns valores suspeitos: 
 
+  - `idade_dias`: máximo = 280, fora do padrão de idades obsevados (7, 14, 28, 56);
+  - `abatimento_mm`: máximo = 12.500, muito acima da média e mediana observadas; 
+  - `densidade_kg_m3`: mínimo = 238, muito abaixo da média e mediana observadas;
+  - `absorção_agregado_pct`: máximo = 18,4, muito acima da média e mediana observadas.
 
-#### Variáveis Qualitativas
-
-Para a variável qualitativa tipo_concreto, foi identificada uma inconsistência relacionada ao uso de letras minúsculas. Para padronizar os registros, utilizou-se a função `str_to_upper()`, do pacote `stringr`, convertendo os caracteres para letras maiúsculas.
+Considerando que possívelmente foram erros de digitação ao preencher os dados, fez-se os devidos ajustes.
 
 ```{R}
 dados_limpos <- dados_limpos |>
   mutate(
+    idade_dias = if_else(
+      id_corpo_prova == "CP-085", 28, idade_dias
+    ),
+    abatimento_mm = if_else(
+      id_corpo_prova == "CP-032", 125, abatimento_mm
+    ),
+    densidade_kg_m3 = if_else(
+      id_corpo_prova == "CP-053", 2380, densidade_kg_m3
+    ),
+    absorção_agregado_pct = if_else(
+      id_corpo_prova == "CP-072", 1.84, absorção_agregado_pct
+    )
+  )
+
+```
+
+```{R}
+dados_limpos |>
+  filter(
+    id_corpo_prova %in% c(
+      "CP-032",
+      "CP-053",
+      "CP-072",
+      "CP-085"
+    )
+  ) |>
+  select(
+    id_corpo_prova,
+    idade_dias,
+    abatimento_mm,
+    densidade_kg_m3,
+    absorção_agregado_pct
+  ) |>
+  knitr::kable(
+    caption = "Registros após a correção dos valores inconsistentes",
+    col.names = c(
+      "Corpo de prova",
+      "Idade (dias)",
+      "Abatimento (mm)",
+      "Densidade (kg/m³)",
+      "Absorção (%)"
+    ),
+    digits = 2
+  )
+
+```
+
+#### Variáveis Qualitativas
+
+Para as variáveis qualitativas `obras` e `tipo_concreto`, foram identificadas inconsistências de padronização. Na variável `obras`, foi identificado um espaço adicional ao final de um dos registros da categoria “Bloco B”, enquanto, para `tipo_concreto`, foi identificada a categoria c30 escrita com letra minúscula. Para a correção, utilizaram-se as funções `str_trim()` e `str_to_upper()`, do pacote `stringr`, respectivamente.
+
+```{R}
+dados_limpos <- dados_limpos |>
+  mutate(
+    obra = str_trim(obra),
     tipo_concreto = str_to_upper(tipo_concreto)
+  )
+
+dados_limpos |>
+  count(obra) |>
+  knitr::kable(
+    caption = "Categorias da variável obra após a padronização",
+    col.names = c("Obra", "Frequência")
   )
 
 dados_limpos |>
@@ -387,9 +452,9 @@ dados_limpos |>
   )
 ```
 
-Dessa forma, a categoria c30 foi padronizada para C30, mantendo-se inalteradas as demais categorias que já apresentavam a grafia adequada.
+Dessa forma, ambas as variáveis qualitativas passaram a apresentar categorias consistentes e adequadamente padronizadas.
 
-Agora, com a base de dados limpa de inconsistências,tem-se:
+Após a realização das etapas de tratamento e correção das inconsistências identificadas, obteve-se a base de dados limpa, cuja estrutura e estatísticas descritivas são apresentadas a seguir.
 
 ```{R}
 dados_limpos |>
@@ -398,6 +463,143 @@ dados_limpos |>
 dados_limpos |>
   summary()
 ```
+
+Após o processo de limpeza, a base passou a apresentar 95 observações e 10 variáveis. As variáveis quantitativas foram adequadamente convertidas para o tipo numérico (`<dbl>`), permitindo a obtenção de suas estatísticas descritivas. Além disso, foram corrigidas as inconsistências de digitação e formatação previamente identificadas, bem como a padronização da variável qualitativa `tipo_concreto`. Os registros contendo valores ausentes foram removidos, reduzindo a base original de 100 para 95 observações.
+
+A análise do resumo da base após o tratamento também demonstra a correção dos valores considerados inconsistentes. A idade máxima dos corpos de prova passou a ser 56 dias, o abatimento máximo 175 mm, a densidade passou a apresentar valores compatíveis com a ordem de grandeza dos demais registros e a absorção máxima foi reduzida após a correção do valor discrepante. Dessa forma, a base `dados_limpos` encontra-se estruturada para realização das análises estatística.
+
+### Processamento dos Dados
+
+#### Resistência Média
+
+Com o objetivo de avaliar o comportamento da resistência à compressão dos corpos de prova, inicialmente foi calculada a resistência média considerando o conjunto total de observações. Posteriormente, os dados foram agrupados por bloco da obra, tipo de concreto e idade do corpo de prova, utilizando-se as funções `group_by()` e `summarise()` do pacote `dplyr`.
+
+```{R}
+dados_limpos |>
+  summarise(
+    resistencia_media = mean(resistencia_mpa)
+  ) |>
+  knitr::kable(
+    caption = "Resistência média à compressão dos corpos de prova geral",
+    col.names = "Resistência média (MPa)",
+    digits = 2
+  )
+
+dados_limpos |>
+  group_by(obra) |>
+  summarise(
+    resistencia_media = mean(resistencia_mpa)
+  ) |>
+  knitr::kable(
+    caption = "Resistência média à compressão por bloco da obra",
+    col.names = c("Obra", "Resistência média (MPa)"),
+    digits = 2
+  )
+
+dados_limpos |>
+  group_by(tipo_concreto) |>
+  summarise(
+    resistencia_media = mean(resistencia_mpa)
+  ) |>
+  knitr::kable(
+    caption = "Resistência média à compressão por tipo de concreto",
+    col.names = c("Tipo de concreto", "Resistência média (MPa)"),
+    digits = 2
+  )
+
+dados_limpos |>
+  group_by(idade_dias) |>
+  summarise(
+    resistencia_media = mean(resistencia_mpa)
+  ) |>
+  arrange(idade_dias) |>
+  knitr::kable(
+    caption = "Resistência média à compressão por idade do corpo de prova",
+    col.names = c("Idade (dias)", "Resistência média (MPa)"),
+    digits = 2
+  )
+
+```
+
+Para comparar os blocos da obra quanto à resistência à compressão, calculou-se a resistência média dos corpos de prova para cada bloco por meio das funções `group_by()` e `summarise()`. Posteriormente, os resultados foram ordenados de forma decrescente utilizando `arrange()`, permitindo identificar os blocos que apresentaram a maior e a menor resistência média.
+
+```{R}
+dados_limpos |>
+  group_by(obra) |>
+  summarise(
+    resistencia_media = mean(resistencia_mpa)
+  ) |>
+  arrange(desc(resistencia_media)) |>
+  knitr::kable(
+    caption = "Resistência média à compressão por bloco da obra",
+    col.names = c(
+      "Obra",
+      "Resistência média (MPa)"
+    ),
+    digits = 2
+  )
+```
+
+Conforme apresentado na tabela, o Bloco B apresentou a maior resistência média à compressão, com 35,68 MPa, enquanto o Bloco C apresentou a menor resistência média, com 32,62 MPa. Os Blocos A e D apresentaram valores intermediários, de 33,43 MPa e 33,35 MPa.
+
+Para avaliar a resistência à compressão em função da classe do concreto, calculou-se a resistência média dos corpos de prova para cada categoria de `tipo_concreto`. Os dados foram agrupados por classe e, posteriormente, ordenados de forma decrescente de acordo com a resistência média obtida.
+
+```{R}
+dados_limpos |>
+  group_by(tipo_concreto) |>
+  summarise(
+    resistencia_media = mean(resistencia_mpa)
+  ) |>
+  arrange(desc(resistencia_media)) |>
+  knitr::kable(
+    caption = "Resistência média à compressão por tipo de concreto",
+    col.names = c(
+      "Tipo de concreto",
+      "Resistência média (MPa)"
+    ),
+    digits = 2
+  )
+```
+
+Conforme apresentado na tabela, a classe C40 apresentou a maior resistência média à compressão, com 43,33 MPa, seguida pelas classes C35, C30 e C25, com resistências médias de 37,14 MPa, 32,08 MPa e 27,45 MPa, respectivamente. Observa-se, portanto, um aumento da resistência média à compressão conforme aumenta a classe de resistência do concreto, comportamento compatível com a classificação adotada para os diferentes tipos de concreto.
+
+Para comparar as características médias das diferentes classes de concreto, utilizou-se a função `aggregate()`, calculando-se, para cada categoria de `tipo_concreto`, os valores médios de resistência à compressão, consumo de cimento, relação água/cimento, abatimento e densidade.
+
+```{R}
+medias_tipo_concreto <- aggregate(
+  cbind(
+    resistencia_mpa,
+    cimento_kg_m3,
+    relacao_a_c,
+    abatimento_mm,
+    densidade_kg_m3
+  ) ~ tipo_concreto,
+  data = dados_limpos,
+  FUN = mean
+)
+
+medias_tipo_concreto |>
+  knitr::kable(
+    caption = "Valores médios das variáveis por tipo de concreto",
+    col.names = c(
+      "Tipo de concreto",
+      "Resistência (MPa)",
+      "Cimento (kg/m³)",
+      "Relação a/c",
+      "Abatimento (mm)",
+      "Densidade (kg/m³)"
+    ),
+    digits = 2
+  )
+```
+
+
+#### Resistência Relativa
+
+
+
+#### Classificação quanto a Resistência
+
 
 
 ## 🧠 Considerações finais
