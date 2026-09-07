@@ -756,18 +756,157 @@ dados_limpos |>
   )
 ```
 
+Observa-se que as médias e medianas apresentam valores próximos em todas as classes de concreto, indicando pouca diferença entre essas medidas de tendência central. Os desvios-padrão variaram entre 2,77 MPa e 3,77 MPa, sendo a classe C35 a que apresentou maior dispersão dos valores de resistência e a classe C25 a menor. Além disso, verifica-se o aumento dos valores de resistência à compressão, incluindo mínimos e máximos, conforme aumenta a classe do concreto.
 
-### Reorganizando Variáveis
+Complementarmente, uma tabela com várias estatísticas é mais informativa do que a apresentação apenas da média, pois permite avaliar não somente o valor central dos dados, mas também sua dispersão e amplitude. A mediana possibilita comparar a tendência central com a média, o desvio-padrão indica a variabilidade dos resultados e os valores mínimo e máximo mostram os extremos observados. Dessa forma, é possível obter uma caracterização mais completa da resistência à compressão em cada classe de concreto.
 
+### Selecionando e Reorganizando Variáveis
+
+Para a continuidade das análises, foram selecionadas somente as variáveis quantitativas relacionadas às propriedades do concreto. Para isso, utilizou-se a função `select()` em conjunto com `all_of()`, permitindo selecionar as variáveis previamente definidas como de interesse. 
+
+```{R}
+variaveis_quantitativas <- c(
+  "idade_dias",
+  "resistencia_mpa",
+  "cimento_kg_m3",
+  "relacao_a_c",
+  "abatimento_mm",
+  "densidade_kg_m3",
+  "absorção_agregado_pct"
+)
+
+dados_quantitativos <- dados_limpos |>
+  select(all_of(variaveis_quantitativas))
+```
+
+A tabela a seguir apresenta as primeiras observações da nova base formada exclusivamente pelas variáveis quantitativas selecionadas.
+
+```{R}
+dados_quantitativos |>
+  slice_head(n = 10) |>
+  knitr::kable(
+    caption = "Variáveis quantitativas relacionadas às propriedades do concreto",
+    col.names = c(
+      "Idade (dias)",
+      "Resistência (MPa)",
+      "Cimento (kg/m³)",
+      "Relação a/c",
+      "Abatimento (mm)",
+      "Densidade (kg/m³)",
+      "Absorção (%)"
+    ),
+    digits = 2
+  )
+```
+
+Para calcular simultaneamente a média das variáveis quantitativas selecionadas, utilizou-se a função `across()` em conjunto com `summarise()`. Essa abordagem permite aplicar a mesma função a diversas variáveis sem a necessidade de especificar individualmente o cálculo para cada coluna.
+
+```{R}
+dados_quantitativos |>
+  summarise(
+    across(
+      everything(),
+      mean
+    )
+  ) |>
+  pivot_longer(
+    everything(),
+    names_to = "Variável",
+    values_to = "Média"
+  ) |>
+  knitr::kable(
+    caption = "Média das variáveis quantitativas",
+    col.names = c("Variável", "Média"),
+    digits = 2
+  )
+```
+
+Em comparação com o uso individual de `summarise()`, a utilização de `across()` torna o código mais compacto e facilita sua manutenção, principalmente quando há um grande número de variáveis. Caso novas variáveis sejam incluídas na seleção, a mesma operação pode ser aplicada a elas sem a necessidade de acrescentar manualmente novos cálculos. Dessa forma, `across()` apresenta maior praticidade e facilidade de manutenção para esse tipo de análise.
+
+Para realizar uma transformação simultânea em diferentes variáveis quantitativas, utilizou-se `mutate()` em conjunto com `across()`. Os valores de resistência, consumo de cimento, abatimento e densidade foram divididos pelas respectivas médias, gerando variáveis relativas. Essa transformação permite comparar valores que apresentam diferentes unidades e ordens de grandeza em uma escala comum, na qual valores iguais a 1 correspondem à média de cada variável.
+
+```{R}
+dados_transformados <- dados_limpos |>
+  mutate(
+    across(
+      c(
+        resistencia_mpa,
+        cimento_kg_m3,
+        abatimento_mm,
+        densidade_kg_m3
+      ),
+      ~ .x / mean(.x),
+      .names = "{.col}_relativo"
+    )
+  )
+
+dados_transformados |>
+  select(
+    id_corpo_prova,
+    ends_with("_relativo")
+  ) |>
+  slice_head(n = 10) |>
+  knitr::kable(
+    caption = "Variáveis quantitativas transformadas em relação às respectivas médias",
+    digits = 2
+  )
+```
+
+A transformação permitiu expressar os valores das diferentes propriedades em relação às respectivas médias. Dessa forma, valores superiores a 1 indicam resultados acima da média da variável analisada, enquanto valores inferiores a 1 representam resultados abaixo da média. Essa padronização facilita a comparação entre propriedades que possuem diferentes unidades e ordens de grandeza.
+
+Na sequência, foram calculadas simultaneamente a média e o desvio-padrão das variáveis quantitativas para cada tipo de concreto. Para isso, utilizou-se `group_by()` para o agrupamento das observações e `summarise()` em conjunto com `across()`, permitindo aplicar as mesmas funções estatísticas a diferentes variáveis.
+
+```{R}
+dados_limpos |>
+  group_by(tipo_concreto) |>
+  summarise(
+    across(
+      c(
+        idade_dias,
+        resistencia_mpa,
+        cimento_kg_m3,
+        relacao_a_c,
+        abatimento_mm,
+        densidade_kg_m3,
+        absorção_agregado_pct
+      ),
+      list(
+        media = mean,
+        desvio_padrao = sd
+      ),
+      .names = "{.col}_{.fn}"
+    )
+  ) |>
+  pivot_longer(
+    cols = -tipo_concreto,
+    names_to = c("Variavel", ".value"),
+    names_pattern = "(.*)_(media|desvio_padrao)"
+  ) |>
+  knitr::kable(
+    caption = "Média e desvio-padrão das variáveis quantitativas por tipo de concreto",
+    digits = 2
+  )
+```
+
+Em comparação com a utilização de vários comandos separados, o uso de `across()` torna o código mais compacto e facilita sua manutenção, pois permite aplicar simultaneamente as mesmas funções a um conjunto de variáveis. Dessa forma, caso seja necessário incluir novas variáveis ou estatísticas na análise, a alteração pode ser realizada em um único trecho do código, reduzindo repetições e tornando a análise mais organizada.
 
 ### Visualização dos Dados
 
+```{R}
+
+```
 
 ### Questões relacionadas à prática profissional
 
+```{R}
+
+```
 
 ### Desafio Final
 
+```{R}
+
+```
 
 ## 🧠 Considerações finais
 
