@@ -98,13 +98,13 @@ Os objetos podem possuir diferentes características, que podem ser obtidas por 
 
 As informações podem ser organizadas no R por meio de diferentes estruturas de dados, entre as quais estão vetores, matrizes, arrays, listas e data frames.
 
-Os **vetores** são estruturas unidimensionais utilizadas para armazenar uma sequência de elementos. Nos vetores atômicos, esses elementos possuem a mesma natureza, como valores numéricos, lógicos ou caracteres. Eles podem ser construídos utilizando recursos como `c()`, `:`, `seq()` e `rep()`, e cada elemento pode ser acessado por sua posição no vetor por meio de colchetes. Por exemplo, em um vetor x, a expressão x\[2\] permite acessar o elemento localizado na segunda posição.
+Os **vetores** são estruturas unidimensionais utilizadas para armazenar uma sequência de elementos. Nos vetores atômicos, esses elementos possuem a mesma natureza, como valores numéricos, lógicos ou caracteres. Eles podem ser construídos utilizando recursos como `c()`, `:`, `seq()` e `rep()`, e cada elemento pode ser acessado por sua posição no vetor por meio de colchetes. Por exemplo, em um vetor x, a expressão `x\[2\]` permite acessar o elemento localizado na segunda posição.
 
 As **matrizes** são estruturas organizadas em duas dimensões, ou seja, em linhas e colunas. Assim como os vetores, seus elementos possuem a mesma natureza, mas sua disposição é modificada pela presença do atributo `dim`, que define suas dimensões. Para acessar um elemento específico, são informadas sua linha e sua coluna. Por exemplo, `x[2, 3]` representa o elemento localizado na segunda linha e na terceira coluna da matriz.
 
 Os **arrays** permitem organizar os dados em mais dimensões do que uma matriz. Um array pode, por exemplo, reunir várias matrizes dentro de um mesmo objeto, fazendo com que seus elementos sejam identificados pela linha, coluna e matriz em que estão localizados. Nesse caso, uma expressão como `x[1, 2, 3]` permite acessar o elemento localizado na primeira linha, segunda coluna e terceira matriz. Essa estrutura é tratada como um vetor multidimensional.
 
-As **listas** permitem armazenar diferentes tipos de objetos em uma mesma estrutura, como valores numéricos, textos, vetores e até outras listas. Cada objeto corresponde a um elemento da lista e pode ser acessado por sua posição. Quando os elementos recebem nomes, também podem ser acessados diretamente pelo operador \$, utilizando o nome associado a cada elemento.
+As **listas** permitem armazenar diferentes tipos de objetos em uma mesma estrutura, como valores numéricos, textos, vetores e até outras listas. Cada objeto corresponde a um elemento da lista e pode ser acessado por sua posição. Quando os elementos recebem nomes, também podem ser acessados diretamente pelo operador `$`, utilizando o nome associado a cada elemento.
 
 Os **data frames** são estruturas utilizadas para organizar dados em formato de tabela, formada por linhas e colunas. As linhas representam as observações, enquanto as colunas representam as variáveis. Diferentemente de uma matriz, as colunas de um data frame podem armazenar dados de diferentes naturezas, como valores numéricos, lógicos ou caracteres. Seus dados podem ser acessados indicando a posição da linha e da coluna, como em `x[2, 3]`, ou pelo nome de uma variável utilizando o operador `$`, como em `x$idade`.
 
@@ -146,7 +146,7 @@ A instalação desses pacotes pode ser realizada através da aba *Packages*, em 
 install.packages("nome_do_pacote")
 ```
 
-Depois de instalado, o pacote pode ser carregado durante uma sessão por meio de funções como library() e require(). É importante diferenciar essas duas etapas: instalar significa disponibilizar o pacote no computador, enquanto carregá-lo permite utilizar seus recursos durante a sessão de trabalho.
+Depois de instalado, o pacote pode ser carregado durante uma sessão por meio de funções como `library()` e `require()`. É importante diferenciar essas duas etapas: instalar significa disponibilizar o pacote no computador, enquanto carregá-lo permite utilizar seus recursos durante a sessão de trabalho.
 
 Os pacotes podem ser obtidos a partir de diferentes locais. O CRAN é um dos principais repositórios utilizados para sua disponibilização, e também é possível encontrar projetos e pacotes no GitHub.
 
@@ -222,7 +222,7 @@ $$\sum_{i=1}^{n} X_i^2$$
 
 Representa a soma dos quadrados dos valores, enquanto:
 
-$$\left(\sum_{i=1}^{n} X_i\right)^2$$ representa o quadrado da soma dos valores.
+$$\left(\sum_{i=1}^{n} X_i\right)^2$$ Representa o quadrado da soma dos valores.
 
 #### Coleta e Organização dos Dados
 
@@ -240,7 +240,7 @@ A frequência relativa representa a proporção de observações pertencentes a 
 
 $$Fr_i = \frac{F_i}{\sum_{i=1}^{k} F_i}$$
 
-em que $F_i$ representa a frequência absoluta e k o número de grupos considerados.
+em que $F_i$ representa a frequência absoluta e $k$ o número de grupos considerados.
 
 A frequência relativa também pode ser apresentada em porcentagem:
 
@@ -288,7 +288,7 @@ Em resumo, o agrupamento de dados contínuos pode, portanto, ser resumido nas et
 
 Apresenta-se, a seguir, a aplicação das frequências mencionadas acima em um conjunto de dados, através do pacote *leem*.
 
-```{r, echo=FALSE}
+```{R}
 library(leem)
 con <- url("https://raw.githubusercontent.com/bendeivide/book-epaec/master/dados/cap02/challenger.RData")
 load(con); close(con)
@@ -303,7 +303,7 @@ Além da representação tabular, os dados podem ser apresentados por meio de gr
 
 O gráfics de hastes ou bastão podem ser utilizados para variáveis discretizadas, incluindo variáveis qualitativas e quantitativas discretas. Os valores ou grupos são apresentados no eixo horizontal, enquanto suas respectivas frequências são representadas no eixo vertical.
 
-```{r, echo=FALSE}
+```{R}
 library(leem)
 con <- url("https://raw.githubusercontent.com/bendeivide/book-epaec/master/dados/cap02/nerros.RData")
 load(con); close(con)
@@ -313,9 +313,9 @@ nerros |>
   stickchart()
 ```
 
-O gráfico de barras segue uma representação semelhante, utilizando barras para representar as frequências. As barras são apresentadas separadamente, mantendo a distinção entre os diferentes grupos.
+O gráfico de barras segue uma representação semelhante, utilizando barras para representar as frequências. As barras são apresentadas em escala de cor, mantendo a distinção entre os diferentes grupos.
 
-```{r, echo=FALSE}
+```{R}
 library(leem)
 regiao <- c(rep("Norte", 7), "Centro-Oeste",
    "Nordeste")
@@ -327,7 +327,7 @@ regiao |>
 
 O gráfico de setores, ou gráfico de pizza, representa os grupos por meio de setores de um círculo. Cada setor corresponde à frequência percentual do respectivo grupo, sendo o círculo completo equivalente a 100% das observações, ou 360º.
 
-```{r, echo=FALSE}
+```{R}
 library(leem)
 regiao <- c(rep("Norte", 7), "Centro-Oeste",
   "Nordeste")
@@ -339,7 +339,7 @@ regiao |>
 
 Para variáveis quantitativas contínuas agrupadas em intervalos de classes, pode-se utilizar o histograma de frequências. Os intervalos são representados no eixo horizontal e suas frequências no eixo vertical. Diferentemente do gráfico de barras, no histograma as barras são apresentadas de forma contínua, sem espaçamento entre elas.
 
-```{r, echo=FALSE}
+```{R}
 library(leem)
 con <- url("https://raw.githubusercontent.com/bendeivide/book-epaec/master/dados/cap02/challenger.RData")
 load(con); close(con)
@@ -351,7 +351,7 @@ challenger |>
 
 A partir do histograma pode ser construído o polígono de frequências, utilizando os pontos médios das classes e suas respectivas frequências. Esses pontos são unidos por segmentos de reta, formando o polígono.
 
-```{r, echo=FALSE}
+```{R}
 library(leem)
 con <- url("https://raw.githubusercontent.com/bendeivide/book-epaec/master/dados/cap02/challenger.RData")
 load(con); close(con)
@@ -363,7 +363,7 @@ challenger |>
 
 As frequências acumuladas também podem ser representadas graficamente por meio das ogivas. A frequência acumulada “abaixo de” resulta em uma ogiva crescente, enquanto a frequência acumulada “acima de” produz uma ogiva decrescente. A interseção entre essas duas representações está relacionada à determinação gráfica da mediana.
 
-```{r, echo=FALSE}
+```{R}
 library(leem)
 challenger |>
   new_leem(variable = 2) |>
@@ -371,7 +371,7 @@ challenger |>
   ogive(bars = TRUE)
 ```
 
-```{r, echo=FALSE}
+```{R}
 library(leem)
 challenger |>
   new_leem(variable = 2) |>
@@ -395,7 +395,7 @@ Já a moda corresponde ao valor que apresenta maior frequência em um conjunto d
 
 Relembrando o conjunto de dados apresentados no item *Representação Tabular*, a partir do pacote *leem*, é possível definir os conceitos apresentados no presente item.
 
-```{r, echo=FALSE}
+```{R}
 library(leem)
 con <- url("https://raw.githubusercontent.com/bendeivide/book-epaec/master/dados/cap02/challenger.RData")
 load(con); close(con)
@@ -403,7 +403,7 @@ load(con); close(con)
 
 - Para os dados agrupados:
 
-```{r, echo=FALSE}
+```{R}
 # Medidas de posicao (dados agrupados)
 challenger |>
   new_leem(variable = 2) |> # var. quant. continua
@@ -412,7 +412,7 @@ challenger |>
 
 - Para os dados não agrupados:
 
-```{r, echo=FALSE}
+```{R}
 # Medidas de posicao (dados nao agrupados)
 challenger |>
   new_leem(variable = 2) |> # var. quant. continua
@@ -421,7 +421,7 @@ challenger |>
 
 #### Medidas de Dispersão
 
-As medidas de posição permitem representar um conjunto de dados por meio de valores centrais, como média, mediana e moda. No entanto, essas medidas não são suficientes para caracterizar completamente uma distribuição, uma vez que conjuntos de dados diferentes podem apresentar a mesma medida de posição e, ao mesmo tempo, possuir comportamentos distintos. Nesse sentido, as medidas de dispersão são utilizadas para avaliar o quanto os dados variam dentro de uma distribuição.
+As medidas de dispersão permitem representar um conjunto de dados por meio de valores centrais, como média, mediana e moda. No entanto, essas medidas não são suficientes para caracterizar completamente uma distribuição, uma vez que conjuntos de dados diferentes podem apresentar a mesma medida de posição e, ao mesmo tempo, possuir comportamentos distintos. Nesse sentido, as medidas de dispersão são utilizadas para avaliar o quanto os dados variam dentro de uma distribuição.
 
 A dispersão pode ser analisada inicialmente pela amplitude, obtida pela diferença entre o maior e o menor valor observado:
 
@@ -482,19 +482,38 @@ O erro padrão está, portanto, relacionado à precisão da média amostral como
 
 Assim como para as medidas de posição, as medidas de dispersão também podem ser determinadas para dados agrupados. Nessa situação, os cálculos passam a considerar as frequências associadas aos valores e, no caso de dados agrupados em intervalos de classes, seus respectivos pontos médios.
 
+#### Medidas de Forma
+
+Além das medidas de posição e dispersão, uma distribuição também pode ser analisada quanto à sua forma. Nesse contexto, a assimetria e a curtose permitem avaliar características relacionadas à distribuição dos valores em torno da região central e ao comportamento de suas caudas.
+
+A assimetria indica o grau de simetria da distribuição dos dados. De acordo com o comportamento apresentado, uma distribuição pode ser classificada como:
+
+- Simétrica: apresenta coeficiente de assimetria igual ou próximo de zero, indicando que os dados se distribuem de forma semelhante em ambos os lados da região central;
+- Assimétrica positiva ou à direita: apresenta coeficiente de assimetria positivo e maior prolongamento da distribuição em direção aos valores mais elevados;
+- Assimétrica negativa ou à esquerda: apresenta coeficiente de assimetria negativo e maior prolongamento da distribuição em direção aos valores mais baixos.
+
+A curtose é uma medida relacionada à forma da distribuição, considerando principalmente o comportamento de suas caudas em comparação com uma distribuição de referência. A partir dessa comparação, as distribuições podem ser classificadas como:
+
+- Mesocúrtica: apresenta curtose equivalente à da distribuição normal, utilizada como referência;
+- Leptocúrtica: apresenta maior curtose em relação à distribuição normal, estando associada a caudas mais pesadas e, consequentemente, maior ocorrência relativa de valores extremos;
+- Platicúrtica: apresenta menor curtose em relação à distribuição normal, estando associada a caudas mais leves e menor ocorrência relativa de valores extremos.
+
+Quando a curtose é expressa diretamente pelo coeficiente de Pearson, a distribuição normal apresenta valor igual a 3. Assim, valores maiores que 3 caracterizam distribuições leptocúrticas, enquanto valores menores que 3 caracterizam distribuições platicúrticas. Quando utilizado o excesso de curtose, obtido tomando a distribuição normal como referência, a classificação passa a considerar o valor zero: valores positivos indicam distribuições leptocúrticas, valores negativos indicam distribuições platicúrticas e valores iguais ou próximos de zero indicam distribuições mesocúrticas.
+
+
 ------------------------------------------------------------------------
 
 ## ⚙️ Metodologia
 
 Para a aplicação da análise estatística descritiva, foi utilizada uma base de dados proveniente de uma obra de descaracterização de uma barragem industrial, cujo escopo incluía o fechamento do reservatório e a construção de canais periféricos e sumps para drenagem superficial da área. Para este estudo, foi selecionado o conjunto de dados referente ao aterro executado para a construção do canal CP-01.
 
-A base analisada é composta por 30 resultados de Grau de Compactação (GC), expressos em porcentagem e obtidos a partir de ensaios de Hilf realizados durante o controle tecnológico do aterro. Para a estrutura em questão, foi estabelecido, em projeto, como critério de aceitação um grau de compactação mínimo de 98%.
+A base analisada é composta por 30 resultados de Grau de Compactação (GC), expressos em porcentagem e obtidos a partir de ensaios de Hilf realizados durante o controle tecnológico do aterro. Para a estrutura em questão, foi estabelecido, em projeto, como critério de aceitação um grau de compactação mínimo de 98%. A escolha do grau de compactação mínimo está diretamente relacionada ao desempenho requerido para o aterro, buscando limitar a quantidade de vazios e as deformações posteriores e proporcionar condições adequadas de resistência e rigidez.
 
 Inicialmente, foram realizadas a organização e a representação tabular dos dados obtidos através do ensaio, seguidas de sua apresentação gráfica. Posteriormente, foram determinadas as medidas de posição, de dispersão e de forma, permitindo avaliar o comportamento central e a variabilidade dos resultados de grau de compactação e a forma da distribuição desses dados.
 
 Os dados obtidos através dos ensaios Hilf estão apresentados a seguir:
 
-```{r, echo=FALSE}
+```{R}
 library(kableExtra)
 
 dados <- read.csv2("ensaiohilf.csv")
@@ -515,10 +534,11 @@ knitr::kable(
 ------------------------------------------------------------------------
 
 ## 🔍 Resultados e Discussão
+A seguir, serão apresentados os resultados obtidos através da análise descrita no item anterior e, na sequência, a discussão e interpretação desses resultados.
 
 ### Resultados
 
-```{r, echo=FALSE}
+```{R}
 library(leem)
 
 dados <- read.csv2("ensaiohilf.csv")
@@ -582,7 +602,7 @@ knitr::kable(
   
 ```
 
-```{r, echo=FALSE}
+```{R}
 library(leem)
 
 dadogc |>
@@ -615,7 +635,7 @@ legend(
 )
 ```
 
-```{r, echo=FALSE}
+```{R}
 # Classificação dos resultados
 situacao <- ifelse(dados$GC >= 98, "GC >= 98%", "GC < 98%")
 
@@ -643,13 +663,17 @@ knitr::kable(
 
 ### Discussões
 
-Os resultados obtidos através do Ensaio Hilf apresentaram grau de compactação médio de 99,64% e mediana de 99,73%, superiores ao valor mínimo de 98% estabelecido como premissa de projeto. A proximidade entre média e mediana indica que os valores estão concentrados em torno de uma região central, próxima a 100%, comportamento que também pode ser observado no histograma.
+Os resultados obtidos através do Ensaio Hilf apresentaram grau de compactação médio de 99,64% e mediana de 99,73%, superiores ao valor mínimo de 98% estabelecido como premissa de projeto.
 
 Quanto à dispersão, o conjunto apresentou desvio padrão de 2,73 pontos percentuais e coeficiente de variação de 2,74%, indicando baixa variabilidade dos resultados em relação à média. A amplitude de 10,48 pontos percentuais mostra, entretanto, que existe uma diferença considerável entre os valores extremos da amostra.
 
 A distribuição apresentou leve assimetria à esquerda (-0,22), indicando uma pequena tendência de prolongamento em direção aos menores valores de GC. A curtose foi de 0,37 e, por apresentar valor próximo de zero, a distribuição pode ser considerada aproximadamente mesocúrtica, ou seja, apresenta comportamento próximo ao da distribuição normal.
 
-Foi possível observar, também, a partir da análise individual dos dados, que 80% (24 ensaios) dos resultados atenderam ao critério de compactação mínimo de projeto, enquanto 20% (6 ensaios) ficaram abaixo desse critério.
+Como o grau de compactação mínimo de 98% é um fator que determina a aprovação ou reprovação da camada, é relevante observar que 80% (24 ensaios) dos resultados atenderam ao critério de compactação mínimo de projeto, enquanto 20% (6 ensaios) ficaram abaixo desse critério. Dessa forma, pode-se afirmar que 20% das camadas foram retrabalhadas para atingir o critério mínimo, uma vez que a obra obrigatoriamente possui fiscalização, acompanhamento técnico de obra e registros formais e rastreáveis do controle tecnológico de toda a sua execução.
+
+Além disso, é importante que seja acompanhado todo o conjunto de resultados do controle tecnológico, mesmo das camadas reprovadas. A manutenção desse histórico permite avaliar não apenas o atendimento pontual aos critérios de projeto, mas também o padrão de qualidade da execução ao longo da obra, possibilitando identificar recorrências, tendências e eventuais dificuldades no processo de compactação.
+
+Nesse sentido, os resultados das camadas reprovadas também são informações relevantes, desde que mantida a rastreabilidade das medidas corretivas adotadas e dos ensaios realizados após o retrabalho. A ocorrência eventual de resultados abaixo do grau de compactação especificado é compatível com a variabilidade da execução de obras de terra e, isoladamente, não caracteriza deficiência no processo construtivo. Entretanto, a ocorrência frequente de reprovações ou a obtenção de valores significativamente inferiores ao critério estabelecido pode indicar a necessidade de avaliação das condições executivas, considerando aspectos como teor de umidade do material, espessura das camadas, número de passadas, equipamento empregado, características e heterogeneidade do solo e procedimentos adotados pela equipe de campo.
 
 ## 🧠 Considerações finais
 
