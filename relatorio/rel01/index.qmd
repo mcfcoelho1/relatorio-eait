@@ -484,21 +484,13 @@ Assim como para as medidas de posição, as medidas de dispersão também podem 
 
 #### Medidas de Forma
 
-Além das medidas de posição e dispersão, uma distribuição também pode ser analisada quanto à sua forma. Nesse contexto, a assimetria e a curtose permitem avaliar características relacionadas à distribuição dos valores em torno da região central e ao comportamento de suas caudas.
+Além das medidas de posição e dispersão, a distribuição dos dados também pode ser analisada quanto à sua forma. Entre as medidas utilizadas para essa finalidade estão a assimetria e a curtose, que permitem identificar características da distribuição dos valores em relação à sua região central e à distribuição de referência (BUSSAB; MORETTIN, 2017).
 
-A assimetria indica o grau de simetria da distribuição dos dados. De acordo com o comportamento apresentado, uma distribuição pode ser classificada como:
+A assimetria representa o grau de afastamento de uma distribuição em relação à simetria. Em uma distribuição simétrica, os valores da média, mediana e moda são iguais. À medida que a distribuição se torna assimétrica, essas medidas passam a apresentar diferenças entre si, sendo possível identificar o sentido e a intensidade dessa assimetria. Uma distribuição pode apresentar assimetria positiva ou negativa. A assimetria positiva caracteriza-se pelo prolongamento da distribuição em direção aos valores mais elevados, enquanto a assimetria negativa apresenta prolongamento em direção aos valores mais baixos. 
 
-- Simétrica: apresenta coeficiente de assimetria igual ou próximo de zero, indicando que os dados se distribuem de forma semelhante em ambos os lados da região central;
-- Assimétrica positiva ou à direita: apresenta coeficiente de assimetria positivo e maior prolongamento da distribuição em direção aos valores mais elevados;
-- Assimétrica negativa ou à esquerda: apresenta coeficiente de assimetria negativo e maior prolongamento da distribuição em direção aos valores mais baixos.
+A curtose, por sua vez, é uma medida relacionada ao grau de achatamento da distribuição e à maneira como os dados se concentram ou se dispersam em torno da região central. Sua interpretação é realizada tomando como referência o formato da distribuição normal, possibilitando comparar o comportamento da distribuição analisada com essa curva.
 
-A curtose é uma medida relacionada à forma da distribuição, considerando principalmente o comportamento de suas caudas em comparação com uma distribuição de referência. A partir dessa comparação, as distribuições podem ser classificadas como:
-
-- Mesocúrtica: apresenta curtose equivalente à da distribuição normal, utilizada como referência;
-- Leptocúrtica: apresenta maior curtose em relação à distribuição normal, estando associada a caudas mais pesadas e, consequentemente, maior ocorrência relativa de valores extremos;
-- Platicúrtica: apresenta menor curtose em relação à distribuição normal, estando associada a caudas mais leves e menor ocorrência relativa de valores extremos.
-
-Quando a curtose é expressa diretamente pelo coeficiente de Pearson, a distribuição normal apresenta valor igual a 3. Assim, valores maiores que 3 caracterizam distribuições leptocúrticas, enquanto valores menores que 3 caracterizam distribuições platicúrticas. Quando utilizado o excesso de curtose, obtido tomando a distribuição normal como referência, a classificação passa a considerar o valor zero: valores positivos indicam distribuições leptocúrticas, valores negativos indicam distribuições platicúrticas e valores iguais ou próximos de zero indicam distribuições mesocúrticas.
+De acordo com essa característica, uma distribuição pode ser classificada como mesocúrtica, leptocúrtica ou platicúrtica. A distribuição mesocúrtica apresenta formato semelhante ao da distribuição normal. A distribuição leptocúrtica apresenta uma curva mais fechada e aguda, associada a uma maior concentração dos dados em torno da região central. Por outro lado, a distribuição platicúrtica apresenta uma curva mais aberta e achatada, associada a uma maior dispersão dos dados em relação à região central.
 
 
 ------------------------------------------------------------------------
@@ -685,6 +677,8 @@ Esse resultado mostra a importância de analisar os dados como um conjunto, util
 
 ## 📖 Referências
 
-BATISTA, B. D. O.; OLIVEIRA, D. A. B. J. R básico. 1. ed. Ouro Branco, MG: [s.n.], 2024.
+BATISTA, Ben Dêivide de Oliveira. Estatística básica aplicada às engenharias e ciências. Ouro Branco, MG: [s. n.], 2024. Disponível em: http://bendeivide.github.io/book-epaec/. 
 
-BATISTA, B. D. O.. Estatística Básica aplicada às Engenharias e Ciências. Ouro Branco, MG: [s.n.]. 2024. XXX p. ISBN 978-65-00-66079-1. Disponível em: https://bendeivide. github.io/book-epaec/. Acesso em: 22:00, sábado, 22 de agosto de 2026.
+MOREIRA, Terezinha de Jesus Rocha Vilanova; SANTOS, Marlei Rosa dos; MOREIRA, Antonia Leidiana (org.). Estatística básica. Teresina: EdUESPI, 2021.
+
+
