@@ -1,7 +1,7 @@
 ---
 # Só mude aqui!!!!
-author: "Nome do Aluno"
-title: "Relatório de Aula Prática XX"
+author: "Maria Clara FIgueiredo Coelho"
+title: "Relatório de Aula Prática 04"
 bibliography: referencias.bib
 # A partir daqui nao faca alteracoes!!!!!
 link-citations: true
@@ -77,35 +77,67 @@ Descreva como o experimento foi realizado.
 
 ## 🔍 Resultados e Discussão
 
-Apresente e interprete os resultados obtidos a partir dos dados coletados.
+### Importação da base de dados
 
-- Descreva os principais resultados numéricos (média, variabilidade, etc.).
-- Comente o comportamento dos dados observados nos gráficos.
-- Indique se há presença de valores discrepantes (outliers).
-- Avalie se os dados apresentam simetria ou tendência.
+A base de dados foi importada para o R através da função `read.csv2()` e atribuída a `dados`:
 
-Em seguida, discuta os resultados à luz dos conceitos teóricos:
+```{R}
+# Importação da base de dados
 
-- Os resultados estão de acordo com o esperado?
-- Há grande variabilidade? O que isso significa no contexto do experimento?
-- Quais fatores podem ter influenciado os resultados?
-- Existem possíveis fontes de erro experimental?
-
-Procure não apenas descrever, mas **interpretar os dados**.
-
-### 💬 Exemplo de como citar uma referência bibliográfica
-
-Depois de inserido as informaçõe no arquivo **referencias.bib**, use:
-
-- Segundo @Rbasico2022
-- Tudo é um objeto em R [@Rbasico2022]
-
-### 📊  Análise de Dados
-
-```{r}
-distancia <- c(10.2, 9.8, 10.5, 10.1, 9.9, 10.3)
-distancia
+dados <- read.csv(
+  "base_processamento_dados_engenharia_civil.csv",
+  stringsAsFactors = FALSE,
+  check.names = FALSE
+)
 ```
+
+Após a importação, foram utilizadas as funções `head()` e `tail()` para visualizar, respectivamente, as primeiras e as últimas observações da base de dados.
+
+```{R}
+# Visualização das primeiras observações
+
+head(dados)
+
+# Visualização das últimas observações
+
+tail(dados)
+
+```
+
+A função `head()` apresenta, por padrão, as seis primeiras observações do objeto, enquanto `tail()` apresenta as seis últimas. Dessa forma, é possível realizar uma verificação inicial da leitura dos dados e observar como as variáveis foram organizadas após a importação.
+
+Por fim, foi utilizada a função `dim()` para verificar as dimensões da base:
+
+```{R}
+# Verificação das dimensões da base
+
+dim(dados)
+
+```
+
+### Número de observações e variáveis
+
+Para verificar separadamente a quantidade de observações e de variáveis presentes na base de dados, foram utilizadas as funções `nrow()` e `ncol()`, conforme apresentado a seguir:
+
+```{R}
+# Número de observações
+nrow(dados)
+
+# Número de variáveis
+ncol(dados)
+```
+
+A função `nrow()` retorna o número de linhas da base, que corresponde à quantidade de observações, enquanto `ncol()` retorna o número de colunas, correspondente à quantidade de variáveis.
+
+A partir dos resultados obtidos, verifica-se que a base de dados é composta por 300 observações e 11 variáveis, sendo cada observação correspondente a uma obra de Engenharia Civil.
+
+
+
+
+
+
+
+
 
 ## 🧠 Considerações finais
 

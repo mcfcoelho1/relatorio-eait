@@ -1,5 +1,5 @@
 ---
-title: "Maria Clara Figueiredo e Victória Marques"
+title: "Maria Clara Figueiredo"
 image: "logo.png"
 links:
   - label: GitHub
