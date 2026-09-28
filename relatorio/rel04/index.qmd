@@ -1465,7 +1465,7 @@ leaflet(mapa_regioes) |>
 ```
 ---
 
-## Reflexão final
+## 💭 Reflexão final
 
 A principal diferença observada entre o Base R e o `ggplot2` está na forma de construção dos gráficos. No Base R, os elementos são inseridos de maneira mais direta, sendo possível construir e complementar uma representação por meio de diferentes funções. Já no `ggplot2`, o gráfico é estruturado a partir da combinação de camadas e do mapeamento das variáveis aos diferentes elementos visuais. Essa organização facilitou principalmente a construção de gráficos com maior quantidade de informações, como aqueles que utilizaram cores, linhas de tendência e facetas.
 
