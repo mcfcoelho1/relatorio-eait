@@ -1,0 +1,1090 @@
+---
+# Só mude aqui!!!!
+author: "Maria Clara Figueiredo Coelho"
+title: "Relatório de Aula Prática 05"
+bibliography: referencias.bib
+# A partir daqui nao faca alteracoes!!!!!
+link-citations: true
+csl: associacao-brasileira-de-normas-tecnicas-ipea.csl
+subtitle: "<a href='https://bendeivide.github.io/courses/epaec/' target='_blank'>Estatística e Probabilidade</a> </br> <a href='https://bendeivide.github.io' target='_blank'>Prof. Ben Dêivide (DEFIM/CAP/UFSJ)</a>"
+include-before-body: header.html
+date: today
+lang: pt-BR
+format:
+  html:
+    toc: true
+    number-sections: true
+    theme: bootstrap
+    #css: styles.css
+    code-fold: true
+    code-tools: true
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+
+## 📌 Introdução
+
+A construção de uma Pequena Central Hidrelétrica (PCH) envolve diferentes etapas e elementos sujeitos a variações e incertezas. Ao longo do projeto, aspectos relacionados à qualidade dos materiais, ocorrência de defeitos, condições geotécnicas, funcionamento de equipamentos e eventos de precipitação podem apresentar diferentes comportamentos e, por isso, demandam ferramentas que permitam analisar essa variabilidade.
+
+As distribuições de probabilidade permitem representar diferentes tipos de variáveis aleatórias de acordo com suas características e estimar a possibilidade de ocorrência de determinados resultados. Sua aplicação possibilita analisar tanto variáveis discretas, relacionadas à contagem de eventos, quanto variáveis contínuas, como resistência, tempo de funcionamento e precipitação, contribuindo para a interpretação de diferentes situações envolvidas na construção da PCH.
+
+---
+
+## 🎯 Objetivos
+
+Este trabalho tem como objetivo aplicar diferentes distribuições de probabilidade na análise de variáveis aleatórias relacionadas à construção de uma Pequena Central Hidrelétrica (PCH), utilizando a linguagem R para o cálculo de probabilidades, valores esperados, variâncias e quantis, além da realização de simulações e da comparação entre resultados simulados e teóricos. Busca-se, ainda, interpretar os resultados obtidos considerando as características de cada fenômeno analisado e sua aplicação no contexto da Engenharia Civil.
+
+---
+
+## ⚙️ Metodologia
+
+O desenvolvimento do trabalho foi realizado a partir da análise de diferentes variáveis aleatórias relacionadas à construção de uma Pequena Central Hidrelétrica (PCH). Para cada situação apresentada, foi considerada uma distribuição de probabilidade de acordo com as características da variável analisada, contemplando modelos aplicáveis a variáveis discretas e contínuas.
+
+Para as variáveis discretas, foram utilizadas as distribuições Binomial e de Poisson. A distribuição Binomial foi aplicada ao número de estacas defeituosas em um lote, uma vez que cada unidade apresenta dois resultados possíveis, defeituosa ou não defeituosa, considerando uma probabilidade de defeito previamente estabelecida. Já a distribuição de Poisson foi utilizada para representar o número de fissuras observadas em determinado comprimento de túnel, sendo adequada à análise da quantidade de ocorrências em um intervalo definido.
+
+Para as variáveis contínuas, foram utilizadas as distribuições Normal, Exponencial, de Weibull e Gama. A distribuição Normal foi aplicada à resistência à compressão do concreto, considerando sua representação por meio da média e do desvio padrão. A distribuição Exponencial foi utilizada para representar o tempo até a falha de um equipamento, enquanto a distribuição de Weibull foi aplicada à resistência ao cisalhamento da interface rocha-concreto. Por fim, a distribuição Gama foi utilizada para representar os valores de precipitação diária durante a estação chuvosa.
+
+A partir dos parâmetros definidos para cada distribuição, foram calculadas probabilidades e medidas de posição e dispersão, conforme solicitado em cada análise. Os cálculos foram desenvolvidos na linguagem R, utilizando as funções correspondentes a cada distribuição. Também foram realizadas simulações de valores aleatórios, com representação gráfica e comparação com as probabilidades teóricas, de acordo com as características de cada problema.
+
+Além das análises individuais, foi realizada uma simulação de Monte Carlo com 10.000 valores de resistência à compressão do concreto. A proporção de valores simulados inferiores a 30 MPa foi comparada à probabilidade teórica obtida pela distribuição Normal, permitindo verificar a aproximação entre o resultado da simulação e o valor calculado analiticamente. 
+
+As principais funções utilizadas ao longo do desenvolvimento foram:
+
+- `pnorm()`: calcula probabilidades acumuladas da distribuição Normal;
+- `qnorm()`: determina quantis da distribuição Normal;
+- `rnorm()`: gera valores aleatórios da distribuição Normal;
+- `dbinom()`: calcula probabilidades pontuais da distribuição Binomial;
+- `pbinom()`: calcula probabilidades acumuladas da distribuição Binomial;
+- `rbinom()`: gera valores aleatórios da distribuição Binomial;
+- `dpois()`: calcula probabilidades pontuais da distribuição de Poisson;
+- `ppois()`: calcula probabilidades acumuladas da distribuição de Poisson;
+- `pexp()`: calcula probabilidades acumuladas da distribuição Exponencial;
+- `qexp()`: determina quantis da distribuição Exponencial;
+- `rexp()`: gera valores aleatórios da distribuição Exponencial;
+- `pweibull()`: calcula probabilidades acumuladas da distribuição de Weibull;
+- `qweibull()`: determina quantis da distribuição de Weibull;
+- `gamma()`: calcula a função Gama;
+- `pgamma()`: calcula probabilidades acumuladas da distribuição Gama;
+- `qgamma()`: determina quantis da distribuição Gama;
+- `rgamma()`: gera valores aleatórios da distribuição Gama;
+- `mean()`: calcula a média dos valores;
+- `abs()`: calcula o valor absoluto;
+- `hist()`: constrói histogramas;
+- `curve()`: adiciona curvas teóricas aos gráficos;
+- `dnorm()`: calcula a densidade da distribuição Normal;
+- `dexp()`: calcula a densidade da distribuição Exponencial;
+- `dgamma()`: calcula a densidade da distribuição Gama;
+- `set.seed()`: define uma semente para permitir a reprodução das simulações.
+
+---
+
+## 🔍 Resultados
+
+### Controle de Qualidade do Concreto - Distribuição Normal
+
+A resistência à compressão do concreto ($f_c$) segue uma distribuição Normal com média $\mu = 35$ MPa e desvio padrão $\sigma = 4$ MPa.
+
+A partir dessa distribuição, inicialmente serão calculadas as probabilidades de uma amostra apresentar resistência inferior a 30 MPa e de a resistência estar entre 32 e 38 MPa, representadas por:
+
+$$
+P(X < 30)
+$$
+
+$$
+P(32 < X < 38) = P(X < 38) - P(X < 32)
+$$
+
+Para esses cálculos, utiliza-se a função `pnorm()`, que fornece a probabilidade acumulada da distribuição Normal até determinado valor.
+
+Também será determinado o percentil de 5%, correspondente ao valor de resistência abaixo do qual se encontram 5% das amostras:
+
+$$
+P(X < x) = 0,05
+$$
+
+Como, nesse caso, a probabilidade é conhecida e deseja-se encontrar o valor correspondente de $X$, utiliza-se a função `qnorm()`.
+
+Considerando ainda a coleta de 10 amostras de concreto, será calculada a probabilidade de que a resistência média seja inferior a 33 MPa:
+
+$$
+P(\bar{X} < 33)
+$$
+
+Como a análise considera a média de 10 amostras, o desvio padrão utilizado no cálculo é dado por:
+
+$$
+\sigma_{\bar{X}} = \frac{\sigma}{\sqrt{n}}
+= \frac{4}{\sqrt{10}}
+$$
+
+Os cálculos podem ser realizados no R da seguinte forma:
+
+```{r}
+# a) Probabilidade de a resistência ser inferior a 30 MPa
+
+prob_inferior_30 <- pnorm(
+  q = 30,
+  mean = 35,
+  sd = 4
+)
+
+
+# b) Probabilidade de a resistência estar entre 32 e 38 MPa
+
+prob_32_38 <- pnorm(
+  q = 38,
+  mean = 35,
+  sd = 4
+) - pnorm(
+  q = 32,
+  mean = 35,
+  sd = 4
+)
+
+
+# c) Determinação do percentil de 5%
+
+percentil_5 <- qnorm(
+  p = 0.05,
+  mean = 35,
+  sd = 4
+)
+
+
+# d) Probabilidade de a média de 10 amostras ser inferior a 33 MPa
+
+prob_media_33 <- pnorm(
+  q = 33,
+  mean = 35,
+  sd = 4 / sqrt(10)
+)
+
+
+# Organizando os resultados obtidos
+
+resultados_normal <- data.frame(
+  Analise = c(
+    "Resistência inferior a 30 MPa",
+    "Resistência entre 32 e 38 MPa",
+    "Percentil de 5%",
+    "Média de 10 amostras inferior a 33 MPa"
+  ),
+  Resultado = c(
+    prob_inferior_30 * 100,
+    prob_32_38 * 100,
+    percentil_5,
+    prob_media_33 * 100
+  ),
+  Unidade = c(
+    "%",
+    "%",
+    "MPa",
+    "%"
+  )
+)
+
+
+# Apresentando os resultados em formato de tabela
+
+knitr::kable(
+  resultados_normal,
+  digits = 2,
+  col.names = c("Análise", "Resultado", "Unidade"),
+  align = "c"
+)
+```
+
+A probabilidade de uma amostra apresentar resistência inferior a 30 MPa é de aproximadamente 10,56%, enquanto a probabilidade de a resistência estar entre 32 e 38 MPa é de 54,67%. Para o percentil de 5%, foi obtida uma resistência de aproximadamente 28,42 MPa, indicando que apenas 5% das amostras apresentam valores inferiores a esse limite.
+
+Considerando a média de 10 amostras, a probabilidade de se obter uma resistência média inferior a 33 MPa é de aproximadamente 5,69%.
+
+Por fim, serão gerados 1.000 valores aleatórios de uma distribuição Normal com média de 35 MPa e desvio padrão de 4 MPa. Para isso, utiliza-se a função `rnorm()`, responsável pela geração dos valores aleatórios de acordo com os parâmetros definidos para a distribuição Normal. 
+
+Em seguida, os valores simulados serão representados em um histograma, juntamente com a curva teórica da distribuição Normal, permitindo comparar o comportamento dos dados gerados com o modelo adotado.
+
+```{r}
+# e) Simulação da distribuição da resistência
+
+# Definindo uma semente para permitir a reprodução dos resultados
+set.seed(123)
+
+# Gerando 1.000 valores aleatórios da distribuição Normal
+x <- rnorm(
+  n = 1000,
+  mean = 35,
+  sd = 4
+)
+
+# Construindo o histograma dos valores simulados
+hist(
+  x,
+  probability = TRUE,
+  main = "Distribuição da resistência à compressão do concreto",
+  xlab = "Resistência à compressão (MPa)",
+  ylab = "Densidade"
+)
+
+# Adicionando a curva teórica da distribuição Normal
+curve(
+  dnorm(x, mean = 35, sd = 4),
+  add = TRUE,
+  lwd = 2
+)
+```
+
+A partir do histograma, é possível observar que os valores se concentram principalmente em torno da média de 35 MPa, diminuindo à medida que se afastam desse valor. Também é possível verificar que a curva teórica acompanha bem os dados simulados, mostrando que os 1.000 valores gerados seguem o comportamento esperado para uma distribuição Normal.
+
+
+### Qualidade de Estacas Pré-Moldadas - Distribuição Binomial
+
+Em um lote de 15 estacas pré-moldadas, dados históricos indicam que 8% são defeituosas. Como cada estaca pode ser classificada como defeituosa ou não defeituosa, e a probabilidade de defeito é considerada constante, o número de estacas defeituosas no lote pode ser representado por uma distribuição Binomial, com $n = 15$ e $p = 0,08$.
+
+Inicialmente, serão calculadas as probabilidades de nenhuma estaca apresentar defeito e de serem encontradas, no máximo, duas estacas defeituosas:
+
+$$
+P(X = 0)
+$$
+
+$$
+P(X \leq 2)
+$$
+
+Para o primeiro caso, utiliza-se a função `dbinom()`, que fornece a probabilidade de ocorrer exatamente determinado número de eventos. Para o segundo, utiliza-se a função `pbinom()`, que fornece a probabilidade acumulada até determinado número de ocorrências.
+
+Para calcular a probabilidade de quatro ou mais estacas apresentarem defeito, utiliza-se novamente a função `pbinom()`, considerando a probabilidade complementar:
+
+$$
+P(X \geq 4) = 1 - P(X \leq 3)
+$$
+
+Além dessas probabilidades, serão calculadas a esperança e a variância do número de estacas defeituosas. Para uma distribuição Binomial, esses valores são dados por:
+
+$$
+E(X) = n \cdot p
+$$
+
+$$
+Var(X) = n \cdot p \cdot (1-p)
+$$
+
+Os cálculos podem ser realizados no R da seguinte forma:
+
+```{r}
+# a) Probabilidade de nenhuma estaca ser defeituosa
+
+prob_zero <- dbinom(
+  x = 0,
+  size = 15,
+  prob = 0.08
+)
+
+
+# b) Probabilidade de no máximo 2 estacas serem defeituosas
+
+prob_max_2 <- pbinom(
+  q = 2,
+  size = 15,
+  prob = 0.08
+)
+
+
+# c) Probabilidade de 4 ou mais estacas serem defeituosas
+
+prob_4_ou_mais <- 1 - pbinom(
+  q = 3,
+  size = 15,
+  prob = 0.08
+)
+
+
+# d) Esperança e variância do número de estacas defeituosas
+
+esperanca <- 15 * 0.08
+variancia <- 15 * 0.08 * (1 - 0.08)
+
+
+# Organizando os resultados obtidos
+
+resultados_binomial <- data.frame(
+  Analise = c(
+    "Nenhuma estaca defeituosa",
+    "No máximo 2 estacas defeituosas",
+    "4 ou mais estacas defeituosas",
+    "Esperança",
+    "Variância"
+  ),
+  Resultado = c(
+    prob_zero * 100,
+    prob_max_2 * 100,
+    prob_4_ou_mais * 100,
+    esperanca,
+    variancia
+  ),
+  Unidade = c(
+    "%",
+    "%",
+    "%",
+    "estaca",
+    "estaca²"
+  )
+)
+
+
+# Apresentando os resultados em formato de tabela
+
+knitr::kable(
+  resultados_binomial,
+  digits = 2,
+  col.names = c("Análise", "Resultado", "Unidade"),
+  align = "c"
+)
+```
+
+A probabilidade de nenhuma das 15 estacas apresentar defeito é de aproximadamente 28,63%, enquanto a probabilidade de serem encontradas, no máximo, duas estacas defeituosas é de 88,70%. Já a probabilidade de quatro ou mais estacas apresentarem defeito é de aproximadamente 2,73%.
+
+A esperança é de 1,2 estacas defeituosas por lote, indicando o número médio esperado de estacas com defeito em lotes de 15 unidades. A variância é de 1,104 estaca², representando a variabilidade do número de estacas defeituosas em relação a esse valor esperado.
+
+Para complementar os resultados, serão simulados 500 lotes de 15 estacas, considerando a mesma probabilidade de 8% de defeito. A função `rbinom()` será utilizada para gerar os valores aleatórios e, em seguida, as frequências relativas obtidas serão comparadas com as probabilidades teóricas da distribuição Binomial.
+
+```{r}
+# e) Simulação de 500 lotes de estacas
+
+# Definindo uma semente para permitir a reprodução dos resultados
+set.seed(123)
+
+# Simulando 500 lotes de 15 estacas
+sim <- rbinom(
+  n = 500,
+  size = 15,
+  prob = 0.08
+)
+
+
+# Organizando os resultados simulados e teóricos
+
+tabela_sim <- data.frame(
+  "Estacas defeituosas" = 0:15,
+  "Frequência simulada" = as.numeric(
+    table(factor(sim, levels = 0:15))
+  ) / 500,
+  "Probabilidade teórica" = dbinom(
+    0:15,
+    size = 15,
+    prob = 0.08
+  ),
+  check.names = FALSE
+)
+
+
+# Apresentando os resultados em formato de tabela
+
+knitr::kable(
+  tabela_sim,
+  digits = 4,
+  align = "c",
+  caption = "Comparação entre as frequências simuladas e as probabilidades teóricas"
+)
+```
+
+Os resultados simulados ficaram próximos das probabilidades teóricas, com maior frequência de lotes contendo 0, 1 ou 2 estacas defeituosas. Isso indica que lotes com poucos defeitos são os mais esperados, enquanto a ocorrência de várias estacas defeituosas em um mesmo lote tende a ser pouco frequente.
+
+
+### Fissuras em Túnel - Distribuição de Poisson
+
+O número de fissuras por quilômetro de túnel segue uma distribuição de Poisson, com média de $\lambda = 2,5$ fissuras/km. A distribuição de Poisson é utilizada para representar a quantidade de ocorrências de um evento em determinado intervalo e, nesse caso, será aplicada ao número de fissuras observadas por quilômetro de túnel.
+
+Primeiramente, será calculada a probabilidade de não ocorrer nenhuma fissura em 1 km:
+
+$$
+P(X = 0)
+$$
+
+Como se deseja calcular a probabilidade de ocorrer exatamente zero fissuras, utiliza-se a função `dpois()`.
+
+Para a ocorrência de 3 ou mais fissuras, utiliza-se a função `ppois()`, considerando a probabilidade complementar:
+
+$$
+P(X \geq 3) = 1 - P(X \leq 2)
+$$
+
+A mesma função pode ser utilizada para calcular a probabilidade de serem observadas entre 1 e 4 fissuras:
+
+$$
+P(1 \leq X \leq 4) = P(X \leq 4) - P(X \leq 0)
+$$
+
+Para o cálculo da probabilidade de exatamente 5 fissuras em 2 km, é necessário ajustar o parâmetro da distribuição de acordo com o comprimento analisado. Como a média é de 2,5 fissuras/km:
+
+$$
+\lambda = 2,5 \times 2 = 5
+$$
+
+Por fim, serão determinadas a esperança e a variância do número de fissuras. Na distribuição de Poisson, ambas são iguais ao parâmetro $\lambda$.
+
+Os cálculos podem ser realizados no R da seguinte forma:
+
+```{r}
+# a) Probabilidade de nenhuma fissura em 1 km
+
+prob_zero <- dpois(
+  x = 0,
+  lambda = 2.5
+)
+
+
+# b) Probabilidade de 3 ou mais fissuras em 1 km
+
+prob_3_ou_mais <- 1 - ppois(
+  q = 2,
+  lambda = 2.5
+)
+
+
+# c) Probabilidade de ocorrerem entre 1 e 4 fissuras em 1 km
+
+prob_1_4 <- ppois(
+  q = 4,
+  lambda = 2.5
+) - ppois(
+  q = 0,
+  lambda = 2.5
+)
+
+
+# d) Probabilidade de exatamente 5 fissuras em 2 km
+
+prob_5_fissuras <- dpois(
+  x = 5,
+  lambda = 5
+)
+
+
+# e) Esperança e variância do número de fissuras
+
+esperanca <- 2.5
+variancia <- 2.5
+
+
+# Organizando os resultados obtidos
+
+resultados_poisson <- data.frame(
+  Analise = c(
+    "Nenhuma fissura em 1 km",
+    "3 ou mais fissuras em 1 km",
+    "Entre 1 e 4 fissuras em 1 km",
+    "Exatamente 5 fissuras em 2 km",
+    "Esperança",
+    "Variância"
+  ),
+  Resultado = c(
+    prob_zero * 100,
+    prob_3_ou_mais * 100,
+    prob_1_4 * 100,
+    prob_5_fissuras * 100,
+    esperanca,
+    variancia
+  ),
+  Unidade = c(
+    "%",
+    "%",
+    "%",
+    "%",
+    "fissuras",
+    "fissuras²"
+  )
+)
+
+
+# Apresentando os resultados em formato de tabela
+
+knitr::kable(
+  resultados_poisson,
+  digits = 2,
+  col.names = c("Análise", "Resultado", "Unidade"),
+  align = "c"
+)
+```
+
+A probabilidade de não ser observada nenhuma fissura em 1 km de túnel é de aproximadamente 8,21%, enquanto a probabilidade de ocorrerem três ou mais fissuras é de 45,62%. Para a ocorrência de uma a quatro fissuras no mesmo comprimento, foi obtida uma probabilidade de 80,91%.
+
+Ao considerar um trecho de 2 km, o parâmetro da distribuição passa a ser $\lambda = 5$, resultando em uma probabilidade de aproximadamente 17,55% de serem observadas exatamente cinco fissuras.
+
+Como na distribuição de Poisson a esperança e a variância são iguais ao parâmetro $\lambda$, ambas correspondem a 2,5 para um trecho de 1 km. Assim, espera-se, em média, a ocorrência de 2,5 fissuras por quilômetro de túnel.
+
+A distribuição de Poisson permite estimar o comportamento esperado do número de fissuras ao longo do túnel. Dessa forma, a comparação entre os valores observados em campo e o comportamento previsto pelo modelo pode auxiliar na identificação de trechos com ocorrência de fissuras acima do esperado, indicando a necessidade de uma avaliação mais detalhada.
+
+
+### Confiabilidade de Equipamentos – Distribuição Exponencial
+
+O tempo até a falha de um misturador de concreto segue uma distribuição Exponencial com tempo médio de 200 horas. Essa distribuição é utilizada para representar o tempo até a ocorrência de determinado evento e, nesse caso, será aplicada ao tempo de funcionamento do equipamento até a falha.
+
+Na distribuição Exponencial, o parâmetro $\lambda$ pode ser obtido a partir do tempo médio:
+
+$$
+\lambda = \frac{1}{200} = 0,005
+$$
+
+Inicialmente, serão calculadas as probabilidades de o misturador funcionar por mais de 250 horas e de apresentar falha antes de completar 100 horas:
+
+$$
+P(X > 250)
+$$
+
+$$
+P(X < 100)
+$$
+
+Para esses cálculos, utiliza-se a função `pexp()`, que fornece a probabilidade acumulada da distribuição Exponencial. Para calcular diretamente a probabilidade de o tempo ser superior a 250 horas, utiliza-se o argumento `lower.tail = FALSE`.
+
+Também será determinado o tempo correspondente à mediana da distribuição, ou seja, o tempo para o qual existe uma probabilidade de 50% de o equipamento já ter apresentado falha:
+
+$$
+P(X \leq x) = 0,50
+$$
+
+Como, nesse caso, a probabilidade é conhecida e deseja-se determinar o tempo correspondente, utiliza-se a função `qexp()`.
+
+Considerando ainda que o misturador já funcionou durante 150 horas sem apresentar falha, será calculada a probabilidade de que continue funcionando por pelo menos mais 100 horas. A distribuição Exponencial apresenta a propriedade de ausência de memória, de modo que a probabilidade de funcionamento por mais 100 horas não depende do tempo que o equipamento já permaneceu em operação:
+
+$$
+P(X > 250 \mid X > 150) = P(X > 100)
+$$
+
+Os cálculos podem ser realizados no R da seguinte forma:
+
+```{r}
+# a) Probabilidade de o misturador funcionar por mais de 250 horas
+
+prob_mais_250 <- pexp(
+  q = 250,
+  rate = 1 / 200,
+  lower.tail = FALSE
+)
+
+
+# b) Probabilidade de o misturador falhar antes de 100 horas
+
+prob_menos_100 <- pexp(
+  q = 100,
+  rate = 1 / 200
+)
+
+
+# c) Determinação da mediana do tempo até a falha
+
+mediana <- qexp(
+  p = 0.50,
+  rate = 1 / 200
+)
+
+
+# d) Probabilidade de funcionar por pelo menos mais 100 horas,
+# considerando que já funcionou durante 150 horas
+
+prob_mais_100 <- pexp(
+  q = 100,
+  rate = 1 / 200,
+  lower.tail = FALSE
+)
+
+
+# Organizando os resultados obtidos
+
+resultados_exponencial <- data.frame(
+  Analise = c(
+    "Funcionamento superior a 250 horas",
+    "Falha antes de 100 horas",
+    "Mediana do tempo até a falha",
+    "Funcionamento por pelo menos mais 100 horas"
+  ),
+  Resultado = c(
+    prob_mais_250 * 100,
+    prob_menos_100 * 100,
+    mediana,
+    prob_mais_100 * 100
+  ),
+  Unidade = c(
+    "%",
+    "%",
+    "horas",
+    "%"
+  )
+)
+
+
+# Apresentando os resultados em formato de tabela
+
+knitr::kable(
+  resultados_exponencial,
+  digits = 2,
+  col.names = c("Análise", "Resultado", "Unidade"),
+  align = "c"
+)
+```
+
+A probabilidade de o misturador funcionar por mais de 250 horas é de aproximadamente 28,65%, enquanto a probabilidade de ocorrer uma falha antes de 100 horas é de 39,35%. Para a mediana, foi obtido um tempo de aproximadamente 138,63 horas, indicando que existe uma probabilidade de 50% de o equipamento apresentar falha até esse tempo.
+
+Considerando que o misturador já funcionou durante 150 horas sem apresentar falha, a probabilidade de continuar funcionando por pelo menos mais 100 horas é de aproximadamente 60,65%. Esse resultado ocorre devido à propriedade de ausência de memória da distribuição Exponencial, pela qual o tempo de funcionamento já transcorrido não altera a probabilidade associada ao tempo restante.
+
+Por fim, serão simulados 1.000 tempos de funcionamento do misturador utilizando a função `rexp()`, considerando o mesmo tempo médio de 200 horas. O histograma será utilizado para observar o comportamento dos valores simulados e compará-los com a curva teórica da distribuição Exponencial.
+
+```{r}
+# e) Simulação dos tempos até a falha
+
+# Definindo uma semente para permitir a reprodução dos resultados
+set.seed(123)
+
+# Gerando 1.000 tempos aleatórios até a falha
+tempos <- rexp(
+  n = 1000,
+  rate = 1 / 200
+)
+
+# Construindo o histograma dos valores simulados
+hist(
+  tempos,
+  probability = TRUE,
+  main = "Distribuição do tempo até a falha do misturador",
+  xlab = "Tempo até a falha (horas)",
+  ylab = "Densidade"
+)
+
+# Adicionando a curva teórica da distribuição Exponencial
+curve(
+  dexp(x, rate = 1 / 200),
+  add = TRUE,
+  lwd = 2
+)
+```
+
+A partir do histograma, é possível observar uma maior concentração de valores nos menores tempos de funcionamento, com redução da frequência à medida que o tempo até a falha aumenta. A curva teórica acompanha o comportamento dos valores simulados, mostrando a característica decrescente esperada para a distribuição Exponencial.
+
+### Resistência ao Cisalhamento - Distribuição de Weibull
+
+A resistência ao cisalhamento de uma interface rocha-concreto segue uma distribuição de Weibull com parâmetro de forma igual a 2 e parâmetro de escala igual a 150 kPa.
+
+A distribuição de Weibull permite representar diferentes comportamentos de uma variável em função dos seus parâmetros. Nesse caso, o parâmetro de forma é dado por $k = 2$, enquanto o parâmetro de escala é $\lambda = 150$ kPa.
+
+Inicialmente, serão calculadas a probabilidade de a resistência ao cisalhamento ser inferior a 100 kPa e a probabilidade de apresentar valores entre 120 e 200 kPa:
+
+$$
+P(X < 100)
+$$
+
+$$
+P(120 < X < 200) = P(X < 200) - P(X < 120)
+$$
+
+Para esses cálculos, utiliza-se a função `pweibull()`, que fornece a probabilidade acumulada da distribuição de Weibull até determinado valor.
+
+Também será determinado o percentil de 90%, correspondente ao valor de resistência abaixo do qual se encontram 90% dos resultados:
+
+$$
+P(X < x) = 0,90
+$$
+
+Como a probabilidade é conhecida e deseja-se encontrar o valor correspondente da resistência, utiliza-se a função `qweibull()`.
+
+Para a distribuição de Weibull, a média e o desvio padrão podem ser determinados a partir dos parâmetros de forma e escala. No R, esses valores serão calculados utilizando a função `gamma()`:
+
+$$
+E(X) = \lambda \cdot \Gamma\left(1+\frac{1}{k}\right)
+$$
+
+$$
+\sigma =
+\lambda
+\sqrt{
+\Gamma\left(1+\frac{2}{k}\right)
+-
+\left[
+\Gamma\left(1+\frac{1}{k}\right)
+\right]^2
+}
+$$
+
+Os cálculos podem ser realizados no R da seguinte forma:
+
+```{r}
+# Definindo os parâmetros da distribuição
+
+forma <- 2
+escala <- 150
+
+
+# a) Probabilidade de a resistência ser inferior a 100 kPa
+
+prob_inferior_100 <- pweibull(
+  q = 100,
+  shape = forma,
+  scale = escala
+)
+
+
+# b) Probabilidade de a resistência estar entre 120 e 200 kPa
+
+prob_120_200 <- pweibull(
+  q = 200,
+  shape = forma,
+  scale = escala
+) - pweibull(
+  q = 120,
+  shape = forma,
+  scale = escala
+)
+
+
+# c) Determinação do percentil de 90%
+
+percentil_90 <- qweibull(
+  p = 0.90,
+  shape = forma,
+  scale = escala
+)
+
+
+# d) Média e desvio padrão da resistência
+
+media_weibull <- escala * gamma(
+  1 + 1 / forma
+)
+
+desvio_weibull <- escala * sqrt(
+  gamma(1 + 2 / forma) -
+  gamma(1 + 1 / forma)^2
+)
+
+
+# Organizando os resultados obtidos
+
+resultados_weibull <- data.frame(
+  Analise = c(
+    "Resistência inferior a 100 kPa",
+    "Resistência entre 120 e 200 kPa",
+    "Percentil de 90%",
+    "Média",
+    "Desvio padrão"
+  ),
+  Resultado = c(
+    prob_inferior_100 * 100,
+    prob_120_200 * 100,
+    percentil_90,
+    media_weibull,
+    desvio_weibull
+  ),
+  Unidade = c(
+    "%",
+    "%",
+    "kPa",
+    "kPa",
+    "kPa"
+  )
+)
+
+
+# Apresentando os resultados em formato de tabela
+
+knitr::kable(
+  resultados_weibull,
+  digits = 2,
+  col.names = c("Análise", "Resultado", "Unidade"),
+  align = "c"
+)
+```
+
+A probabilidade de a resistência ao cisalhamento ser inferior a 100 kPa é de aproximadamente 35,88%, enquanto a probabilidade de apresentar valores entre 120 e 200 kPa é de 35,81%. Para o percentil de 90%, foi obtida uma resistência de aproximadamente 227,61 kPa, indicando que 90% dos valores se encontram abaixo desse limite.
+
+A resistência média obtida para a distribuição é de aproximadamente 132,93 kPa, com desvio padrão de 69,48 kPa.
+
+Por fim, será analisada a função de risco da distribuição de Weibull, que representa como a taxa de ocorrência do evento varia em função do valor da resistência. Para os parâmetros considerados, essa função pode ser calculada por:
+
+$$
+h(x) =
+\frac{2}{150}
+\left(\frac{x}{150}\right)^{2-1}
+$$
+
+Para visualizar esse comportamento, serão considerados valores de resistência entre 0 e 400 kPa.
+
+```{r}
+# e) Função de risco da distribuição de Weibull
+
+# Criando uma sequência de valores de resistência
+x_seq <- seq(
+  from = 0,
+  to = 400,
+  length.out = 1000
+)
+
+# Calculando a função de risco
+risco <- (2 / 150) * (x_seq / 150)^(2 - 1)
+
+# Construindo o gráfico da função de risco
+plot(
+  x_seq,
+  risco,
+  type = "l",
+  lwd = 2,
+  main = "Função de risco da distribuição de Weibull",
+  xlab = "Resistência ao cisalhamento (kPa)",
+  ylab = "Função de risco"
+)
+```
+
+O gráfico mostra que a função de risco aumenta à medida que os valores de resistência aumentam. Esse comportamento está relacionado ao parâmetro de forma $k = 2$, que, por ser maior que 1, resulta em uma função de risco crescente.
+
+### Precipitação Diária - Distribuição Gama
+
+A precipitação diária durante a estação chuvosa segue uma distribuição Gama com parâmetro de forma igual a 3 e taxa igual a 0,5. Assim, para essa distribuição, são considerados $\alpha = 3$ e $\beta = 0,5$.
+
+Inicialmente, serão calculadas a probabilidade de a precipitação diária ser superior a 10 mm e a probabilidade de apresentar valores entre 5 e 15 mm:
+
+$$
+P(X > 10)
+$$
+
+$$
+P(5 < X < 15) = P(X < 15) - P(X < 5)
+$$
+
+Para esses cálculos, utiliza-se a função `pgamma()`, que fornece a probabilidade acumulada da distribuição Gama. Para calcular diretamente a probabilidade de precipitação superior a 10 mm, utiliza-se o argumento `lower.tail = FALSE` e, para obter a probabilidade de a precipitação estar entre 5 e 15 mm, calcula-se a diferença entre as probabilidades acumuladas nos limites superior e inferior do intervalo.
+
+Também será determinado o percentil de 95%, correspondente ao valor de precipitação abaixo do qual se encontram 95% dos resultados:
+
+$$
+P(X < x) = 0,95
+$$
+
+Como a probabilidade é conhecida e deseja-se determinar o valor de precipitação correspondente, utiliza-se a função `qgamma()`.
+
+Para uma distribuição Gama definida pelos parâmetros de forma e taxa, a esperança e a variância são dadas por:
+
+$$
+E(X) = \frac{\alpha}{\beta}
+$$
+
+$$
+Var(X) = \frac{\alpha}{\beta^2}
+$$
+
+Os cálculos podem ser realizados no R da seguinte forma:
+
+```{r}
+# Definindo os parâmetros da distribuição
+
+forma <- 3
+taxa <- 0.5
+
+
+# a) Probabilidade de precipitação superior a 10 mm
+
+prob_mais_10 <- pgamma(
+  q = 10,
+  shape = forma,
+  rate = taxa,
+  lower.tail = FALSE
+)
+
+
+# b) Probabilidade de precipitação entre 5 e 15 mm
+
+prob_5_15 <- pgamma(
+  q = 15,
+  shape = forma,
+  rate = taxa
+) - pgamma(
+  q = 5,
+  shape = forma,
+  rate = taxa
+)
+
+
+# c) Determinação do percentil de 95%
+
+percentil_95 <- qgamma(
+  p = 0.95,
+  shape = forma,
+  rate = taxa
+)
+
+
+# d) Esperança e variância da precipitação diária
+
+esperanca_gama <- forma / taxa
+variancia_gama <- forma / taxa^2
+
+
+# Organizando os resultados obtidos
+
+resultados_gama <- data.frame(
+  Analise = c(
+    "Precipitação superior a 10 mm",
+    "Precipitação entre 5 e 15 mm",
+    "Percentil de 95%",
+    "Esperança",
+    "Variância"
+  ),
+  Resultado = c(
+    prob_mais_10 * 100,
+    prob_5_15 * 100,
+    percentil_95,
+    esperanca_gama,
+    variancia_gama
+  ),
+  Unidade = c(
+    "%",
+    "%",
+    "mm",
+    "mm",
+    "mm²"
+  )
+)
+
+
+# Apresentando os resultados em formato de tabela
+
+knitr::kable(
+  resultados_gama,
+  digits = 2,
+  col.names = c("Análise", "Resultado", "Unidade"),
+  align = "c"
+)
+```
+
+A probabilidade de a precipitação diária ser superior a 10 mm é de aproximadamente 12,47%, enquanto a probabilidade de apresentar valores entre 5 e 15 mm é de aproximadamente 52,35%. Para o percentil de 95%, foi obtida uma precipitação de aproximadamente 12,59 mm. Isso significa que 95% dos valores de precipitação estão abaixo desse limite.
+
+A esperança da distribuição é de 6 mm, enquanto a variância é de 12 mm². Assim, considerando os parâmetros adotados, espera-se uma precipitação diária média de 6 mm durante a estação chuvosa.
+
+Por fim, serão simulados 365 valores de precipitação diária utilizando a função `rgamma()`, considerando os mesmos parâmetros da distribuição. Em seguida, os valores simulados serão representados em um histograma, juntamente com a curva teórica da distribuição Gama, para comparação.
+
+```{r}
+# e) Simulação de 365 dias de precipitação
+
+# Definindo uma semente para permitir a reprodução dos resultados
+set.seed(123)
+
+# Gerando 365 valores de precipitação diária
+precipitacao <- rgamma(
+  n = 365,
+  shape = forma,
+  rate = taxa
+)
+
+# Construindo o histograma dos valores simulados
+hist(
+  precipitacao,
+  probability = TRUE,
+  main = "Distribuição da precipitação diária",
+  xlab = "Precipitação (mm)",
+  ylab = "Densidade"
+)
+
+# Adicionando a curva teórica da distribuição Gama
+curve(
+  dgamma(x, shape = forma, rate = taxa),
+  add = TRUE,
+  lwd = 2
+)
+```
+
+A partir do histograma, é possível observar uma maior concentração dos valores de precipitação nas menores faixas, enquanto valores mais elevados ocorrem com menor frequência. A distribuição apresenta assimetria à direita, com a presença de uma cauda associada aos maiores valores de precipitação. A curva teórica acompanha o comportamento dos dados simulados, indicando que os 365 valores gerados apresentam o comportamento esperado para a distribuição Gama.
+
+### Simulação de Monte Carlo
+
+Para complementar a análise da resistência à compressão do concreto, será realizada uma simulação de Monte Carlo considerando a mesma distribuição Normal utilizada anteriormente, com média $\mu = 35$ MPa e desvio padrão $\sigma = 4$ MPa.
+
+A simulação de Monte Carlo utiliza a geração de valores aleatórios para estimar a probabilidade de ocorrência de determinado evento. Nesse caso, serão simulados 10.000 valores de resistência e calculada a proporção de resultados inferiores a 30 MPa:
+
+$$
+P(X < 30)
+$$
+
+A estimativa obtida pela simulação será comparada com a probabilidade teórica calculada por meio da função `pnorm()`.
+
+```{r}
+# Definindo uma semente para permitir a reprodução dos resultados
+set.seed(123)
+
+# Gerando 10.000 valores de resistência à compressão
+sim_monte_carlo <- rnorm(
+  n = 10000,
+  mean = 35,
+  sd = 4
+)
+
+
+# Calculando a proporção simulada de resistências inferiores a 30 MPa
+prob_simulada <- mean(sim_monte_carlo < 30)
+
+
+# Calculando a probabilidade teórica
+prob_teorica <- pnorm(
+  q = 30,
+  mean = 35,
+  sd = 4
+)
+
+
+# Calculando a diferença entre os resultados
+diferenca <- abs(prob_simulada - prob_teorica)
+
+
+# Organizando os resultados obtidos
+resultados_monte_carlo <- data.frame(
+  Analise = c(
+    "Probabilidade simulada",
+    "Probabilidade teórica",
+    "Diferença entre os resultados"
+  ),
+  Resultado = c(
+    prob_simulada * 100,
+    prob_teorica * 100,
+    diferenca * 100
+  ),
+  Unidade = c(
+    "%",
+    "%",
+    "pontos percentuais"
+  )
+)
+
+
+# Apresentando os resultados em formato de tabela
+knitr::kable(
+  resultados_monte_carlo,
+  digits = 2,
+  col.names = c("Análise", "Resultado", "Unidade"),
+  align = "c"
+)
+```
+
+A simulação de 10.000 valores permite obter uma estimativa para a probabilidade de a resistência à compressão ser inferior a 30 MPa. Ao comparar esse resultado com a probabilidade teórica de aproximadamente 10,56%, calculada anteriormente pela distribuição Normal, espera-se encontrar valores próximos.
+
+A partir da simulação, foi possível obter uma probabilidade próxima ao valor teórico calculado para a resistência à compressão do concreto. Nesse tipo de análise, a simulação de Monte Carlo permite representar a variabilidade da resistência por meio da geração de um grande número de resultados possíveis e, a partir deles, estimar a frequência de ocorrência de valores abaixo de um limite estabelecido. Essa abordagem pode contribuir para análises de confiabilidade e risco, permitindo estimar a probabilidade de ocorrência de resultados potencialmente críticos.
+
+## 💭 Discussão
+
+As análises realizadas mostraram que a escolha do modelo probabilístico está relacionada às características da variável e ao tipo de informação que se pretende obter. Ao longo do trabalho, foram analisadas variáveis discretas e contínuas associadas a diferentes situações da construção de uma PCH, permitindo calcular probabilidades de ocorrência, valores esperados, variâncias e limites associados a determinados níveis de probabilidade.
+
+Os resultados também mostraram diferentes possibilidades de aplicação dessas análises na Engenharia Civil. A avaliação da resistência do concreto e da ocorrência de defeitos está diretamente relacionada ao controle de qualidade, enquanto a análise de fissuras permite avaliar a frequência esperada desses eventos. Da mesma forma, o estudo do tempo até a falha de equipamentos, da resistência ao cisalhamento e da precipitação permite incorporar a variabilidade dessas grandezas às análises realizadas durante o empreendimento.
+
+As simulações complementaram os resultados teóricos ao representar diferentes valores possíveis para as variáveis analisadas. A partir delas, foi possível comparar os resultados obtidos com o comportamento esperado pelos modelos teóricos. Essa comparação também foi realizada na simulação de Monte Carlo, em que a estimativa da probabilidade de resistência do concreto inferior a 30 MPa ficou próxima ao valor calculado diretamente pela distribuição Normal.
+
+De forma geral, o desenvolvimento permitiu associar os conceitos de probabilidade a diferentes situações relacionadas à construção da PCH. A partir das análises, foi possível compreender a aplicação de cada tipo de distribuição de acordo com as características das variáveis estudadas e como os resultados obtidos podem contribuir para avaliações relacionadas à qualidade, segurança e planejamento em empreendimentos de Engenharia Civil.
+
+## 🧠 Considerações finais
+
+A realização deste trabalho possibilitou aplicar os conceitos de distribuições de probabilidade a diferentes situações da Engenharia Civil e compreender como a escolha do modelo depende das características da variável analisada. O desenvolvimento dos cálculos no R contribuiu para relacionar os conceitos estudados com os problemas propostos, por meio do cálculo de probabilidades, medidas estatísticas e simulações a partir dos parâmetros definidos para cada situação.
+
+A comparação entre os resultados teóricos e simulados permitiu verificar, de forma prática, o comportamento das distribuições estudadas. Nesse sentido, o uso das simulações, incluindo o método de Monte Carlo, complementou os cálculos realizados e apresentou outra forma de analisar fenômenos aleatórios.
+
+Por fim, foi possível relacionar o conteúdo estudado com situações presentes na construção de uma PCH e compreender como a análise probabilística pode ser utilizada na avaliação de diferentes cenários e na interpretação de dados relacionados a problemas de engenharia.
+
+## 📖 Referências
+
+BUSSAB, W. O.; MORETTIN, P. A. Estatística Básica. Saraiva.
+MONTGOMERY, D. C.; RUNGER, G. C. Estatística Aplicada e Probabilidade para Engenheiros. LTC.
+R CORE TEAM. R: A Language and Environment for Statistical Computing. Vienna: R Foundation for Statistical Computing.
